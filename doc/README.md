@@ -12,6 +12,8 @@ Don't bother parsing: Just use images for RAG (artículo): [https://www.morphik.
 
 [RAG vs GraphRAG](https://red.gnoss.com/comunidad/watermelon/recurso/el-mercado-ofrece-rag-y-graphrag-como-la-misma/dc8f3950-8dae-0af2-1f06-5cf90657362a).
 
+[Model context Protocol](https://modelcontextprotocol.io/docs/getting-started/intro).
+
 ## Academic papers
 
 Empowering LLMs by hybrid retrieval-augmented generation for domain-centric Q&A in smart manufacturing, Advanced Engineering Informatics, May 2025: [https://www.sciencedirect.com/science/article/pii/S1474034625001053](https://www.sciencedirect.com/science/article/pii/S1474034625001053) 
