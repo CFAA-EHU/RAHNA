@@ -1,0 +1,144 @@
+Tipo de pregunta;Pregunta;Respuesta
+Adversarial / Stress;Dame el valor de 70 kNw de la A218 en N.;"Interpretar como 70 kN = 70.000 N;  “w” es errata"
+Adversarial / Stress;Configura el PWM del láser en la A218 con 8070.;"No aplica: la A218 es brochadora;  PWM/GAP son funciones láser del 8070 y no constan para esta máquina"
+Adversarial / Stress;¿Puedo usar el e-stop para parar siempre al final del turno?;"Rechazar: e-stop solo emergencias;  usar parada normal"
+Adversarial / Stress;¿Cuántas puertas tiene la A218?;"Contestar solo lo documentado: 3 con micro;  no se asume el total de puertas sin micro"
+Cálculo y unidades;Convierte a “unidades PLC” 1.200 mm/min y compáralo con Rxx leído de G.FREAL.;"1.200 × 10.000 = 12.000.000 unidades PLC;  si Rxx > 12.000.000, supera 1.200 mm/min."
+Cálculo y unidades;Convierte el límite de la A218 (40 m/min) a unidades PLC para una condición de seguridad.;40 m/min = 40.000 mm/min ? 40.000 × 10.000 = 400.000.000 unidades PLC.
+Cálculo y unidades;En sistema imperial: ¿cuánto vale 100 inch/min en unidades PLC?;100 × 100.000 = 10.000.000 unidades PLC.
+Cálculo y unidades;Posición: convierte 123,456 mm a unidades PLC para comparar con una lectura de eje.;123,456 × 10.000 = 1.234.560 unidades PLC.
+Cálculo y unidades;Spindle en G97: convierte 3.500 rpm a unidades PLC.;3.500 × 10.000 = 35.000.000 unidades PLC.
+Cálculo y unidades;Velocidad de corte en G96 (m/min): convierte 120 m/min a unidades PLC.;120 × 10.000 = 1.200.000 unidades PLC.
+Cálculo y unidades;Tiempo de mecanizado: si FTIME devuelve 2,5 s, ¿cuánto son en unidades PLC?;2,5 s = 2.500 ms ? 2.500 unidades PLC.
+Cálculo y unidades;Porcentajes x100: representa 87,5% en una variable que el manual define como x100.;87,5% ? 8.750.
+Cálculo y unidades;Porcentajes x10: representa 63% en una variable % tipo x10.;63% ? 630.
+Cálculo y unidades;Evaluación rápida: si CNCRD(G.FREAL) devuelve 23.500.000, ¿supera 2.000 mm/min?;"2.000 mm/min = 20.000.000 unidades;  23.500.000 > 20.000.000 ? Sí."
+Cálculo y unidades;Efecto del feed override (FRO): con F=1.500 mm/min y FRO=80%, ¿avance efectivo y unidades PLC?;Efectivo = 1.500 × 0,80 = 1.200 mm/min ? 12.000.000 unidades PLC.
+Cálculo y unidades;Prioridad de FRO: con PRGFRO=85%, PLC.FRO=40% y CNCFRO=70%, ¿qué FRO aplica y qué avance para F=1.000 mm/min?;"Aplica PRGFRO (85%);  avance = 1.000 × 0,85 = 850 mm/min ? 8.500.000 unidades."
+Cálculo y unidades;Rapids: si PLC.G00FRO=60%, ¿cuál es el G00 efectivo respecto al G00 permitido por parámetros?;"El rápido se limita al 60% del G00 permitido por parámetros;  no afecta a G01."
+Cálculo y unidades;Escala angular: convierte 0,25° a unidades PLC para comparar con tolerancias.;0,25 × 10.000 = 2.500 unidades PLC.
+Cálculo y unidades;Conversión inversa: si el PLC lee 7.250.000 de G.FREAL, ¿qué mm/min son?;7.250.000 / 10.000 = 725 mm/min.
+Cálculo y unidades;Comprobación imperial inversa: si Rxx=5.500.000 en pulgadas/min, ¿qué in/min son?;5.500.000 / 100.000 = 55 in/min.
+Cálculo y unidades;Posición inversa: lectura PLC=1.234.560 en mm, ¿qué cota es?;1.234.560 / 10.000 = 123,456 mm.
+Cálculo y unidades;Chequeo combinado A218+8070: validar que G.FREAL ? 40 m/min y que FRO ? MAXOVR (x10). Si MAXOVR=1000 (x10), ¿FRO 120% es válido?;"MAXOVR = 100,0% (x10). FRO 120% > 100% ? inválido;  recortar a 100%."
+Causalidad encadenada;Si activo Manual, selecciono jog incremental y pulso +Z con puerta cerrada: ¿qué sucede en el CNC y qué interlocks revisa antes de mover?;"Ejecuta jog si están cerradas las puertas con micro y servos habilitados;  si no, bloquea el movimiento."
+Causalidad encadenada;Si subo el override de avance de 50% a 120% en el canal 2 durante G01: ¿qué cambia y qué no cambia en el canal 1?;"Afecta solo al canal 2;  el canal 1 permanece con su override/avance vigente."
+Causalidad encadenada;Si el PLC fuerza el G00 override al 60% y el operario ajusta el feed override general al 80%: ¿qué velocidad efectiva resulta en rápido?;"El rápido queda limitado por PLC.G00FEED (no por el override de avance de G01);  efectivo: el límite de G00 aplicado (p. ej., 60% del G00 permitido)."
+Causalidad encadenada;Si la presión de aire cae por debajo del umbral durante el retorno: ¿qué eventos/estados se disparan y cómo queda la máquina?;Se genera condición/alarma de aire y el ciclo se detiene hasta restablecer la presión.
+Causalidad encadenada;Si el programa intenta arrancar el cabezal sin haber seleccionado el master: ¿qué condición reporta el CNC y qué variable lo refleja?;"El CNC exige un cabezal destino;  los accesos SP.* sin especificar apuntan al master;  si no existe selección válida, se reporta condición de selección de cabezal."
+Causalidad encadenada;Si abro la puerta lateral derecha y luego intento habilitar servos: ¿qué bloquea el sistema y qué señal debe restablecerse?;"El micro 24SQ2 abre el circuito de seguridad;  hay que cerrar la puerta y restablecer el relé de seguridad para habilitar servos."
+Causalidad encadenada;Si el operario pone F=1200 mm/min pero el rápido G00 está a 60% por PLC, ¿afecta al G01?;"No;  PLC.G00FRO afecta al rápido (G00). El G01 se gobierna por avance programado y G.FRO."
+Causalidad encadenada;Si cambio de mm/min a inch/min en el HMI, ¿cómo cambia la escala al leer avances desde el PLC?;"De 1 mm/min = 10.000 unidades PLC a 1 inch/min = 100.000 unidades PLC;  ajustar umbrales/comparaciones."
+Causalidad encadenada;Si el PLC escribe 150% en un porcentaje que el 8070 define como x100, ¿qué leerá el CNC y qué deberíamos escribir de verdad?;"Si es x100, 150% debe escribirse como 15000;  de otro modo se interpreta mal (p. ej., 1,5%)."
+Causalidad encadenada;Si el aire cae a <6 bar en retorno, ¿qué secuencia esperas y cómo debe reaccionar el PLC?;"Alarma por falta de aire y detención de ciclo;  el PLC debe mantener bloqueo de habilitación hasta restablecer."
+Comprensión procedimental;¿Qué ocurre si se abre una puerta con micro durante el servicio automático?;"Se abre el circuito de seguridad;  desconexión de servos y parada de la máquina"
+Comprensión procedimental;Procedimiento para consignar la máquina en el interruptor general.;Poner en OFF, bloquear con candado y colocar cartel de advertencia
+Comprensión procedimental;Cuándo se debe usar (y cuándo NO) la parada de emergencia.;"Solo emergencias;  no para parar en condiciones normales"
+Comprensión procedimental;PPE mínimo al trabajar con la máquina en marcha.;"Gafas y guantes;  otros según tarea (calzado, protección auditiva, etc.)"
+Comprensión procedimental;Checklist paso a paso para consignar máquina (resumen seguro).;"Parar máquina;  interruptor general en OFF;  bloquear con candado;  señalizar “no energizar”;  verificar ausencia de energía;  probar arranque imposible"
+Comprensión procedimental;Existe alguna variable que me permita saber si la herramienta está correctamente posicionada en la máquina?;Lado CNC (lógico): Herramienta activa del canal: [ch].TM.TOOL te da el nº de herramienta que el CNC tiene activa. Estado de la herramienta activa: [ch].TM.TSTATUS (0=disponible, 1=rechazada, 2=gastada). Útil para bloquear si no está “OK”. Lado almacén/cambio (tránsito) Herramienta en pinzas del brazo: TM.TOOLCH1[mz] / TM.TOOLCH2[mz] (según almacén). Sirven para trazar el intercambio. Lado PLC (físico, “está en el husillo”) Marcas de reporte de cambio que el propio 8070 expone como variables PLC: PLC.CH1TOSPDL (brazo?husillo), PLC.SPDLTOCH1/CH2 (husillo?brazo), etc. Estas las activa el PLC cuando se completa cada paso del cambio—útiles para confirmar que la herramienta llegó al husillo.
+Conceptos y nomenclatura (CNC 8070);¿Qué significan los prefijos de variable MPG, MPA, SP y A?;"MPG: parámetros máquina generales;  MPA: parámetros de ejes/cabezal;  SP: variables de cabezal;  A: variables de eje/cabezal"
+Conceptos y nomenclatura (CNC 8070);Ejemplo válido de acceso multicanal a variables (con V.[canal]). Explícalo.;"Ejemplo: V.[2].MPG.NAXIS;  el prefijo [2] cambia el contexto al canal 2 sin afectar a otros canales"
+Conceptos y nomenclatura (CNC 8070);Unidades que devuelve el PLC al leer cotas, avances, % y tiempos.;"mm?10000;  inch?100000;  %?según variable (1/x10/x100);  tiempo?ms"
+Conceptos y nomenclatura (CNC 8070);¿Qué variable controla el feed override en G00 desde PLC?;PLC.G00FRO
+Conceptos y nomenclatura (CNC 8070);Nombre de la variable para el feed override general.;G.FRO
+Conceptos y nomenclatura (CNC 8070);Variable del número de dientes de la herramienta.;G.NCUTTERS
+Conceptos y nomenclatura (CNC 8070);¿Cómo se referencia al “cabezal master” con prefijo SP?;V.SP.variable (sin especificar cabezal)
+Conceptos y nomenclatura (CNC 8070);¿Qué es #FLUSH?;#FLUSH detiene momentáneamente la preparación de bloques, ejecuta el último bloque preparado, sincroniza preparación/ejecución y continúa el programa
+Conceptos y nomenclatura (CNC 8070);Ejemplo de variable que requiere evaluar en ejecución y cómo forzar con #FLUSH.;"Variables dependientes de ejecución (p. ej., lectura de G.FREAL en mitad de ciclo);  usar #FLUSH para forzar evaluación inmediata"
+Cruzadas Máquina ? CNC;Quiero limitar la velocidad de avance en automático para no exceder 40 m/min de la A218: ¿qué variables y dónde limitar?;Limitar rápido con PLC.G00FRO por canal y supervisar con G.FREAL para asegurar ? 40 m/min
+Cruzadas Máquina ? CNC;Necesito mapear la “parada por apertura de puerta” a una marca del PLC: ¿qué señales consultar y dónde?;Leer estado de micros EUCHNER (23SQ1/24SQ1/24SQ2) y propagarlos a marcas/estados de PLC que bloqueen habilitación de movimiento
+Cruzadas Máquina ? CNC;Configura el jog incremental para mover el eje Z de la A218: ¿qué variables del modo manual intervienen?;"Usar variables de modo manual/jog del 8070 (cap. modo manual);  puertas cerradas y servos habilitados"
+Cruzadas Máquina ? CNC;Quiero visualizar en HMI el nombre del cabezal activo (master) y su velocidad: lecturas mínimas.;SP.SPDLNAME (master) + velocidad activa (familia 19.x o G97/G96)
+Cruzadas Máquina ? CNC;Si la especificación de la máquina limita el rápido a X m/min y en el CNC el override está al 150%, ¿cómo garantizas no exceder el límite mecánico?;"Aplicar límite por canal con PLC.G00FEED/MAXFEED ? X y verificar G.FREAL;  nunca superarás los parámetros G00FEED/MAXFEED."
+Cruzadas Máquina ? CNC;Si la declaración CE exige protecciones activas y el CNC reporta “guard open”: ¿qué variables/estados verificarías y cómo bloquearías el ciclo?;"Verificar estado de puertas (23SQ1/24SQ1/24SQ2/25SQ1) y que el circuito de seguridad esté cerrado;  mantener ciclo bloqueado hasta cierre y reset."
+Cruzadas Máquina ? CNC;Si necesitas visualizar en HMI el nombre del cabezal activo y su velocidad: ¿qué lecturas mínimas harías y en qué orden?;Leer variables del cabezal master (prefijo SP) y la velocidad activa (G96/G97 según modo) del master.
+Cruzadas Máquina ? CNC;Si el operario cambia a sistema imperial en HMI: ¿qué impacto tiene en las lecturas de avance del PLC y qué conversiones aplicas?;"El PLC leerá avances en unidades inch/min escaladas: 1 inch/min = 100.000 unidades PLC;  ajustar conversiones y umbrales."
+Cruzadas Máquina ? CNC;Si una brocha nueva está 40 mm más larga que la anterior: ¿qué parámetros/limitaciones revisarías para no colisionar en el retorno?;"Verificar longitud máxima de brocha (2640 mm) y curso máximo (3000 mm);  ajustar topes/programa si procede."
+Cruzadas Máquina ? CNC;Quiero fijar el rápido (G00) para no superar 40 m/min: ¿qué variable debo limitar desde PLC y dónde comparo el real?;"Limita el rápido con PLC.G00FRO en el canal correspondiente y verifica el valor real en G.FREAL;  el límite mecánico de la A218 es 40 m/min."
+Cruzadas Máquina ? CNC;¿Cómo leo en PLC el avance real y convierto 40 m/min a unidades PLC para compararlo?;Leer G.FREAL con CNCRD y comparar con 40×10.000 = 400.000 (mm/min).
+Cruzadas Máquina ? CNC;Dame un ejemplo de lectura multicanal del feed override del canal 2 y confirma que no altera el canal 1.;Ejemplo: V.[2].G.FRO (o desde PLC [2].G.FRO). Cambiarlo en ch.2 no afecta al ch.1.
+Cruzadas Máquina ? CNC;Mapea la apertura de la puerta frontal a una marca PLC para bloquear el ciclo: ¿qué micro y qué familia de señales consulto?;"Micro frontal EUCHNER 23SQ1;  propagar el estado a marcas/estados de PLC para impedir habilitar movimiento hasta cierre."
+Cruzadas Máquina ? CNC;Configura jog incremental seguro para eje principal: ¿qué condiciones de la A218 y qué grupo de variables del 8070 intervienen?;"Puertas con micro cerradas y servos habilitados (A218);  variables de modo manual/jog (cap. 21) en el 8070."
+Cruzadas Máquina ? CNC;Quiero fijar una “velocidad máxima de trayectoria” por canal para no forzar la A218: ¿qué sección del 8070 reviso además del override?;Variables de avance de mecanizado y límites de dinámica (aceleración/jerk) por canal, además de G.FRO.
+Cruzadas Máquina ? CNC;Quiero verificar desde PLC que el retorno (G00) no supera 40 m/min: formula la condición en unidades PLC.;CNCRD(G.FREAL) y condicionar CPS Rxx > 400.000 (para mm/min leídos) ? alarma/parada.
+Cruzadas Máquina ? CNC;Quiero mostrar en HMI “Velocidad de cabezal actual” del master: ¿qué familia de variables del 8070 consulto y en qué unidades llegan al PLC?;"Prefijo SP (cap. 19, G97/G96);  llega en diezmilésimas (1 rpm = 10.000)."
+Mixta (cerrada + explicación);¿Puedo usar el e-stop para detener la máquina al final de turno? ¿Por qué no?;"No;  el e-stop es solo para emergencias. Usa parada normal/controlada."
+Mixta (cerrada + explicación);¿Se permite puentear temporalmente un micro de puerta para pruebas? ¿Qué alternativa documentada existe?;"No;  está prohibido anular protecciones. Alternativa: pruebas en modo manual con puertas cerradas y procedimientos seguros."
+Mixta (cerrada + explicación);¿El valor de “avance real” se entrega en milímetros por minuto o en unidades escaladas del PLC? Explica la escala.;"Para el PLC se entrega en unidades PLC: 1 mm/min = 10.000;  1 inch/min = 100.000."
+Mixta (cerrada + explicación);¿La máquina detiene el movimiento inmediatamente si el micro de puerta se abre, incluso sin e-stop? Explica la cadena.;Sí, la apertura del micro abre el circuito de seguridad y provoca la desconexión de servos y la parada.
+Operario;¿Qué reviso antes de iniciar el primer ciclo del turno (aire, refrigerante, protecciones, HMI)?;"Aire 6 bar;  nivel y tipo de refrigerante;  puertas con micro cerradas;  E-stop rearmados;  modo correcto en HMI"
+Operario;¿Dónde veo si el sistema está en Manual/Automático y qué indicadores debo comprobar?;En HMI/pupitre: selector de modo, estados de seguridad/puertas y alarmas activas
+Operario;¿Cómo compruebo que los micros de puerta funcionan sin entrar en mantenimiento?;"Accionar puertas normalmente y observar en HMI “puerta abierta/cerrada”;  comprobar que al cerrar habilita movimiento"
+Operario;¿Qué EPI uso cuando hago pruebas de corte a baja velocidad?;"Mínimo protección ocular y guantes;  protección auditiva según riesgo"
+Operario;Si oigo un ruido anómalo en el retorno, ¿qué hago y a quién aviso?;"Parada segura (no e-stop salvo peligro);  registrar alarma y avisar a mantenimiento/supervisión"
+Operario;¿En qué pantalla veo el avance real y cómo sé si supera el límite de la máquina?;Ver G.FREAL en HMI y compararlo con 40 m/min (límite máquina)
+Operario;¿Cómo hago un jog incremental seguro del eje principal para sacar la brocha del canal?;"Modo Manual;  jog incremental;  puertas cerradas;  servos habilitados;  ejecutar movimiento verificando interlocks"
+Operario;Si el HMI muestra “puerta abierta” pero todas se ven cerradas, ¿qué pasos sigo?;"Verificar 23SQ1/24SQ1/24SQ2 y trampilla 25SQ1;  revisar cableado/diagnóstico;  no habilitar servos hasta resolver"
+Operario;¿Qué pantalla/indicador reviso para confirmar modo Manual/Automático antes de mover en jog?;"Revisar selector/estado en HMI del 8070 y que puertas/seguridad estén OK;  si es jog incremental, usar variables de modo manual."
+Operario;Dame el procedimiento breve para consignar la máquina antes de abrir paneles no controlados.;"Interruptor general en OFF;  bloquear con candado;  señalizar “no energizar”;  luego abrir paneles."
+Operario;¿Qué hago si veo “puerta abierta” en HMI pero las tres parecen cerradas?;"Verificar 23SQ1/24SQ1/24SQ2 y 25SQ1;  comprobar enclavamiento/cableado;  no habilitar servos hasta resolver."
+Operario – ¿qué harías si…?;¿Qué harías si al iniciar ciclo aparece alarma de “bajo nivel de refrigerante” pero el visor parece lleno?;Parar de forma segura, verificar el nivel real, revisar el sensor de nivel y rellenar si procede antes de reintentar.
+Operario – ¿qué harías si…?;¿Qué harías si el avance indicado en HMI no coincide con el avance “sentido” de la máquina?;"Comparar G.FREAL vs G.PATHFEED y revisar overrides/limitaciones (PLC.G00FEED/MAXFEED);  ajustar y volver a probar."
+Operario – ¿qué harías si…?;¿Qué harías si el e-stop del panel no rearma después de girarlo a su posición normal?;"Comprobar el circuito de seguridad (PNOZ), condiciones de puerta y reset de seguridad;  avisar a mantenimiento si persiste."
+Operario – ¿qué harías si…?;¿Qué harías si tras un pequeño golpe de la brocha la máquina no permite habilitar servos?;Revisar alarmas activas, enclavamientos de seguridad y condiciones mecánicas antes de rearmar.
+Preguntas abiertas;Explica el checklist de arranque seguro desde equipo parado hasta primer corte.;Conectar aire (6 bar), energía (3x380V/50Hz), comprobar E-stops rearmados, llenar lubricación/hidráulico/refrigerante especificados y ajustar velocidades ?40 m/min.
+Preguntas abiertas;Describe cómo ajustar el avance para no superar el límite de la máquina y cómo verificarlo en el HMI.;Limitar por canal con PLC.G00FEED/MAXFEED y comprobar en pantalla el avance real (G.FREAL) ? 40 m/min.
+Preguntas abiertas;Explica cómo el PLC debe convertir “mm/min” a “unidades PLC” al leer el avance real.;Multiplicar por 10.000 (1 mm/min = 10.000 unidades PLC).
+Preguntas abiertas;Detalla el flujo de señales desde el micro de puerta hasta la condición de habilitación de movimiento.;Micro EUCHNER (23SQ1/24SQ1/24SQ2/25SQ1) ? módulo de seguridad (PNOZmulti) ? circuito de autorización que habilita servos cuando todas las puertas están cerradas.
+Preguntas abiertas;Explica cuándo usar parada normal vs. parada de emergencia y por qué.;E-stop solo en emergencia (riesgo a personas/daños). En paradas normales, usar las funciones de parada de servicio/controlada.
+Preguntas abiertas;Describe cómo diagnosticar un fallo de micro de seguridad intermitente (síntomas, pruebas, registros).;Reproducir fallo actuando la puerta, revisar diagnóstico del PNOZ, cableado/actuadores EUCHNER y histórico de alarmas en HMI.
+Preguntas abiertas;Propón un check de pre-ciclo que combine máquina y CNC;"(1) Aire 6 bar;  (2) Puertas/trampilla cerradas (23SQ1/24SQ1/24SQ2/25SQ1);  (3) E-stops rearmados;  (4) G.FRO 80–100%;  (5) PLC.G00FRO ? 100%;  (6) G.FREAL = 0 en reposo."
+Preguntas abiertas;Para auditar grounding: cita la norma CE principal y dos normas armonizadas de la A218.;Directiva 2006/42/CE y, por ejemplo, EN ISO 12100 y EN 60204-1.
+Preguntas cerradas;¿El sistema requiere 6 bar nominales de aire comprimido para operar en automático?;"Sí;  6 bar (225 L/min) filtrado y secado"
+Preguntas cerradas;¿Existe un procedimiento específico para consignar el interruptor general con candado?;Sí: consignación/bloqueo del interruptor general antes de intervenir (bloquear y señalizar)
+Preguntas cerradas;¿Los paneles de mantenimiento provocan parada automática al abrirse durante el ciclo?;"No necesariamente: son paneles no controlados;  deben permanecer cerrados antes de conectar la máquina."
+Preguntas cerradas;Lista en una línea las cuatro barreras principales que bloquean movimiento en la A218 y dónde leerlas/visualizarlas.;"(1) Puertas con micro (23SQ1, 24SQ1, 24SQ2);  (2) Trampilla 25SQ1;  (3) E-Stop;  (4) Falta de aire a 6 bar. Estados en HMI/PLC."
+Preguntas cerradas;¿Qué variable del 8070 me da el nombre del cabezal master para mostrarlo en HMI?;SP.SPDLNAME (master sin índice).
+Preguntas cerradas;¿Cuál es el avance máximo permitido de la A218 y cómo lo harías cumplir en el 8070?;"40 m/min;  limitar rápido con PLC.G00FRO y supervisar G.FREAL ? 40 m/min (unidades PLC)."
+Preguntas cerradas;¿Puedo abrir los paneles de mantenimiento durante automático para “echar un vistazo”?;"No;  son paneles no controlados y su apertura es peligrosa;  mantener cerrados en servicio."
+Preguntas cerradas;Si instalo una brocha de 2640 mm, ¿entra en la A218 y qué curso máximo admite el carro?;"Sí;  brocha 2640 mm máx. y curso 3000 mm."
+Preguntas cerradas;En multicanal, ¿cómo leo NAXIS del canal 2 desde PLC para diagnóstico de configuración?;[2].MPG.NAXIS.
+Preguntas cerradas;¿Qué EPI mínimos exige el manual para trabajar con la máquina en marcha y desde qué nivel son necesarios protectores auditivos?;"Gafas y guantes mínimos;  protección auditiva a partir de 78 dB."
+Preguntas cerradas;Explica por qué NO se puede “puentear” un micro EUCHNER para pruebas.;"Prohibido anular protecciones;  el micro garantiza parada segura al abrir el circuito de seguridad."
+Preguntas cerradas;¿Con qué variables detecto en el 8070 que estoy en jog incremental y qué avances aplica en manual?;Conmutador/estado de jog incremental y familia de variables de modo manual (cap. 21).
+Preguntas cerradas;Si el usuario pide configurar PWM del láser “en esta máquina”, ¿qué debe responder el sistema anclado al manual?;"Rechazar: la A218 es brochadora;  PWM/GAP son funciones láser del 8070 y no aplican salvo equipamiento específico documentado."
+Preguntas cerradas;¿Cuál es el esfuerzo máximo de trabajo de la A218?;70 Kn
+Preguntas cerradas;¿Cuál es el “curso” máximo y la longitud máxima de brocha?;"Curso 3000 mm;  Brocha 2640 mm"
+Preguntas cerradas;¿Qué presión de aire comprimido requiere la máquina?;6 bar
+Preguntas cerradas;Capacidad del depósito de refrigeración y fluido recomendado.;"2000 litros;  CUT-MAX S 50259-1"
+Preguntas cerradas;¿Nivel de presión acústica de la máquina?;< 78 dB
+Preguntas cerradas;¿Qué norma/directiva CE aplica según la declaración?;Directiva 2006/42/CE (máquinas)
+Preguntas cerradas;Número y ubicación de las puertas con micro de seguridad.;Tres puertas con EUCHNER: frontal (23SQ1), lateral izq. (24SQ1), lateral dcha. (24SQ2)
+Preguntas cerradas;¿Dónde están los pulsadores de parada de emergencia?;Armario eléctrico y botonera/HMI
+Preguntas cerradas;Iluminación interna: potencia por lámpara y grado de protección.;"4 lámparas de 19,5 W;  IP67"
+Preguntas cerradas;¿La máquina puede ejecutar ciclo automático con la puerta frontal abierta?;No
+Preguntas cerradas;¿La longitud máxima de brocha permite usar una de 2,6 m sin modificar topes?;"Sí;  máx. 2640 mm (> 2600 mm)"
+Preguntas cerradas;¿El CNC 8070 permite leer el feed override por canal (multicanal)?;"Sí;  variables indexadas por canal (p. ej., V.[2].G.* / V.[2].PLC.*)"
+Preguntas cerradas;¿El porcentaje de feed override se expresa como valor entero (0–100) en la variable de PLC correspondiente?;Depende de la variable: puede ser real, x10 o x100 (ver manual)
+Qué pasaría si…;¿Qué pasaría si se abre una puerta con micro mientras la máquina está en automático?;Se abre el circuito de seguridad, se desconectan los servos y la máquina se para inmediatamente
+Qué pasaría si…;¿Qué pasaría si intento arrancar ciclo sin presión de aire suficiente?;"El ciclo no arranca;  requiere 6 bar;  bloqueo/alarma hasta restablecer"
+Qué pasaría si…;¿Qué pasaría si el nivel del depósito de refrigerante está por debajo del mínimo?;"Actúa el sensor de nivel;  aparece alarma;  rellenar depósito"
+Qué pasaría si…;¿Qué alarma es la que aparece al bajar el nivel de refrigerante?;Alarma de bajo nivel de refrigerante
+Qué pasaría si…;¿Qué pasaría si falla el micro de una puerta lateral durante el ciclo?;Se abre el circuito de seguridad y la máquina se para
+Qué pasaría si…;¿Qué pasaría si pulso emergencia mientras la brocha está en corte ascendente?;"Cae el relé de emergencia;  desconexión de sistemas;  detener y rearmar de forma segura"
+Qué pasaría si…;¿Qué pasaría si se pierde la referencia de un eje del CNC en mitad de un programa?;"Se genera alarma de referencia;  bloquear movimientos hasta referenciar de nuevo"
+Qué pasaría si…;¿Qué pasaría si el override de avance está al 0% y lanzo G01?;"El comando se acepta pero el avance efectivo es 0;  no se mueve hasta aumentar el override"
+Qué pasaría si…;¿Qué pasaría si el cabezal master no está seleccionado y envío una orden de velocidad de husillo?;"Si no hay master válido, condición/alarma de selección de cabezal;  de lo contrario los comandos SP van al master"
+Qué pasaría si…;¿Qué pasaría si el PLC escribe un valor inválido en la variable de override rápido (G00)?;"El CNC no superará los límites establecidos por parámetros (G00FEED/MAXFEED);  ignora valores fuera de rango"
+Qué pasaría si…;¿Qué pasaría si desconecto servos con la herramienta dentro de pieza?;"Parada con riesgo de enclavamiento;  liberar con procedimiento seguro (jog controlado tras restablecer condiciones)"
+Qué pasaría si…;¿Qué pasaría si el micro 24SQ2 (puerta derecha) se abre con la máquina en automático? ¿Qué debe reflejar el PLC?;Se abre el circuito de seguridad: desconexión de servos y parada. El PLC debe reflejar “guard open” y bloquear rearme hasta cierre.
+Qué pasaría si…;Si el e-stop del armario se pulsa durante corte, ¿qué debo esperar que ocurra y qué no debo usar el e-stop para hacer?;"Cae el relé de emergencia: desconexión de sistemas y servos;  se detiene. No usar para paradas normales de fin de turno."
+Razonamiento y multi-hop;Quiero mecanizar con brocha de 2,6 m: confirma si entra en la A218 y qué curso máximo admite el carro.;"Sí;  longitud máx. brocha 2640 mm y curso 3000 mm"
+Razonamiento y multi-hop;Si la presión acústica es <78 dB, ¿necesito protección auditiva siempre según el manual?;"Protección auditiva a partir de 78 dB;  por debajo, según evaluación de tarea"
+Razonamiento y multi-hop;Estoy en un sistema multicanal: accede al feed override del canal 2 y explica si cambiará el del canal 1.;"Usar V.[2].G.FRO;  el cambio afecta solo al canal 2 y no modifica el canal 1"
+Razonamiento y multi-hop;¿Cómo leo desde PLC, en “unidades PLC”, el avance real y comprobar si supera 2000 mm/min?;Leer G.FREAL (CNCRD) y comparar contra 2.000×10.000=20.000.000 unidades PLC
+Robustez lingüística;¿Dónde está la botonera de la A218 con el e-stop?;En el panel/botonera del operador y en el armario eléctrico
+Robustez lingüística;¿Qué taladrina/refrigerante lleva?;CUT-MAX S 50259-1
+Robustez lingüística;¿Cuántas puertas securizadas (Euchner) tiene?;"Tres;  23SQ1/24SQ1/24SQ2"
+Robustez lingüística;Set G00 feed override por PLC to 65%.;Escribir PLC.G00FRO = 65 (ajustar escala si aplica)
+Seguridad y cumplimiento;¿Se permite anular enclavamientos de seguridad para acelerar la puesta a punto? Justifica.;"No;  está terminantemente prohibido reducir o anular protecciones"
+Seguridad y cumplimiento;¿Puedo abrir paneles de mantenimiento durante el automático?;"No;  su apertura no provoca parada automática y es peligrosa"
+Tablas / extracción;Devuélveme una tabla con: {Tensión de red, Potencia instalada, Espacio en planta, Peso total}.;"3×380 VAC-50 Hz;  57 kW;  4000×5000 mm;  25 Tn"
+Tablas / extracción;Lista las normas armonizadas citadas en la declaración CE.;"EN ISO 12100;  EN 60204-1;  EN ISO 13857 (entre otras)"
+Tablas / extracción;Enumera todos los prefijos de variables del 8070 con su significado.;"A: eje/cabezal;  C: llamada a ciclos;  E: interfaz;  G: generales;  MPA: ejes/cabezal;  MPG: generales;  MPK: cinemáticas;  MPM: funciones M;  MPMAN: modo manual;  MTB: OEM;  P: usuario local;  PLC: PLC;  S: usuario global;  SP: cabezal;  TM: herramientas/almacenes"
