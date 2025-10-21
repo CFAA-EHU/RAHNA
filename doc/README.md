@@ -14,6 +14,8 @@ Don't bother parsing: Just use images for RAG (artículo): [https://www.morphik.
 
 [Model context Protocol](https://modelcontextprotocol.io/docs/getting-started/intro).
 
+[Microsoft GraphRAG](https://github.com/microsoft/graphrag).
+
 ## Academic papers
 
 Empowering LLMs by hybrid retrieval-augmented generation for domain-centric Q&A in smart manufacturing, Advanced Engineering Informatics, May 2025: [https://www.sciencedirect.com/science/article/pii/S1474034625001053](https://www.sciencedirect.com/science/article/pii/S1474034625001053) 
@@ -21,3 +23,5 @@ Empowering LLMs by hybrid retrieval-augmented generation for domain-centric Q&A 
 An advanced retrieval-augmented generation system for manufacturing quality control, Advanced Engineering Informatics, March 2025: [https://www.sciencedirect.com/science/article/pii/S147403462400658X](https://www.sciencedirect.com/science/article/pii/S147403462400658X)
 
 AMGPT: A large language model for contextual querying in additive manufacturing, Additive Manufacturing Letters, December 2024: [https://www.sciencedirect.com/science/article/pii/S2772369024000409](https://www.sciencedirect.com/science/article/pii/S2772369024000409)
+
+Henri Scaffidi, Melinda Hodkiewicz, Caitlin Woods, and Nicole Roocke. GraphRAG on Technical Documents - Impact of Knowledge Graph Schema. In Transactions on Graph Data and Knowledge (TGDK), Volume 3, Issue 2, pp. 3:1-3:24, Schloss Dagstuhl – Leibniz-Zentrum für Informatik (2025) https://doi.org/10.4230/TGDK.3.2.3
