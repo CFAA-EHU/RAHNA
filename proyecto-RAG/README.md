@@ -10,5 +10,10 @@
 
 - ./mistral-embeddings_db: Base de datos vectorial de Chroma con todos los embeddings.
 
+# Resultados de las evaluaciones:
+Hemos evaluado las respuestas poniendole al modelo temperature = 0.1 y temperature = 0.3. Los resultados de la evaluación están en:
+- Temperatura = 0.3: modelo_respuestas_completo_t0.3.csv
+- Temperatura = 0.1: modelo_respuestas_completo_t0.1.csv
+
 # Notas:
 Para usar MistralAIEmbeddings hace falta una API key de MistralAI y la primera vez también me pidió un Access Token de HuggingFace
