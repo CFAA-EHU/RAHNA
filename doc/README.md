@@ -16,6 +16,8 @@ Don't bother parsing: Just use images for RAG (artículo): [https://www.morphik.
 
 [Microsoft GraphRAG](https://github.com/microsoft/graphrag).
 
+[Graph RAG Chat Application](https://github.com/nemegrod/graph_RAG). A Graph RAG (Retrieval-Augmented Generation) chat application that combines OpenAI GPT with knowledge graphs stored in GraphDB. This application demonstrates how to build an intelligent assistant using Microsoft Agent Framework with structured data using SPARQL.
+
 ## Academic papers
 
 Empowering LLMs by hybrid retrieval-augmented generation for domain-centric Q&A in smart manufacturing, Advanced Engineering Informatics, May 2025: [https://www.sciencedirect.com/science/article/pii/S1474034625001053](https://www.sciencedirect.com/science/article/pii/S1474034625001053) 
