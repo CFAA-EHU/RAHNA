@@ -2,6 +2,7 @@
 - main.py: Flujo RAG.
 - load_db.py: Llama a los métodos para procesar los PDFs y las imágenes de extract_text.py y extract_images.py para conseguir los chunks, crea los embeddings y los guarda en la base de datos vectorial. La extracción de texto de cada PDF se hace un poco diferente en base a la configuraciones definidas en config.py.
 - generate_answers.py: Carga las preguntas para la evaluación del CSV, consigue las respuestas del modelo y las guarda en un CSV.
+- langsmith_eval.py: Evaluación con LangSmith
 
 # Otros archivos:
 - chunks_*.txt: Los .txt que ha generado load_db.py para ver la estructura de los chunks creados.
