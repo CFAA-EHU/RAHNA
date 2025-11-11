@@ -37,10 +37,9 @@ pip install qwen-vl-utils
 
 ```
 📁 qwen2.5-vl-pdf-extractor
-├── main.py                      # Main script
-├── qwen_vl_utils.py             # Vision pre-processing utilities (from Qwen)
-├── pdf_images_qwen/             # Folder where extracted images are stored
-├── image_descriptions_qwen.json # JSON file containing generated captions
+├── image_descriptions_pdf_qwen.py    # Main script
+├── pdf_images_qwen/                  # Folder where extracted images are stored
+├── image_descriptions_qwen.json      # JSON file containing generated captions
 └── README.md
 ```
 
