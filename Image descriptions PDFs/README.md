@@ -19,7 +19,7 @@ It is designed for analyzing technical, scientific, or industrial documents cont
 
 ### Environment
 - Python **>= 3.9**
-- GPU with at least **12 GB VRAM** (recommended for `Qwen2.5-VL-3B`)
+- GPU with at least **12 GB VRAM** (recommended for `Qwen2.5-VL-3B-Instruct`)
 - For `Qwen2.5-VL-7B-Instruct`, **20 GB VRAM or more** is recommended.
 
 ### Dependencies
