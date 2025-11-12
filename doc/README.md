@@ -26,4 +26,6 @@ An advanced retrieval-augmented generation system for manufacturing quality cont
 
 AMGPT: A large language model for contextual querying in additive manufacturing, Additive Manufacturing Letters, December 2024: [https://www.sciencedirect.com/science/article/pii/S2772369024000409](https://www.sciencedirect.com/science/article/pii/S2772369024000409)
 
-Henri Scaffidi, Melinda Hodkiewicz, Caitlin Woods, and Nicole Roocke. GraphRAG on Technical Documents - Impact of Knowledge Graph Schema. In Transactions on Graph Data and Knowledge (TGDK), Volume 3, Issue 2, pp. 3:1-3:24, Schloss Dagstuhl – Leibniz-Zentrum für Informatik (2025) https://doi.org/10.4230/TGDK.3.2.3
+GraphRAG on Technical Documents - Impact of Knowledge Graph Schema. In Transactions on Graph Data and Knowledge (TGDK), Volume 3, Issue 2, pp. 3:1-3:24 (2025) [https://doi.org/10.4230/TGDK.3.2.3]
+
+Personalized safety training for construction workers: A large language model-driven multi-agent framework integrated with knowledge graph reasoning, Computers in Industry, January 2026: [https://www.sciencedirect.com/science/article/pii/S0166361525001642]
