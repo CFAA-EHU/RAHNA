@@ -12,9 +12,15 @@ from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
 import uuid
 import sys
+import yaml
 
+# Cargar variables de entorno y configuracion
 load_dotenv()
 
+with open("conf.yaml", "r") as f:
+    conf = yaml.safe_load(f)
+
+# Configurar modelos, embeddings, vectorstore y prompts
 embeddings = MistralAIEmbeddings()
 chat_model = ChatMistralAI(
     model = "mistral-medium",
@@ -26,23 +32,30 @@ rewrite_model = ChatMistralAI(
 )
 
 vectorstore = Chroma(
-    persist_directory = "./mistral-embeddings_db",
+    persist_directory = conf["paths"]["db"]["persist_directory"],
     embedding_function = embeddings
 )
 
 prompt = ChatPromptTemplate.from_messages(
     [
-        ("system", "Eres un asistente que ayuda a responder preguntas\n"
-         "Usa el siguiente contexto para responder a la pregunta del final.\n"
-         "Si no sabes la respuesta simplemente dí 'no sé', no intentes inventar una respuesta.\n\n"
-         "Haz tu respuesta corta y concisa. No superes las 100 palabras en la respuesta.\n"),
-        ("human", "Contexto: {context}\n"),
-        MessagesPlaceholder(variable_name="messages", n_messages=5)
+        ("system", conf["prompts"]["chat_prompt"]["system"]),
+        ("human", conf["prompts"]["chat_prompt"]["human"]),
+        MessagesPlaceholder(variable_name="messages", n_messages=conf["prompts"]["chat_prompt"]["n_messages"])
     ]
 )
 
 runnable = prompt | chat_model
 
+rewrite_prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", conf["prompts"]["rewrite_prompt"]["system"]),
+        MessagesPlaceholder(variable_name="messages")
+    ]
+)
+
+query_rewriter = rewrite_prompt | rewrite_model
+
+# Definir el esquema de estado y las funciones del flujo RAG (Langgraph)
 class State(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
     context: str
@@ -60,18 +73,6 @@ def retrieve(state: State):
     )
     return {"context": docs_content}
 
-rewrite_prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system",
-         "Reformula la última pregunta del usuario de forma clara y autónoma, pero responde únicamente con la pregunta reescrita.\n"
-         "No des explicaciones, no contestes la pregunta, no añadas contexto extra.\n"
-         "Si la pregunta original ya es una pregunta clara y autónoma, simplemente repítela en el mismo idioma en el que se formuló.\n"),
-        MessagesPlaceholder(variable_name="messages")
-    ]
-)
-
-query_rewriter = rewrite_prompt | rewrite_model
-
 def rewrite_query(state: State):
     rewritten = query_rewriter.invoke(state)
     print(rewritten.content)
@@ -84,7 +85,7 @@ graph_builder.add_edge(START, "rewrite_query")
 memory = MemorySaver()
 app = graph_builder.compile(checkpointer=memory)
 
-### METODO PARA HACER PREGUNTAS DE EVALUACION
+# Funcion para obtener respuestas del RAG
 def get_rag_response(question: str) -> tuple[str, str]:
     config = {"configurable": {"thread_id": str(uuid.uuid4())}}
     input_dict = {

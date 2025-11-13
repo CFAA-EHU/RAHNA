@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import scrolledtext, messagebox
-from main import get_rag_response  # Importa tu función
+from main import get_rag_response
 
 class RAGInterface:
     def __init__(self, root):

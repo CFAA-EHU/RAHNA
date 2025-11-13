@@ -4,13 +4,19 @@ from extract_images import procesar_descripciones_imagenes
 import config
 from langchain_chroma import Chroma
 from langchain_mistralai import MistralAIEmbeddings
+import yaml
 
-pdf_path = "Manual_1.pdf" # Ruta al PDF a procesar
-imgs_txt_path = "" # Ruta al .txt con descripciones de imágenes, si existe para este PDF (Solo para Manual 3)
-txt_path = "chunks_manual_1.txt" # Archivo de salida para escribir los chunks extraídos para revisarlos
+# Cargar configuracion
+with open("conf.yaml", "r") as f:
+    conf = yaml.safe_load(f)
+
+# Rutas de archivos a procesar
+pdf_path = conf["paths"]["load_db"]["pdf_path"]
+imgs_txt_path = conf["paths"]["load_db"]["imgs_txt_path"]
+txt_path = conf["paths"]["load_db"]["txt_path"]
 
 # Procesar el PDF y extraer chunks y metadatos
-split_texts, split_metas = procesar_pdf(pdf_path, config.config_manual_1, txt_path)
+split_texts, split_metas = procesar_pdf(pdf_path, config.config_manual_1)
 
 if (imgs_txt_path):
     img_texts, img_metas = procesar_descripciones_imagenes(imgs_txt_path, config.config_manual_1)
@@ -32,7 +38,7 @@ embeddings = MistralAIEmbeddings() # mistral-embed
 
 vectorstore = Chroma(
     embedding_function=embeddings,
-    persist_directory="./mistral-embeddings1000_db"
+    persist_directory=conf["paths"]["db"]["persist_directory"]
 )
 
 # Almacenar los textos y metadatos en la base vectorial en batches y con pausas para evitar sobrecarga

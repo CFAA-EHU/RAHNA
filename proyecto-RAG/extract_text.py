@@ -2,7 +2,7 @@ import pdfplumber
 import re
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-def procesar_pdf(pdf_path, config, txt_path):
+def procesar_pdf(pdf_path, config):
 
     paginas_dos_columnas = config.get("paginas_dos_columnas", [])
     paginas_a_excluir = config.get("paginas_a_excluir", set())

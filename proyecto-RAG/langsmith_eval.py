@@ -11,9 +11,15 @@ import numpy as np
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 import httpx
 import time
+import yaml
 
+# Cargar variables de entorno y configuracion
 load_dotenv()
 
+with open("conf.yaml", "r") as f:
+    conf = yaml.safe_load(f)
+
+# Definir el esquema de evaluacion RAG
 class Score(str, Enum):
     no_relevance = "0"
     low_relevance = "1"
@@ -80,7 +86,7 @@ def safe_invoke_model(evaluator, payload: dict):
         return evaluator.invoke(payload)
     except httpx.HTTPStatusError as e:
         if e.response.status_code == 429:
-            print("Capacidad del modelo Mistral excedida (429). Reintentando…")
+            print("Capacidad del modelo excedida (429). Reintentando…")
             raise
         raise
 
@@ -119,7 +125,7 @@ def rag_system(inputs: dict) -> dict:
     retrieved_context = ""
     error_msg = None
 
-    # 1) Ejecuta tu pipeline RAG con tolerancia a 429/errores
+    # Ejecuta el pipeline RAG (si recibe error reintenta)
     try:
         generated_answer, retrieved_context = safe_get_rag_response(query)
     except httpx.HTTPStatusError as e:
@@ -127,7 +133,7 @@ def rag_system(inputs: dict) -> dict:
     except Exception as e:
         error_msg = f"RAG error: {type(e).__name__}: {e}"
 
-    # 2) Evalúa (solo si tenemos algo de salida)
+    # Evalua con el juez LLM (si recibe error, pasa)
     try:
         if generated_answer or retrieved_context:
             eval_result = evaluate_with_llm_judge(
@@ -139,7 +145,7 @@ def rag_system(inputs: dict) -> dict:
         error_msg = f"Judge error: {type(e).__name__}: {e}"
         eval_result = None
 
-    # 4) Construye salida robusta
+    # Construye el output
     out = {
         "query": query,
         "generated_answer": generated_answer,
@@ -157,7 +163,7 @@ def rag_system(inputs: dict) -> dict:
             "exp_groundedness": eval_result.groundedness.explanation
         })
     else:
-        # valores por defecto para que no fallen los evaluadores
+        # Valores por defecto para que no fallen los evaluadores
         out.update({
             "context_relevance": None,
             "answer_relevance": None,
@@ -193,8 +199,9 @@ def rag_judge(inputs: dict, outputs: dict, reference_outputs: dict):
     
     return metrics
 
+# Configurar cliente LangSmith y ejecutar evaluacion
 ls_client = Client()
-dataset_name = "RAG Evaluation Dataset"
+dataset_name = conf["variables"]["langsmith"]["dataset_name"]
 datasets = ls_client.list_datasets(dataset_name=dataset_name)
 dataset = next(datasets, None)
 if not dataset:
@@ -204,5 +211,5 @@ results = ls_client.evaluate(
     rag_system,
     data=dataset,
     evaluators=[rag_judge],
-    experiment_prefix="RAG-Eval-Prueba"
+    experiment_prefix=conf["variables"]["langsmith"]["experiment_prefix"]
 )
