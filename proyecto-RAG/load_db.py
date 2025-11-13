@@ -5,15 +5,15 @@ import config
 from langchain_chroma import Chroma
 from langchain_mistralai import MistralAIEmbeddings
 
-pdf_path = "manual_2.pdf" # Ruta al PDF a procesar
+pdf_path = "Manual_1.pdf" # Ruta al PDF a procesar
 imgs_txt_path = "" # Ruta al .txt con descripciones de imágenes, si existe para este PDF (Solo para Manual 3)
-txt_path = "chunks_manual_2.txt" # Archivo de salida para escribir los chunks extraídos para revisarlos
+txt_path = "chunks_manual_1.txt" # Archivo de salida para escribir los chunks extraídos para revisarlos
 
 # Procesar el PDF y extraer chunks y metadatos
-split_texts, split_metas = procesar_pdf(pdf_path, config.config_manual_2, txt_path)
+split_texts, split_metas = procesar_pdf(pdf_path, config.config_manual_1, txt_path)
 
 if (imgs_txt_path):
-    img_texts, img_metas = procesar_descripciones_imagenes(imgs_txt_path, config.config_manual_2)
+    img_texts, img_metas = procesar_descripciones_imagenes(imgs_txt_path, config.config_manual_1)
 else:
     img_texts, img_metas = [], []
 
@@ -28,16 +28,17 @@ with open(txt_path, "w", encoding="utf-8") as f:
         f.write(text)
 
 # Crear la base vectorial o acceder a ella si ya existe
-embeddings = MistralAIEmbeddings()
+embeddings = MistralAIEmbeddings() # mistral-embed
 
 vectorstore = Chroma(
     embedding_function=embeddings,
-    persist_directory="./mistral-embeddings_db"
+    persist_directory="./mistral-embeddings1000_db"
 )
 
-# Almacenar los textos y metadatos en la base vectorial en batches y con pausas para evitar sobrecarga de la API de Mistral
+# Almacenar los textos y metadatos en la base vectorial en batches y con pausas para evitar sobrecarga
 BATCH_SIZE = 5
 PAUSE_SEC = 1
+MAX_RETRIES = 3
 
 def batcher(lst, n):
     for i in range(0, len(lst), n):
@@ -45,14 +46,18 @@ def batcher(lst, n):
 
 for text_batch, meta_batch in zip(batcher(combined_texts, BATCH_SIZE),
                                   batcher(combined_metas, BATCH_SIZE)):
-    try:
-        vectorstore.add_texts(texts=text_batch, metadatas=meta_batch)
-        print(f"Batch de {len(text_batch)} textos añadido correctamente.")
-    except Exception as e:
-        print(f"Error al añadir batch: {e}")
-    time.sleep(PAUSE_SEC)
+    for attempt in range(MAX_RETRIES):
+        try:
+            vectorstore.add_texts(texts=text_batch, metadatas=meta_batch)
+            print(f"Batch de {len(text_batch)} textos añadido correctamente.")
+            break
+        except Exception as e:
+            print(f"Error al añadir batch: {e}")
+        time.sleep(PAUSE_SEC)
+    else:
+        print(f"No se pudo añadir el batch después de {MAX_RETRIES} intentos. Continuando con el siguiente batch.")
 
-print(f"Base vectorial creada con {len(combined_texts)} chunks en ./mistral-embeddings_db")
+print(f"Base vectorial creada con {len(combined_texts)} chunks")
 
 # Imprimir algunos chunks para verificar que se están almacenando correctamente
 all_docs = vectorstore.get()['documents']

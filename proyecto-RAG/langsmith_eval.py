@@ -70,9 +70,9 @@ embeddings_model = MistralAIEmbeddings(model="mistral-embed")
 
 @retry(
     reraise=True,
-    stop=stop_after_attempt(5),
-    wait=wait_exponential(multiplier=2, min=5, max=40),
-    retry=retry_if_exception_type(httpx.HTTPStatusError),
+    stop=stop_after_attempt(6),
+    wait=wait_exponential(multiplier=2, min=5, max=60),
+    retry=retry_if_exception_type((httpx.HTTPStatusError, httpx.RemoteProtocolError, httpx.ReadTimeout)),
 )
 def safe_invoke_model(evaluator, payload: dict):
     """Invoca un Runnable con un ÚNICO input dict."""
@@ -181,7 +181,17 @@ def rag_judge(inputs: dict, outputs: dict, reference_outputs: dict):
         _metric("cosine_similarity", compute_cosine_similarity(gen_answer, ref_answer) if gen_answer and ref_answer else None)
     ]
     # Filtra None
-    return [m for m in metrics if m is not None]
+    metrics = [m for m in metrics if m is not None]
+
+    if not metrics:
+        return [
+            {"key": "context_relevance", "score": 0.0},
+            {"key": "answer_relevance", "score": 0.0},
+            {"key": "groundedness", "score": 0.0},
+            {"key": "cosine_similarity", "score": 0.0},
+        ]
+    
+    return metrics
 
 ls_client = Client()
 dataset_name = "RAG Evaluation Dataset"

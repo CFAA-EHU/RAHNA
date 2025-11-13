@@ -208,8 +208,8 @@ def procesar_pdf(pdf_path, config, txt_path):
 
     # Dividir los textos que sean demasiado largos (más de 2000 caracteres)
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size = 2000, # Aprox. un token = 4 caracteres (varía dependiendo del idioma) // Límite de tokens para mistral-embed = 8192 // Así aseguramos no pasarnos del límite
-        chunk_overlap = 200
+        chunk_size = 1000, # Aprox. un token = 4 caracteres (varía dependiendo del idioma) // Límite de tokens para mistral-embed = 8192 // Así aseguramos no pasarnos del límite
+        chunk_overlap = 100
     )
 
     split_texts = []
