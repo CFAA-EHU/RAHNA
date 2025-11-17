@@ -23,11 +23,11 @@ with open("conf.yaml", "r") as f:
 # Configurar modelos, embeddings, vectorstore y prompts
 embeddings = MistralAIEmbeddings()
 chat_model = ChatMistralAI(
-    model = "mistral-medium",
-    temperature = 0.3
+    model = "mistral-small-2503",
+    temperature = 0.5
 )
 rewrite_model = ChatMistralAI(
-    model = "mistral-medium",
+    model = "mistral-small-2503",
     temperature = 0.0
 )
 
@@ -39,8 +39,8 @@ vectorstore = Chroma(
 prompt = ChatPromptTemplate.from_messages(
     [
         ("system", conf["prompts"]["chat_prompt"]["system"]),
-        ("human", conf["prompts"]["chat_prompt"]["human"]),
-        MessagesPlaceholder(variable_name="messages", n_messages=conf["prompts"]["chat_prompt"]["n_messages"])
+        ("human", "Contexto: {context}\n"),
+        MessagesPlaceholder(variable_name="messages", n_messages=5)
     ]
 )
 
