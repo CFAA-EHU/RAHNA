@@ -1,7 +1,7 @@
 # Configuraciones específicas para procesar cada manual
 
 config_manual_1 = {
-    "pdf_path": "Manual_1.pdf", #Path al PDF
+    "pdf_path": "data/Manual_1.pdf", #Path al PDF
     "imgs_txt_path": "", #Path al .txt que contiene las descripciones de las imágenes de ese PDF (Si no tiene, dejar string vacío)
     "txt_path": "chunks_manual_1.txt", #Path en el que crear el .txt en el que se escriben los chunks para ver como se han generado y depurar
     "nombre": "Manual 1", #Nombre del PDF, para los metadatos de cada chunk
@@ -27,7 +27,7 @@ config_manual_1 = {
 }
 
 config_manual_2 = {
-    "pdf_path": "manual_2.pdf",
+    "pdf_path": "data/manual_2.pdf",
     "imgs_txt_path": "",
     "txt_path": "chunks_manual_2.txt",
     "nombre": "Manual 2",
@@ -53,8 +53,8 @@ config_manual_2 = {
 }
 
 config_manual_3 = {
-    "pdf_path": "manual_3.pdf",
-    "imgs_txt_path": "manual_3_imgs.txt",
+    "pdf_path": "data/manual_3.pdf",
+    "imgs_txt_path": "data/manual_3_imgs.txt",
     "txt_path": "chunks_manual_3.txt",
     "nombre": "Manual 3",
     "paginas_dos_columnas": [],
@@ -73,6 +73,92 @@ config_manual_3 = {
         {
             "condition": lambda p: True,
             "margins": {"Y_MIN": 15, "Y_MAX": 780, "X_MIN": 15, "X_MAX": 1200}
+        }
+    ]
+}
+
+config_manual_4 = {
+    "pdf_path": "data/new_docs/manual_4.pdf",
+    "imgs_txt_path": "data/new_docs/manual_4_imgs.txt",
+    "txt_path": "debug/chunks_manual_4.txt",
+    "nombre": "Manual 4",
+    "paginas_dos_columnas": [2],
+    "paginas_a_excluir": {1, 3, 4, 5, 6, 86, 142, 170, 212, 222, 244, 270, 472, 473, 474},
+    "paginas_sin_tablas": {2},
+    "titulo_threshold": 13,
+    "min_len_palabra": 3,
+    "margen_rules": [
+        {
+            "condition": lambda p: p == 2,
+            "margins": {"Y_MIN": 0, "X_MIN": 0, "X_MAX": 600}
+        },
+        {
+            "condition": lambda p: p % 2 == 0,
+            "margins": {"Y_MIN": 30, "Y_MAX": 790, "X_MIN": 100, "X_MAX": 535}
+        },
+        {
+            "condition": lambda p: True,
+            "margins": {"Y_MIN": 30, "Y_MAX": 790, "X_MIN": 65, "X_MAX": 490}
+        }
+    ]
+}
+
+config_manual_5 = {
+    "pdf_path": "data/new_docs/manual_5.pdf",
+    "imgs_txt_path": "data/new_docs/manual_5_images.txt",
+    "txt_path": "debug/chunks_manual_5.txt",
+    "nombre": "Manual 5",
+    "paginas_dos_columnas": [4, 5, 6, 51],
+    "paginas_a_excluir": {1, 2, 3, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 44, 45, 46, 47, 48, 49, 50, 52},
+    "paginas_sin_tablas": {},
+    "titulo_threshold": 14,
+    "min_len_palabra": 3,
+    "margen_rules": [
+        {
+            "condition": lambda p: p == 7,
+            "margins": {"Y_MIN": 350, "Y_MAX": 800}
+        },
+        {
+            "condition": lambda p: p in (8, 13),
+            "margins": {"Y_MIN": 280, "Y_MAX": 800}
+        },
+        {
+            "condition": lambda p: p == 10,
+            "margins": {"Y_MIN": 195, "Y_MAX": 800}
+        },
+        {
+            "condition": lambda p: p == 26,
+            "margins": {"Y_MIN": 50, "Y_MAX": 200}
+        },
+        {
+            "condition": lambda p: p == 29,
+            "margins": {"Y_MIN": 50, "Y_MAX": 160}
+        },
+        {
+            "condition": lambda p: True,
+            "margins": {"Y_MIN": 50, "Y_MAX": 800}
+        }
+    ]
+}
+
+config_manual_6 = {
+    "pdf_path": "data/new_docs/manual_6.pdf",
+    "imgs_txt_path": "data/new_docs/manual_6_images.txt",
+    "txt_path": "debug/chunks_manual_6.txt",
+    "nombre": "Manual 6",
+    "paginas_dos_columnas": [],
+    "paginas_a_excluir": set(range(1, 21)) | set(range(167, 171)),
+    "paginas_sin_tablas": {},
+    "titulo_threshold": 13,
+    "min_len_palabra": 3,
+    "margen_rules": [
+        {
+            "condition": lambda p: p % 2 == 0,
+            "margins": {"Y_MIN": 40, "X_MIN": 100, "X_MAX": 535}
+        },
+        {
+            "condition": lambda p: True,
+            "margins": {"Y_MIN": 40, "X_MIN": 65, "X_MAX": 490}
         }
     ]
 }

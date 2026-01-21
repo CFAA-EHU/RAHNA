@@ -8,12 +8,43 @@ def procesar_pdf(config):
     paginas_dos_columnas = config.get("paginas_dos_columnas", [])
     paginas_a_excluir = config.get("paginas_a_excluir", set())
     paginas_sin_tablas = config.get("paginas_sin_tablas", set())
+    CID_REGEX = re.compile(r'\(cid:\d+\)')
+
+    # Limpiar (cid:x) del texto
+    def limpiar_cids(texto: str) -> str:
+        return CID_REGEX.sub('', texto).strip()
+
+    def tabla_es_semantica(md):
+        # Quitar líneas de separadores markdown
+        lineas = [
+            l.strip()
+            for l in md.splitlines()
+            if l.strip() and not re.fullmatch(r'\|?\s*-+\s*\|?', l)
+        ]
+    
+        # Muy pocas líneas -> no es tabla útil
+        if len(lineas) < 3:
+            return False
+    
+        texto = " ".join(lineas)
+    
+        total = len(texto)
+        if total == 0:
+            return False
+    
+        espacios = texto.count(" ")
+        ratio_espacios = espacios / total
+    
+        # Demasiados espacios -> layout / gráfico
+        if ratio_espacios > 0.3:
+            return False
+        return True
 
     # Convertir una tabla a formato markdown
     def tabla_a_markdown(table):
         if not table:
             return ""
-        table = [[str(c) if c is not None else "" for c in row] for row in table]
+        table = [[limpiar_cids(str(c)) if c is not None else "" for c in row] for row in table]
         n_cols = max(len(row) for row in table)
         for row in table:
             while len(row) < n_cols:
@@ -24,7 +55,10 @@ def procesar_pdf(config):
         md.append("| " + " | ".join(["---"] * n_cols) + " |")
         for row in table[1:]:
             md.append("| " + " | ".join(row) + " |")
-        return "\n".join(md)
+        md = "\n".join(md)
+        if not tabla_es_semantica(md):
+            return ""
+        return md
 
     # Verificar si una palabra está dentro de alguna de las áreas de tablas (si lo están, no hay que meterlas con el texto normal)
     def dentro_de_tabla(word, table_areas):
@@ -57,39 +91,51 @@ def procesar_pdf(config):
 
         return lineas
 
+    # Calcula la densidad de letras y números sobre todos los caracteres de la línea para filtrar ruido
+    def densidad_texto_valido(texto):
+        if not texto:
+            return 0
+        validos = sum(c.isalnum() for c in texto)
+        return validos / len(texto)
+
     # Procesar una columna de texto de una página, dados sus límites en el eje x
     def procesar_columna(X_min, X_max):
-                elementos = []
+        elementos = []
 
-                if page_num in paginas_sin_tablas:
-                    palabras = [w for w in page.extract_words(extra_attrs=["size"])
-                            if X_min <= w['x0'] <= X_max and X_min <= w['x1'] <= X_max
-                            and Y_MIN <= w['top'] <= Y_MAX and Y_MIN <= w['bottom'] <= Y_MAX]
-                else:
-                    palabras = [w for w in page.extract_words(extra_attrs=["size"])
-                            if X_min <= w['x0'] <= X_max and X_min <= w['x1'] <= X_max
-                            and Y_MIN <= w['top'] <= Y_MAX and Y_MIN <= w['bottom'] <= Y_MAX and not dentro_de_tabla(w, table_areas)]
+        if page_num in paginas_sin_tablas:
+            palabras = [w for w in page.extract_words(extra_attrs=["size"])
+                if X_min <= w['x0'] <= X_max and X_min <= w['x1'] <= X_max
+                and Y_MIN <= w['top'] <= Y_MAX and Y_MIN <= w['bottom'] <= Y_MAX]
+        else:
+            palabras = [w for w in page.extract_words(extra_attrs=["size"])
+                if X_min <= w['x0'] <= X_max and X_min <= w['x1'] <= X_max
+                and Y_MIN <= w['top'] <= Y_MAX and Y_MIN <= w['bottom'] <= Y_MAX and not dentro_de_tabla(w, table_areas)]
 
-                lineas = agrupar_por_linea(palabras)
-                for l in lineas:
-                    y_avg = sum(w['top'] for w in l)/len(l)
-                    size_avg = sum(w['size'] for w in l)/len(l)
-                    text = " ".join(w['text'] for w in l)
-                    elementos.append({"type": "text", "y": y_avg, "text": text, "size": size_avg, "words": l})
+        lineas = agrupar_por_linea(palabras)
+        for l in lineas:
+            y_avg = sum(w['top'] for w in l)/len(l)
+            size_avg = sum(w['size'] for w in l)/len(l)
+            text = " ".join(w['text'] for w in l)
+            text = limpiar_cids(text)
+            if not text:
+                continue
+            if densidad_texto_valido(text) < 0.5:
+                continue
+            elementos.append({"type": "text", "y": y_avg, "text": text, "size": size_avg, "words": l})
 
-                # Agregar tablas que estén en esta columna
-                if page_num in paginas_sin_tablas:
-                    return elementos
-                else:
-                    for t_index, table in enumerate(tables or [], start=1):
-                        x0, top, x1, bottom = page.find_tables()[t_index-1].bbox
-                        if (
-                            ((x0 >= X_min and x1 <= X_max) or (X_min <= x0 <= X_max) or (X_min <= x1 <= X_max))
-                            and ((top >= Y_MIN and bottom <= Y_MAX) or (Y_MIN <= top <= Y_MAX) or (Y_MIN <= bottom <= Y_MAX))
-                        ):
-                            tabla_md = tabla_a_markdown(table)
-                            elementos.append({"type": "table", "y": top, "md": f"\n\n{tabla_md}\n"})
-                    return elementos
+        # Agregar tablas que estén en esta columna
+        if page_num in paginas_sin_tablas:
+            return elementos
+        else:
+            for t_index, table in enumerate(tables or [], start=1):
+                x0, top, x1, bottom = page.find_tables()[t_index-1].bbox
+                if (
+                    ((x0 >= X_min and x1 <= X_max) or (X_min <= x0 <= X_max) or (X_min <= x1 <= X_max))
+                    and ((top >= Y_MIN and bottom <= Y_MAX) or (Y_MIN <= top <= Y_MAX) or (Y_MIN <= bottom <= Y_MAX))
+                ):
+                    tabla_md = tabla_a_markdown(table)
+                    elementos.append({"type": "table", "y": top, "md": f"\n\n{tabla_md}\n"})
+            return elementos
 
     # Obtener los márgenes para una página específica según las reglas definidas en la configuración
     def get_margenes_para_pagina(page_num, rules):
@@ -209,8 +255,8 @@ def procesar_pdf(config):
 
     # Dividir los textos que sean demasiado largos (más de 2000 caracteres)
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size = 1000, # Aprox. un token = 4 caracteres (varía dependiendo del idioma) // Límite de tokens para mistral-embed = 8192 // Así aseguramos no pasarnos del límite
-        chunk_overlap = 100
+        chunk_size = 2000, # Aprox. un token = 4 caracteres (varía dependiendo del idioma) // Límite de tokens para mistral-embed = 8192 // Así aseguramos no pasarnos del límite
+        chunk_overlap = 200
     )
 
     split_texts = []
