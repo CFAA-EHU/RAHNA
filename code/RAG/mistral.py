@@ -67,7 +67,8 @@ def mistral_chat(messages, temp):
     inputs.to(model.device)
 
     gen_kwargs = {
-        "max_new_tokens": 512,
+        "max_new_tokens": 256,
+        "use_cache": False,
     }
 
     if temp==0.0:
@@ -79,7 +80,8 @@ def mistral_chat(messages, temp):
             "top_p": 0.9,
         })
 
-    outputs = model.generate(**inputs, **gen_kwargs)
+    with torch.inference_mode():
+        outputs = model.generate(**inputs, **gen_kwargs)
     answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return answer
 
@@ -139,7 +141,7 @@ def rewrite_query(state: State):
 
 def retrieve(state: State):
     t0 = time.perf_counter()
-    retrieved_docs = vectorstore.similarity_search(state["query"])
+    retrieved_docs = vectorstore.similarity_search(state["query"], k=3)
     retrieval_time = time.perf_counter() - t0
     docs_content = "\n\n".join(
         f"[Fuente: {doc.metadata.get('source', 'N/A')} | "

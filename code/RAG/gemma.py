@@ -61,7 +61,8 @@ def gemma_chat(messages, temp):
     input_len = inputs["input_ids"].shape[-1]
 
     gen_kwargs = {
-            "max_new_tokens": 512,
+            "max_new_tokens": 256,
+            "use_cache": False,
     }
 
     if temp==0.0:
@@ -136,7 +137,7 @@ def rewrite_query(state: State):
 
 def retrieve(state: State):
     t0 = time.perf_counter()
-    retrieved_docs = vectorstore.similarity_search(state["query"])
+    retrieved_docs = vectorstore.similarity_search(state["query"], k=3)
     retrieval_time = time.perf_counter() - t0
     docs_content = "\n\n".join(
         f"[Fuente: {doc.metadata.get('source', 'N/A')} | "

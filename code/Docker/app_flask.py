@@ -7,15 +7,29 @@ import uuid
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
+def leer_historial_session(session_id, max_entries=10):
+    archivo = "/data/valoraciones.csv"
+    historial = []
+
+    if os.path.exists(archivo):
+        with open(archivo, newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if row["session_id"] == session_id:
+                    historial.append({
+                        "pregunta": row["pregunta"],
+                        "respuesta": row["respuesta"],
+                        "valoracion": int(row["valoracion"]) if row["valoracion"] else None
+                    })
+
+    return historial[-max_entries:]
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     respuesta = None
 
     if "thread_id" not in session:
         session["thread_id"] = str(uuid.uuid4())
-
-    if "historial" not in session:
-        session["historial"] = []
 
     if request.method == "POST":
         session.pop("feedback", None)
@@ -36,28 +50,21 @@ def index():
             session["ultima_pregunta"] = pregunta
             session["ultima_respuesta"] = respuesta
 
-            # Añadir al historial
-            session["historial"].append({
-                "pregunta": pregunta,
-                "respuesta": respuesta,
-                "valoracion": None
-            })
-
-            session.modified = True  # importante
+    historial = leer_historial_session(session["thread_id"])
 
     respuesta_pendiente = False
-    if session.get("historial"):
-        if session["historial"][-1]["valoracion"] is None:
+    if historial:
+        if historial[-1]["valoracion"] is None:
             respuesta_pendiente = True
 
     return render_template(
         "index.html",
         respuesta=respuesta,
-        historial=session.get("historial", []),
+        historial=historial,
         respuesta_pendiente=respuesta_pendiente
     )
 
-def guardar_valoracion_csv(usuario, pregunta, respuesta, valor):
+def guardar_valoracion_csv(session_id, usuario, pregunta, respuesta, valor):
     archivo = "/data/valoraciones.csv"
 
     # Si no existe, crear encabezado
@@ -66,8 +73,8 @@ def guardar_valoracion_csv(usuario, pregunta, respuesta, valor):
     with open(archivo, mode="a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         if archivo_nuevo:
-            writer.writerow(["usuario", "pregunta", "respuesta", "valoracion"])
-        writer.writerow([usuario, pregunta, respuesta, valor])
+            writer.writerow(["session_id", "usuario", "pregunta", "respuesta", "valoracion"])
+        writer.writerow([session_id, usuario, pregunta, respuesta, valor])
 
 @app.route("/valorar/<int:valor>")
 def valorar(valor):
@@ -76,17 +83,19 @@ def valorar(valor):
 
     usuario = session.get("usuario", "")
 
-    if "historial" in session and session["historial"]:
-        # Actualizar la última entrada
-        session["historial"][-1]["valoracion"] = valor
-        session.modified = True
+    if "ultima_pregunta" not in session or "ultima_respuesta" not in session:
+        return redirect(url_for("index"))
 
-        pregunta = session["historial"][-1]["pregunta"]
-        respuesta = session["historial"][-1]["respuesta"]
+    usuario = session.get("usuario", "")
+    pregunta = session["ultima_pregunta"]
+    respuesta = session["ultima_respuesta"]
 
-        guardar_valoracion_csv(usuario, pregunta, respuesta, valor)
+    guardar_valoracion_csv(session["thread_id"], usuario, pregunta, respuesta, valor)
 
-        session["feedback"] = f"<strong>Pregunta:</strong> {pregunta}.\n <strong>Respuesta:</strong> {respuesta}.\n Has valorado esta respuesta con: <strong>{valor}/5</strong>"
+    session["feedback"] = f"<strong>Pregunta:</strong> {pregunta}\n <strong>Respuesta:</strong> {respuesta}\n Has valorado esta respuesta con: <strong>{valor}/5</strong>"
+
+    session.pop("ultima_pregunta", None)
+    session.pop("ultima_respuesta", None)
 
     return redirect(url_for("index"))
 

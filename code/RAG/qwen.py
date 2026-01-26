@@ -77,7 +77,8 @@ def qwen_chat(messages, temp):
     model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
 
     gen_kwargs = {
-            "max_new_tokens": 512,
+            "max_new_tokens": 256,
+            "use_cache": False,
     }
 
     if temp==0.0:
@@ -89,7 +90,9 @@ def qwen_chat(messages, temp):
             "top_p": 0.9,
         })
 
-    generated_ids = model.generate(**model_inputs, **gen_kwargs)
+    with torch.inference_mode():
+        generated_ids = model.generate(**model_inputs, **gen_kwargs)
+
     generated_ids = [
             output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
     ]
@@ -153,7 +156,7 @@ def rewrite_query(state: State):
 
 def retrieve(state: State):
     t0 = time.perf_counter()
-    retrieved_docs = vectorstore.similarity_search(state["query"])
+    retrieved_docs = vectorstore.similarity_search(state["query"], k=3)
     retrieval_time = time.perf_counter() - t0
     docs_content = "\n\n".join(
         f"[Fuente: {doc.metadata.get('source', 'N/A')} | "
