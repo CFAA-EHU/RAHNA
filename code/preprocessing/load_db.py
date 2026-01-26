@@ -5,7 +5,7 @@ import pdf_pages_config as config
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 
-curr_config = config.config_manual_6
+curr_config = config.config_manual_9
 
 # Procesar el PDF y extraer chunks y metadatos
 split_texts, split_metas = procesar_pdf(curr_config)

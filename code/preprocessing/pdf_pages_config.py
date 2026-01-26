@@ -162,3 +162,69 @@ config_manual_6 = {
         }
     ]
 }
+
+config_manual_7 = {
+    "pdf_path": "data/new_docs/manual_7.pdf",
+    "imgs_txt_path": "data/new_docs/manual_7_images.txt",
+    "txt_path": "debug/chunks_manual_7.txt",
+    "nombre": "Manual 7",
+    "paginas_dos_columnas": [],
+    "paginas_a_excluir": set(range(1, 25)) | set(range(504, 507)),
+    "paginas_sin_tablas": {},
+    "titulo_threshold": 13,
+    "min_len_palabra": 3,
+    "margen_rules": [
+        {
+            "condition": lambda p: p % 2 == 0,
+            "margins": {"Y_MIN": 40, "X_MIN": 100, "X_MAX": 535}
+        },
+        {
+            "condition": lambda p: True,
+            "margins": {"Y_MIN": 40, "X_MIN": 65, "X_MAX": 490}
+        }
+    ]
+}
+
+config_manual_8 = {
+    "pdf_path": "data/new_docs/manual_8.pdf",
+    "imgs_txt_path": "data/new_docs/manual_8_images.txt",
+    "txt_path": "debug/chunks_manual_8.txt",
+    "nombre": "Manual 8",
+    "paginas_dos_columnas": [],
+    "paginas_a_excluir": set(range(1, 31)) | set(range(763, 767)),
+    "paginas_sin_tablas": {},
+    "titulo_threshold": 13,
+    "min_len_palabra": 3,
+    "margen_rules": [
+        {
+            "condition": lambda p: p % 2 == 0,
+            "margins": {"Y_MIN": 40, "X_MIN": 100, "X_MAX": 535}
+        },
+        {
+            "condition": lambda p: True,
+            "margins": {"Y_MIN": 40, "X_MIN": 65, "X_MAX": 490}
+        }
+    ]
+}
+
+config_manual_9 = {
+    "pdf_path": "data/new_docs/manual_9.pdf",
+    "imgs_txt_path": "data/new_docs/manual_9_imgs.txt",
+    "txt_path": "debug/chunks_manual_9.txt",
+    "nombre": "Manual 9",
+    "paginas_dos_columnas": [],
+    "paginas_a_excluir": set(range(1, 27)) | set(range(319, 323)),
+    "paginas_sin_tablas": {},
+    "titulo_threshold": 13,
+    "min_len_palabra": 3,
+    "margen_rules": [
+        {
+            "condition": lambda p: p % 2 == 0,
+            "margins": {"Y_MIN": 40, "X_MIN": 100, "X_MAX": 535}
+        },
+        {
+            "condition": lambda p: True,
+            "margins": {"Y_MIN": 40, "X_MIN": 65, "X_MAX": 490}
+        }
+    ]
+}
