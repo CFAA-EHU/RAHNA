@@ -62,7 +62,6 @@ def gemma_chat(messages, temp):
 
     gen_kwargs = {
             "max_new_tokens": 256,
-            "use_cache": False,
     }
 
     if temp==0.0:
@@ -113,7 +112,7 @@ def build_query_rewriter_prompt(messages: list[BaseMessage]) -> list[dict]:
 
 # --- Estado de LangGraph ---
 # Función para limitar la cantidad de mensajes que guardamos en la lista del estado. Para que la memoria no crezca sin control.
-MAX_HISTORY = 10
+MAX_HISTORY = 4
 def add_messages_limited(existing_messages, new_messages):
     combined = add_messages(existing_messages, new_messages)
     if len(combined) <= MAX_HISTORY:
