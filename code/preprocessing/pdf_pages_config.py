@@ -3,7 +3,7 @@
 config_manual_1 = {
     "pdf_path": "data/Manual_1.pdf", #Path al PDF
     "imgs_txt_path": "", #Path al .txt que contiene las descripciones de las imágenes de ese PDF (Si no tiene, dejar string vacío)
-    "txt_path": "chunks_manual_1.txt", #Path en el que crear el .txt en el que se escriben los chunks para ver como se han generado y depurar
+    "txt_path": "debug/chunks_manual_1.txt", #Path en el que crear el .txt en el que se escriben los chunks para ver como se han generado y depurar
     "nombre": "Manual 1", #Nombre del PDF, para los metadatos de cada chunk
     "paginas_dos_columnas": [2, 12, 13, 14], #Páginas que están escritas a dos columnas
     "paginas_a_excluir": {1} | set(range(3, 11)), #Páginas que no queremos procesar
@@ -29,7 +29,7 @@ config_manual_1 = {
 config_manual_2 = {
     "pdf_path": "data/manual_2.pdf",
     "imgs_txt_path": "",
-    "txt_path": "chunks_manual_2.txt",
+    "txt_path": "debug/chunks_manual_2.txt",
     "nombre": "Manual 2",
     "paginas_dos_columnas": [2],
     "paginas_a_excluir": {1, 3, 4},
@@ -55,7 +55,7 @@ config_manual_2 = {
 config_manual_3 = {
     "pdf_path": "data/manual_3.pdf",
     "imgs_txt_path": "data/manual_3_imgs.txt",
-    "txt_path": "chunks_manual_3.txt",
+    "txt_path": "debug/chunks_manual_3.txt",
     "nombre": "Manual 3",
     "paginas_dos_columnas": [],
     "paginas_a_excluir": {1, 6, 7, 8} | {81} | set(range(89, 103)) | set(range(104, 110)) | {115} | set(range(118, 170)) | set(range(179, 188)),

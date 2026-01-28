@@ -22,10 +22,6 @@ def procesar_pdf(config):
             if l.strip() and not re.fullmatch(r'\|?\s*-+\s*\|?', l)
         ]
     
-        # Muy pocas líneas -> no es tabla útil
-        if len(lineas) < 3:
-            return False
-    
         texto = " ".join(lineas)
     
         total = len(texto)
