@@ -67,7 +67,7 @@ def mistral_chat(messages, temp):
     inputs.to(model.device)
 
     gen_kwargs = {
-        "max_new_tokens": 256,
+        "max_new_tokens": 512,
     }
 
     if temp==0.0:

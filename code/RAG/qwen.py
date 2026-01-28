@@ -77,7 +77,7 @@ def qwen_chat(messages, temp):
     model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
 
     gen_kwargs = {
-            "max_new_tokens": 256,
+            "max_new_tokens": 512,
     }
 
     if temp==0.0:
