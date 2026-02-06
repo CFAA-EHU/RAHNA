@@ -22,6 +22,16 @@ evaluator_llm = LangchainLLMWrapper(VertexAI(model_name="gemini-2.5-pro"))
 
 evaluator_embeddings = LangchainEmbeddingsWrapper(VertexAIEmbeddings(model_name="gemini-embedding-001"))
 
+# Define experiment characteristics
+experiment_char = {
+        "experiment_id": "1",
+        "llm": "Qwen2.5-7B-Instruct",
+        "quantization": "8-bit",
+        "temperature": "0.3",
+        "chunk_size_and_overlap": "2000, 200",
+        "k_retrieved_contexts": "3",
+}
+
 # Define evaluation metrics
 context_relevance = ContextRelevance(llm=evaluator_llm)
 faithfulness = Faithfulness(llm=evaluator_llm)
@@ -35,6 +45,10 @@ user_inputs = df['pregunta'].tolist()
 retrieved_contexts = df['contexto_usado'].tolist()
 responses = df['respuesta_modelo'].tolist()
 references = df['respuesta_correcta'].tolist()
+question_types = df['tipo_pregunta'].tolist()
+retrieval_time = df['retrieval_time'].tolist()
+response_time = df['response_time'].tolist()
+question_ids = list(range(len(df)))
 
 # Create samples for RAGAS to evaluate for each entry in the CSV
 n = len(user_inputs)
@@ -74,4 +88,35 @@ result = evaluate(
 
 # Save the results
 result_df = result.to_pandas()
+result_df["question_id"] = question_ids
+result_df["question_type"] = question_types
+result_df["retrieval_time"] = retrieval_time
+result_df["response_time"] = response_time
+for key, value in experiment_char.items():
+    result_df[key] = value
+
+ordered_columns = [
+    "experiment_id",
+    "llm",
+    "quantization",
+    "temperature",
+    "chunk_size_and_overlap",
+    "k_retrieved_contexts",
+    "question_id",
+    "question_type",
+]
+
+ragas_metric_columns = [
+    col for col in result_df.columns
+    if col not in ordered_columns
+]
+
+time_columns = [
+    "retrieval_time",
+    "response_time",
+]
+
+final_columns = ordered_columns + ragas_metric_columns + time_columns
+result_df = result_df[final_columns]
+
 result_df.to_csv("output_prueba_ragas.csv", index=False)
