@@ -48,6 +48,8 @@ references = df['respuesta_correcta'].tolist()
 question_types = df['tipo_pregunta'].tolist()
 retrieval_time = df['retrieval_time'].tolist()
 response_time = df['response_time'].tolist()
+generation_prompt_tokens = df['generation_prompt_tokens'].tolist()
+total_tokens_budgeted = df['total_tokens_budgeted'].tolist()
 question_ids = list(range(len(df)))
 
 # Create samples for RAGAS to evaluate for each entry in the CSV
@@ -92,6 +94,8 @@ result_df["question_id"] = question_ids
 result_df["question_type"] = question_types
 result_df["retrieval_time"] = retrieval_time
 result_df["response_time"] = response_time
+result_df["generation_prompt_tokens"] = generation_prompt_tokens
+result_df["total_tokens_budgeted"] = total_tokens_budgeted
 for key, value in experiment_char.items():
     result_df[key] = value
 
@@ -106,17 +110,19 @@ ordered_columns = [
     "question_type",
 ]
 
-ragas_metric_columns = [
-    col for col in result_df.columns
-    if col not in ordered_columns
-]
-
-time_columns = [
+time_tokens_columns = [
     "retrieval_time",
     "response_time",
+    "generation_prompt_tokens",
+    "total_tokens_budgeted",
 ]
 
-final_columns = ordered_columns + ragas_metric_columns + time_columns
+ragas_metric_columns = [
+    col for col in result_df.columns
+    if col not in ordered_columns + time_tokens_columns
+]
+
+final_columns = ordered_columns + ragas_metric_columns + time_tokens_columns
 result_df = result_df[final_columns]
 
 result_df.to_csv("output_prueba_ragas.csv", index=False)

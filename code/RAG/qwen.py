@@ -58,6 +58,7 @@ model.generation_config.temperature = None
 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 
+MAX_NEW_TOKENS = 512
 def qwen_chat(messages, temp):
     """
     messages: [{'role': 'system/user/assistant', 'content': str}]
@@ -75,9 +76,10 @@ def qwen_chat(messages, temp):
             add_generation_prompt=True
     )
     model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
+    prompt_tokens = model_inputs.input_ids.shape[1]
 
     gen_kwargs = {
-            "max_new_tokens": 512,
+            "max_new_tokens": MAX_NEW_TOKENS,
     }
 
     if temp==0.0:
@@ -97,7 +99,7 @@ def qwen_chat(messages, temp):
     ]
 
     response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
-    return response
+    return response, prompt_tokens
 
 # --- Vectorstore ---
 vectorstore = Chroma(
@@ -146,11 +148,12 @@ class State(TypedDict):
     context: str
     query: str
     retrieval_time: float
+    generation_prompt_tokens: int
 
 # --- Nodos del grafo ---
 def rewrite_query(state: State):
     prompt_msgs = build_query_rewriter_prompt(state["messages"])
-    rewritten = qwen_chat(prompt_msgs, 0.0)
+    rewritten, _ = qwen_chat(prompt_msgs, 0.0)
     return {"query": rewritten}
 
 def retrieve(state: State):
@@ -179,8 +182,8 @@ def generate(state: State):
         elif isinstance(msg, AIMessage):
             formatted_msgs.append({"role": "assistant", "content": msg.content})
 
-    output_text = qwen_chat(formatted_msgs, 0.3)
-    return {"messages": [AIMessage(output_text)]}
+    output_text, prompt_tokens = qwen_chat(formatted_msgs, 0.3)
+    return {"messages": [AIMessage(output_text)], "generation_prompt_tokens": prompt_tokens}
 
 # --- Construcción del grafo ---
 workflow = StateGraph(state_schema=State)
@@ -191,7 +194,7 @@ memory = MemorySaver()
 app = graph.compile(checkpointer=memory)
 
 # --- Función para usar el RAG desde Python ---
-def get_rag_response(question: str, thread_id: str) -> tuple[str, str, float, float]:
+def get_rag_response(question: str, thread_id: str) -> tuple[str, str, float, float, int, int]:
     input_dict = {
         "messages": [HumanMessage(question)],
         "context": ""
@@ -202,11 +205,17 @@ def get_rag_response(question: str, thread_id: str) -> tuple[str, str, float, fl
     output = app.invoke(input_dict, config)
     response_time = time.perf_counter() - t0
 
+    generation_prompt_tokens = output["generation_prompt_tokens"]
+
+    total_tokens_budgeted = (
+        generation_prompt_tokens + MAX_NEW_TOKENS
+    )
+
     answer = output["messages"][-1].content
     retrieved_context = output["context"]
     retrieval_time = output["retrieval_time"]
 
-    return answer, retrieved_context, retrieval_time, response_time
+    return answer, retrieved_context, retrieval_time, response_time, generation_prompt_tokens, total_tokens_budgeted
 
 # --- CLI interactivo ---
 if __name__ == "__main__":
