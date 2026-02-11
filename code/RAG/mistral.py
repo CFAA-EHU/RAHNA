@@ -47,6 +47,7 @@ model.generation_config.temperature = None
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
 
+MAX_NEW_TOKENS = 512
 def mistral_chat(messages, temp):
     """
     messages: [{'role': 'system/user/assistant', 'content': str}]
@@ -65,9 +66,10 @@ def mistral_chat(messages, temp):
             return_tensors="pt",
     )
     inputs.to(model.device)
+    prompt_tokens = inputs.input_ids.shape[-1]
 
     gen_kwargs = {
-        "max_new_tokens": 512,
+        "max_new_tokens": MAX_NEW_TOKENS,
     }
 
     if temp==0.0:
@@ -82,7 +84,7 @@ def mistral_chat(messages, temp):
     with torch.inference_mode():
         outputs = model.generate(**inputs, **gen_kwargs)
     answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
-    return answer
+    return answer, prompt_tokens
 
 # --- Vectorstore ---
 vectorstore = Chroma(
@@ -131,6 +133,7 @@ class State(TypedDict):
     context: str
     query: str
     retrieval_time: float
+    generation_prompt_tokens: int
 
 # --- Nodos del grafo ---
 def rewrite_query(state: State):
@@ -164,8 +167,8 @@ def generate(state: State):
         elif isinstance(msg, AIMessage):
             formatted_msgs.append({"role": "assistant", "content": msg.content})
 
-    output_text = mistral_chat(formatted_msgs, 0.3)
-    return {"messages": [AIMessage(output_text)]}
+    output_text, prompt_tokens = mistral_chat(formatted_msgs, 0.3)
+    return {"messages": [AIMessage(output_text)], "generation_prompt_tokens": prompt_tokens}
 
 # --- Construcción del grafo ---
 workflow = StateGraph(state_schema=State)
@@ -176,7 +179,7 @@ memory = MemorySaver()
 app = graph.compile(checkpointer=memory)
 
 # --- Función para usar el RAG desde Python ---
-def get_rag_response(question: str, thread_id: str) -> tuple[str, str]:
+def get_rag_response(question: str, thread_id: str) -> tuple[str, str, float, float, int, int]:
     config = {"configurable": {"thread_id": thread_id}}
 
     input_dict = {
@@ -188,11 +191,17 @@ def get_rag_response(question: str, thread_id: str) -> tuple[str, str]:
     output = app.invoke(input_dict, config)
     response_time = time.perf_counter() - t0
 
+    generation_prompt_tokens = output["generation_prompt_tokens"]
+
+    total_tokens_budgeted = (
+        generation_prompt_tokens + MAX_NEW_TOKENS
+    )
+
     generated_answer = output["messages"][-1].content
     retrieved_context = output["context"]
     retrieval_time = output["retrieval_time"]
 
-    return generated_answer, retrieved_context, retrieval_time, response_time
+    return generated_answer, retrieved_context, retrieval_time, response_time, generation_prompt_tokens, total_tokens_budgeted
 
 # --- CLI interactivo ---
 if __name__ == "__main__":
