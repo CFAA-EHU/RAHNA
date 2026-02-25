@@ -26,4 +26,4 @@ COPY ./rag/ .
  
 EXPOSE 8080
 
-CMD ["python3", "app_flask.py"]
+CMD ["gunicorn", "-w", "1", "--worker-class", "sync", "-b", "0.0.0.0:8080", "--timeout", "0", "--graceful-timeout", "0", "app_flask:app"]
