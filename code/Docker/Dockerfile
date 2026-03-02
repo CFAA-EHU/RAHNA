@@ -10,13 +10,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 && rm -rf /var/lib/apt/lists/*
  
 COPY requirements.txt .
- 
-# Instala primero PyTorch con CUDA 12.1 (muy importante)
 
 RUN pip3 install --no-cache-dir --upgrade pip \
-&& pip3 install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
- 
-# Luego el resto
+&& pip3 install --no-cache-dir torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cu118
 
 RUN pip3 install --no-cache-dir -r requirements.txt
  
