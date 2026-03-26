@@ -1,0 +1,39 @@
+#WARNING["Introducir la posición del primera diente de la brocha en el eje Z"]
+P295 = 1801.225; Z Primer diente
+
+#WARNING["Introducir la posición del ultimo diente de la brocha en el eje Z"]
+P296=2211.337; Z Ultimo diente
+
+P297 = 42; Numero dientes 
+
+;NO TOCAR ESTA PARTE (EXCLUSIVO DE LA HERRAMEINTA)
+
+P294=0.053 ; RPT brocha
+P293=0
+P298= [P296-P295]/[P297-1]  ; Paso por diente
+P299=1; Contador
+
+#WARNING["COMPROBAR QUE NO HAY COLISIÓN ENTRE DISCO Y BROCHA"]
+M0
+#WARNING[""]
+
+;G01 C0 F500
+M0
+G01 G90 G94 ZP295 F5000; ZIINICIAL
+M0
+G01 G90 G94 ZP296 F5000; ZFinal no foto
+M0
+G01 G90 G94 ZP295 F5000; ZIINICIAL
+#MSG[" DIENTE ACTUAL 0%D",P299]
+M0
+
+#RPT[N10,N20,P297-2]
+N10 
+G01 G91 G94 ZP298 F1000
+P299=P299+1;
+#MSG[" DIENTE ACTUAL 0%D",P299]
+M0
+N20
+P293=0
+G90
+M30

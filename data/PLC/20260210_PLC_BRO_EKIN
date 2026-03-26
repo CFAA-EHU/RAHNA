@@ -1,0 +1,3937 @@
+;==============================================================================
+;        Client:. . . . . . . . EKIN_CFAA
+;==============================================================================
+;        Author:. . . . . . . . Ekin
+;==============================================================================
+;          Date:. . . . . . . . Iraila 2020
+;==============================================================================
+;      CNC type:. . . . . . . . 8065-M
+;==============================================================================
+;       Comment:. . . . . . . .
+;==============================================================================
+;
+;==============================================================================
+;                         PLC MNEMONICS
+;==============================================================================
+;                         INPUTS
+;==============================================================================
+;
+;Inputs asigned
+;
+DEF I_COOL_CABINET_FAULT I1     ; Cabinet climate controler failure
+DEF I_POWER_ON           I2     ; Power on
+DEF I_DOOR_F_CLOSED      I3     ; Front door closed
+DEF I_DOOR_L_CLOSED      I3     ; Left door closed
+DEF I_DOOR_R_CLOSED      I5     ; Right door closed
+DEF I_SAFETY_RELAY       I6     ; Discrepancy safety relay
+DEF I_PILZ_OK            I7     ; Condiciones de rearme OK
+DEF I_PS_EXT_IO_HEADER   I9     ; Power supply external I/O header
+DEF I_PS_EXT_IO_OUT      I10    ; Power supply external I/O outputs
+DEF I_PS_IN_ET200SP      I11    ; Inputs power supply ET200SP
+DEF I_PS_SAFETY          I12    ; Safety power supply
+DEF I_PS_CNC             I13    ; CNC power supply
+DEF I_PS_PPC             I14    ; Operator panel power supply
+DEF I_PS_OUT_ET200SP     I15    ; Output power supply ET200SP
+DEF I_PAPER_FILTER_THS   I18    ; Paper filter thermal switch
+DEF I_COOL_MAIN_THS      I19    ; Coolant motor main circuit breaker
+DEF I_COOL_TRANSF_THS    I20    ; Coolant transfer motor circuit breaker
+DEF I_CHIP_CONVEYOR_THS  I21    ; Chip conveyor thermal switch
+DEF I_HYD_THS            I22    ; Hydraulic thermal switch
+DEF I_COOL_CABINET_THS   I24    ; Electric cabinet air conditioner thermal switch
+DEF I_PAPER_FILTER_ON    I25    ; Paper filter motor running
+DEF I_COOL_MAIN_ON       I26    ; Frame cleaning motor on
+DEF I_COOL_TRANSFER_ON   I27    ; Coolant transfer motor on
+DEF I_CHIP_CONVEYOR_ON   I28    ; Chip conveyor motor on
+DEF I_HYD_PUMP_ON        I29    ; Hydraulic group motor running
+DEF I_BRAKE_Z_ENA        I30    ; Z axes brake enable
+DEF I_SETUP_MODE         I31    ; Machine selector in SETUP mode
+DEF I_DOOR_OPEN_ENABLE   I32    ; Opening doors enabled
+DEF I_PAPER_FILTER_FAULT I33    ; Paper is missing
+DEF I_PAPER_FILTER_LEVEL I34    ; Paper filter level
+DEF I_COOL_TANK_MIN      I35    ; Coolant tank level minimum
+DEF I_START_OP           I36    ; Start key from operator panel
+DEF I_COOL_FLOW          I37    ; Coolant flow
+DEF I_DOOR_OPEN_PB       I38    ; Door opening push-button
+DEF I_TABLE_LOCKED       I39    ; Table axis locked detector
+DEF I_TABLE_UNLOCKED     I40    ; Table axis unlocked detector
+DEF I_DOOR_F_KEY_OUT     I41    ; Front doors key not present
+DEF I_DOOR_L_KEY_IN      I43    ; Left door key present
+DEF I_DOOR_R_KEY_IN      I44    ; Right door key in
+DEF I_DOOR_SC_KEY_IN     I45    ; Interior scuttle key in
+DEF I_RPS_LINE_CONTACT   I47    ; RPS Line contact
+DEF I_RPS_SYSTEM_OK      I48    ; Drives power supply OK
+DEF I_LUC400_FAULT       B0R809 ; LUC 400 Lubrication failure
+DEF I_AIR_PRESSURE       B0R810 ; General air pressure switch
+DEF I_AIR_LINEAR_PRESS   B1R810 ; Linear encoder air pressure switch
+DEF I_TABLE_LOCK_PRESS   B4R810 ; Table axis locked pressure
+DEF I_MAYR_BRAKE_L1      B5R810 ; Mayr brake left guide detector 1
+DEF I_CHAIN_R            B6R810 ; Counterbalance chain right detector
+DEF I_MAYR_BRAKE_COMP_L1 B7R810 ; Mayr brake left compensation side detector 1
+DEF I_MAYR_BRAKE_COMP_L2 B0R812 ; Mayr brake left compensation side detector 2
+DEF I_MAYR_BRAKE_R1      B1R812 ; Mayr brake right guide detector 1
+DEF I_CHAIN_L            B2R812 ; Counterbalance chain left detector
+DEF I_MAYR_BRAKE_COMP_R1 B3R812 ; Mayr brake right compensation side detector 1
+DEF I_MAYR_BRAKE_COMP_R2 B4R812 ; Mayr brake right compensation side detector 2
+DEF I_HYD_FILTER         B5R812 ; Hydraulic group filter dirty
+DEF I_HYD_LEVEL          B6R812 ; Hydraulic tank level minimum
+DEF I_MAYR_BRAKE_PRESS   B7R812 ; Toolholder mayr brake unlock pressure
+;
+DEF I_TOOL_CLEANER_OUT   B0R814 ; Tool cleaning detector forward
+DEF I_TOOL_CLEANER_IN    B1R814 ; Tool cleaning detector back
+;
+DEF BD1_LUB_REQUEST      B0KEYBD1 ; Lubrication request
+;
+;Inputs without asignation
+;
+DEF BD1_M01STOP          I537   ; M01STOP button
+DEF BD1_BLKSKIP1         I538   ; Conditional block button
+DEF BD1_LIGHTING         I572   ; Button for machine lighting
+DEF BD1_CHIP_CONVEYOR    I575   ; Button to activate chip conveyor
+DEF BD1_COOL_BROACH      I582   ; Button for broach coolant
+;
+;==============================================================================
+;                         OUTPUTS
+;==============================================================================
+;
+;Outputs asigned
+;
+DEF O_DOOR_F_UNLOCK      O1     ; Front door unlock
+DEF O_DOOR_L_UNLOCK      O3     ; Left door unlock
+DEF O_DOOR_R_UNLOCK      O4     ; Right door unlock
+DEF O_DOOR_S_UNLOCK      O5     ; Interior scuttle unlock
+DEF O_CNC_ERROR          O6     ; Emergency beacon
+DEF O_CNC_INCYCLE        O7     ; Green beacon output
+DEF O_CNC_CYCLE_END      O8     ; WARNING_LIGHT end of cycle, orange
+DEF O_LED_POWER_ON       O9     ; Machine with power on Led azul
+DEF O_LED_DOOR_OPEN      O12    ; Door opening conditions led
+DEF O_LED_DOOR_ENABLE    O13    ; Enable operate with open doors
+DEF O_EMERGEN            O11    ; Emergency from the CNC
+DEF O_PS_DRIVE_RESET     O16    ; Drive power supply reset
+;
+DEF O_PAPER_FILTER       O17    ; Paper filter motor on
+DEF O_COOL_MAIN          O18    ; Coolant motor main
+DEF O_COOL_TRANSFER      O19    ; Coolant transfer motor start
+DEF O_CHIP_CONVEYOR      O20    ; Chip conveyor
+DEF O_HYD_PUMP           O21    ; Hydraulic motor pump
+DEF O_PILZ_BRAKE         O24    ; Pilz brake signal
+;
+DEF O_LUB_GUIDES         B0R905 ; Activate way lubrication guides
+DEF O_AIR_GENERAL        B1R905 ; Activation of general air flow
+DEF O_TABLE_UNLOCK       B2R905 ; Unlock table axis
+DEF O_TABLE_LOCK         B3R905 ; Lock table axis
+DEF O_MAYR_BRAKE         B0R906 ; Toolholder MAYR brake unlock
+DEF O_TOOL_CLEANER_FORW  B1R906 ; Advance tool cleaning device
+DEF O_TOOL_CLEANER_BACK  B2R906 ; Retracting tool cleaning device
+DEF O_FRAME_CLEAN        B3R906 ; Activate frame cleaning
+;
+DEF LD1_LUB_REQUEST      B0KEYLED1; Lubrication request
+;
+;Outputs without asignation
+;
+DEF O_LIGHT              O537   ; Machine lighting
+DEF LD1_LIGHTING         O538   ; LED for machine lighting
+;
+;==============================================================================
+;                         MARKS
+;==============================================================================
+;
+; Remaining marks
+PDEF M_BROACHING_CYCLE   M1     ; Broaching cycle
+DEF M_BROACHING_EMERG    M2     ; Emergency during broaching cycle
+;
+; Standard marks
+;
+DEF M_M0_C1              M100   ; Program stop M0
+DEF M_M1_C1              M101   ; Conditional program stop
+DEF M_M2_C1              M102   ; M2 function
+DEF M_M8_C1              M108   ; M8: coolant by broach coolant
+DEF M_M9_C1              M109   ; M9: Cancel tool coolant
+DEF M_M10_C1             M110   ; M10: Table axis dead
+DEF M_M11_C1             M111   ; M11: Table axis alive
+DEF M_M20_C1             M120   ; M20: Tool cleaning backward
+DEF M_M21_C1             M121   ; M21: Tool cleaning forward
+DEF M_M30_C1             M130   ; M30 function
+DEF M_M50_C1             M150   ; M50: Lights on
+DEF M_M51_C1             M151   ; M51: Lights off
+DEF M_M90_C1             M190   ; M90: Tune up mode
+DEF M_M91_C1             M191   ; M91: End Tune up mode
+DEF M_M92_C1             M192   ; M92: Activate chip conveyor
+DEF M_M93_C1             M193   ; M93: Stop chip conveyor
+DEF M_M95_C1             M195   ; M95: Additional lubrication
+DEF M_M96_C1             M196   ; M96: Enable Z-axis movements without parallelism
+DEF M_M100_C1            M200   ; M100: Start of broaching cycle
+DEF M_M101_C1            M201   ; M101: End of broaching cycle
+;
+DEF M_CY1                M500   ; "first scan" bit
+DEF M_OPTIONS            M501   ; Aux. to call subroutine for machine options
+DEF M_MSTROBEC1          M502   ; Scan with M functions
+DEF M_GANTRY_ON_Z        M503   ; Gantry active on Z axis
+DEF M_GANTRY_DIFFCOMPZ   M504   ; Automatic parallelism correction
+DEF M_EMERGEN            M505   ; CNC emergency
+DEF M_MACHINE_POWER      M506   ; Machine with power (on)
+DEF M_RESET_C1           M507   ; General reset
+DEF M_TOOLINSP_C1        M508   ; CNC in tool inspection
+DEF M_DOOR_CLOSED        M509   ; Door closed
+DEF M_TOOLINSP_MDIC1     M510   ; CNC in MDI tool inspection with open door
+DEF M_REPOS_C1           M511   ; CNC in reposition
+DEF M_MANUALC1           M512   ; CNC in manual modes
+DEF M_MAN_INT_AUTO       M513   ; CNC in manual intervention in automatic
+DEF M_MAN_MDIC1          M514   ; CNC in Jog and MDI modes
+DEF M_AUTO_INCYCLE       M515   ; CNC in cycle in AUTOMAT mode
+DEF M_ZERO               M516   ; CNC in homing mode
+DEF M_DR_STATUS_Z        M517   ; No permission to apply power due to Z drive
+DEF M_DR_NOT_POWER_Z     M518   ; Z without power
+DEF M_FEEDHOLC1_Z        M519   ; FEEDHOLDC1, Z drive without torque
+DEF M_DR_TORQUE_Z        M520   ; Z drive with torque
+DEF M_DR_STATUS_Z1       M521   ; No permission to apply power due to Z1 drive
+DEF M_DR_NOT_POWER_Z1    M522   ; Z1 without power
+DEF M_FEEDHOLC1_Z1       M523   ; FEEDHOLDC1, Z1 drive without torque
+DEF M_DR_TORQUE_Z1       M524   ; Z1 drive with torque
+DEF M_DR_STATUS_C        M525   ; No permission to apply power due to C drive
+DEF M_DR_NOT_POWER_C     M526   ; C axis without power
+DEF M_DR_TORQUE_C        M527   ; C axis drive with torque
+DEF M_PLC_ERROR          M528   ; Some PLC error activated
+DEF M_DOOR_F_CLOSE       M529   ; Front door closed
+DEF M_DOOR_L_CLOSE       M530   ; Left  door closed
+DEF M_DOOR_R_CLOSE       M531   ; Right  door closed
+DEF M_DOOR_SCUTTLE_CLOSE M532   ; Interior scuttle door closed
+DEF M_DOOR_SCUTTLE_OPEN  M533   ; Interior scuttle door opened
+DEF M_DOOR_OPEN_NO_START M534   ; Start has been pressed while door open
+DEF M_DOOR_OPEN_COND     M535   ; Door opening conditions
+DEF M_DOOR_L_INPOSZ      M536   ; Z-axis in position to open left door
+DEF M_DOOR_R_INPOSZ      M537   ; Z-axis in position to open right door
+DEF M_DOOR_L_OPEN_REQ    M538   ; Left door opening request accepted
+DEF M_DOOR_R_OPEN_REQ    M539   ; Right door opening request accepted
+DEF M_DOOR_F_OPEN_REQ    M540   ; Front door opening request accepted
+DEF M_AXES_ENABLE_AUX    M541   ; Aux. axis enable permission
+DEF M_AXES_ENABLE        M542   ; Axis enable permission
+DEF M_Z_BRAKE            M543   ; Aux. Z brake
+DEF M_Z1_BRAKE           M544   ; Aux. Z1 brake
+DEF M_TABLE_CONNECTED    M545   ; Table axis connected
+DEF M_TABLE_UNLOCKED     M546   ; Confirmation table axis unlocked
+DEF M_TABLE_LOCKED       M547   ; Confirmation table axis locked
+DEF M_TABLE_TORQUE       M548   ; Table axis alive
+DEF M_TABLE_PARK_CY1     M549   ; Park table axis in first cycle
+DEF M_TABLE_UNPARK_CY1   M550   ; Unpark table axis in first cycle
+DEF M_TABLE_PARKED       M551   ; Request to park table axis
+DEF M_TABLE_UNLOCK       M552   ; unlock table axis, moving permission
+DEF M_REFZ               M553   ; Z-Z1 axes in homing mode
+DEF M_REFPOINZ           M554   ; Gantry axis homing has been made
+DEF M_GANTRY_MAXDIFFZ    M555   ; Difference between Z-Z1 > MAXCOUPE (mm)
+DEF M_GANTRY_BYPASZ      M556   ; Enable Z-axis movements without parallelism
+DEF M_LUC400_FAULT       M557   ; LUC 400 Lubrication failure
+DEF M_LUB_CONDITIONS     M558   ; Lub. conditions
+DEF M_LUB_GUIDES         M559   ; Activate way lubrication
+DEF M_LUB_PULSE_1        M560   ; Way lubrication request first pulse
+DEF M_LUB_PULSE_2        M561   ; Way lubrication request second pulse
+PDEF M_LUB_CYCLE         M562   ; Lubrication cycle
+DEF M_LUC400_FAULT_E1    M563   ; E1: Empty indicator
+DEF M_COOL_TRANSF_THS    M565   ; Coolant transfer motor circuit breaker
+DEF M_COOL_MAIN_THS      M566   ; Frame cleaning motor circuit breaker
+DEF M_COOL_TRANSFER_ON   M568   ; Coolant transfer motor on
+DEF M_COOL_MAIN_ON       M569   ; Frame cleaning motor on
+DEF M_COOL_FLOW          M570   ; Coolant flow
+DEF M_COOL_FILTER        M573   ; Coolant filter dirty
+DEF M_COOL_TANK_MIN      M574   ; Coolant tank level minimum
+DEF M_COOL_MAIN_COND     M575   ; Broach coolant condition
+DEF M_COOL_MAIN          M576   ; Request for broach coolant
+DEF M_COOL_MAIN_AUX      M577   ; Aux. Broach coolant ON
+DEF M_COOL_TRANSFER      M578   ; Coolant transfer motor start
+DEF M_CHIP_CONVEYOR_THS  M579   ; Chip conveyor thermal switch
+DEF M_CHIP_CONVEYOR_ON   M580   ; Chip conveyor motor on
+DEF M_CHIP_CONVEYOR_COND M581   ; Chip conveyor condition
+DEF M_CHIP_CONVEYOR      M582   ; Request for chip conveyor
+DEF M_AIR_PRESSURE       M585   ; General air pressure switch
+DEF M_TOOL_CLEANER_BACK  M586   ; Tool cleaning backward
+DEF M_TOOL_CLEANER_FORW  M587   ; Tool cleaning forward
+DEF M_HYD_THS            M588   ; Hydraulic thermal switch
+DEF M_HYD_LEVEL          M589   ; Hydraulic tank level minimum
+DEF M_HYD_FILTER         M590   ; Hydraulic group filter dirty
+DEF M_HYD_PUMP_ON        M591   ; Hydraulic group motor running
+DEF M_HYD_CONDITIONS     M592   ; Hydraulic conditions
+DEF M_HYD_PUMP           M593   ; Hydraulic motor pump
+DEF M_HYD_PUMP_FAULT     M594   ; Hydraulic group motor fault
+DEF M_STARTC1            M595   ; Request for CYSTART
+DEF M_RESET_TIMERS       M596   ; Reset machine timers
+DEF M_LIGHT_ON           M597   ; Request to turn lights on
+DEF M_BEACON_EMERGEN     M598   ; Red LED
+DEF M_BEACON_END         M599   ; End-of-program beacon
+DEF M_COOL_CABINET_THS   M600   ; Electric cabinet air conditioner thermal switch
+DEF M_COOL_CABINET_FAULT M601   ; Cabinet climate controler failure
+DEF M_MAYR_BRAKE_UNLOCK  M602   ; Toolholder MAYR brake unlock detectors ok
+DEF M_MAYR_BRAKE_LOCK    M603   ; Toolholder MAYR brake lock detectors ok
+DEF M_MAYR_BRAKE_PRESS   M604   ; Toolholder MAYR brake unlock pressure
+DEF M_CHAIN_OK           M605   ; Tensioned counterbalance chain
+DEF M_BRAKE_Z_ENA        M606   ; Z axes brake enable
+DEF M_MAYR_BRAKE_L1      M607   ; Mayr brake left guide detector 1
+DEF M_MAYR_BRAKE_R1      M608   ; Mayr brake right guide detector 1
+DEF M_MAYR_BRAKE_COMP_L1 M609   ; Mayr brake left compensation side detector 1
+DEF M_MAYR_BRAKE_COMP_R1 M610   ; Mayr brake right compensation side detector 1
+DEF M_MAYR_BRAKE_COMP_L2 M611   ; Mayr brake left compensation side detector 2
+DEF M_MAYR_BRAKE_COMP_R2 M612   ; Mayr brake right compensation side detector 2
+DEF M_MAYR_BRAKE         M613   ; Toolholder MAYR brake unlock
+DEF M_MAYR_BRAKE_SW_DFD  M614   ; Toolholder MAYR brake lock detectors down flank
+PDEF M_LUB_FILL          M615   ; Filling function
+DEF M_PAPER_FILTER_THS   M616   ; Paper filter thermal switch
+DEF M_PAPER_FILTER_LEVEL M617   ; Paper filter level
+DEF M_PAPER_FILTER_FAULT M618   ; Paper is missing
+DEF M_PAPER_FILTER_ON    M619   ; Paper filter motor running
+DEF M_PAPER_FILTER_COND  M620   ; Paper filter conditions
+DEF M_TUNE_MODE          M621   ; Tune up mode
+DEF M_GANTRYOFF          M622   ; CNC decouples the gantry axis
+DEF M_SPENAZ1            M623   ; Z1 enable
+DEF M_TABLE_XFERINH      M624   ; Aux axis locked xferinh
+DEF M_TOOL_CLEANER_AUX   M625   ; Aux Tool cleaning
+DEF M_COOL_FLOW_AUX      M626   ; Aux. coolant flow
+DEF M_TOOL_CLEANER_OUT   M627   ; Tool cleaning detector forward
+DEF M_TOOL_CLEANER_IN    M628   ; Tool cleaning detector back
+DEF M_AIR_LINEAR_PRESS   M629   ; Linear encoder air pressure switch
+DEF M_ENABLEZ_POS        M630   ; Z axis moves in the positive direction
+DEF M_ENABLEZ_NEG        M631   ; Z axis moves in the negative direction
+PDEF M_BROACHING_REPOS   M632   ; Post-Emergency Gantry Repositioning
+DEF M_RESETIN            M633   ; Aux. Reset from PLC
+DEF M_TOOL_CLEANER_NOPOS M634   ; Non-positioned tool cleaning
+DEF M_TABLE_UNLOCK_FAULT M635   ; Error maximum table axis unlocking
+DEF M_TABLE_LOCK_FAULT   M636   ; Error maximum table axis locking
+;
+DEF M_GANTRY_M200        M640   ; CNCEX Gantry to origin
+DEF M_GANTRY_M201        M641   ; CNCEX Gantry to the middle part
+DEF M_GANTRY_M202        M642   ; CNCEX Gantry up to the top
+DEF M_TABLE_G180         M643   ; CNCEX Table position
+DEF M_TABLE_COND         M644   ; Table movement conditions
+DEF M_GANTRY_POS_DOWN    M645   ; Z-axis start position
+DEF M_GANTRY_POS_MIDDLE  M646   ; Z-axis middle position
+DEF M_GANTRY_POS_UP      M647   ; Z-axis end position
+;
+DEF M_SETUP_MODE         M650   ; Machine in SETUP mode
+DEF M_DOOR_OPEN_ENABLE   M651   ; Enable operate with open doors
+DEF M_DOOR_AUX_LIMIT     M652   ; Limitations due to open door
+;
+;==============================================================================
+;Signals monitored on screen
+;
+DEF M_SM_GANTRY_UP       M4001  ; Z-axis up position
+DEF M_SM_GANTRY_MIDDLE   M4002  ; Z-axis middle position
+DEF M_SM_GANTRY_DOWN     M4003  ; Z-axis down position
+DEF M_SM_BQ715           M4004  ; Screen monitoring: Mayr brake left guide detector 1
+DEF M_SM_BQ717           M4005  ; Screen monitoring: Mayr brake left compensation side detector 1
+DEF M_SM_BQ720           M4006  ; Screen monitoring: Mayr brake left compensation side detector 2
+DEF M_SM_BP727           M4007  ; Screen monitoring: Toolholder mayr brake unlock pressure
+DEF M_SM_BQ721           M4008  ; Screen monitoring: Mayr brake right guide detector 1
+DEF M_SM_BQ723           M4009  ; Screen monitoring: Mayr brake right compensation side detector 1
+DEF M_SM_BQ724           M4010  ; Screen monitoring: Mayr brake right compensation side detector 2
+DEF M_SM_SQ712           M4011  ; Screen monitoring: Table axis unlocked detector
+DEF M_SM_BP714           M4012  ; Screen monitoring: Table axis locked pressure
+DEF M_SM_SQ713           M4013  ; Screen monitoring: Table axis locked detector
+DEF M_SM_TABLE_COND      M4014  ; Table movement conditions
+DEF M_SM_M202            M4020  ; Screen monitoring: Gantry up to the top
+DEF M_SM_M201            M4021  ; Screen monitoring: Gantry to the middle part
+DEF M_SM_M200            M4022  ; Screen monitoring: Gantry to origin
+DEF M_SM_TABLE_POS       M4025  ; Screen monitoring: Table position
+DEF M_SM_KA01            M4030  ; Coolant motor main on
+DEF M_SM_14QM2           M4031  ; Coolant motor main circuit breaker
+DEF M_SM_BC44            M4032  ; Coolant flow
+DEF M_SM_14QM3           M4033  ; Coolant transfer motor circuit breaker
+DEF M_SM_BN42            M4034  ; Coolant tank level minimum
+DEF M_SM_KA04            M4035  ; Hydraulic group motor running
+DEF M_SM_14QM5           M4036  ; Hydraulic thermal switch
+DEF M_SM_KA03            M4037  ; Chip conveyor motor on
+DEF M_SM_14QM4           M4038  ; Chip conveyor thermal switch
+DEF M_SM_LUB_CYCLE_ON    M4039  ; Screen monitoring: Lubrication cycle
+DEF M_SM_LUC400_FAULT_E1 M4040  ; Screen monitoring: Empty indicator
+DEF M_SM_LUC400_FAULT_E2 M4041  ; Screen monitoring: Overcurrent
+DEF M_SM_KA02            M4042  ; Coolant transfer motor on
+DEF M_SM_BL726           M4043  ; Hydraulic tank level minimum
+DEF M_SM_COOLANT_ON      M4050  ; Screen monitoring: Coolant ON
+DEF M_SM_COOLANT_OFF     M4051  ; Screen monitoring: Coolant OFF
+DEF M_SM_CHIP_ON         M4052  ; Screen monitoring: Activate chip conveyor
+DEF M_SM_CHIP_OFF        M4053  ; Screen monitoring: Stop chip conveyor
+DEF M_SM_LUB_ON          M4054  ; Screen monitoring: Lubrication ON
+DEF M_SM_CLEANER_BACK    M4055  ; Screen monitoring: Tool cleaning backward
+DEF M_SM_CLEANER_FORW    M4056  ; Screen monitoring: Tool cleaning forward
+DEF M_SM_TOOL_CLEANER_OUT M4057 ; Screen monitoring: Tool cleaning detector forward
+DEF M_SM_TOOL_CLEANER_IN M4058  ; Screen monitoring: Tool cleaning detector back
+DEF M_SAFETY_RELAY       M4080  ; Screen monitoring: Discrepancy safety relay
+DEF M_PS_EXT_IO_HEADER   M4081  ; Screen monitoring: Power supply external I/O header
+DEF M_PS_EXT_IO_OUT      M4082  ; Screen monitoring: Power supply external I/O outputs fault
+DEF M_PS_IN_ET200SP      M4083  ; Screen monitoring: Inputs power supply ET200SP fault
+DEF M_PS_SAFETY          M4084  ; Screen monitoring: Safety power supply fault
+DEF M_PS_CNC             M4085  ; Screen monitoring: CNC power supply fault
+DEF M_PS_PPC             M4086  ; Screen monitoring: Operator panel power supply fault
+DEF M_PS_OUT_ET200SP     M4087  ; Screen monitoring: Output power supply ET200SP fault
+DEF M_RPS_LINE_CONTACT   M4088  ; Screen monitoring: RPS Line contact
+DEF M_RPS_SYSTEM_OK      M4089  ; Screen monitoring: Drives power supply fault
+DEF M_POWER_ON           M4090  ; Screen monitoring: Power on
+DEF M_PILZ_OK            M4091  ; Screen monitoring: Condiciones de rearme OK
+DEF M_DOOR_F_CLOSED      M4092  ; Screen monitoring: Front door closed
+DEF M_DOOR_L_CLOSED      M4093  ; Screen monitoring: Left door closed
+DEF M_DOOR_R_CLOSED      M4094  ; Screen monitoring: Right door closed
+DEF M_SM_BP710           M4095  ; General air pressure switch
+DEF M_SM_BP711           M4096  ; Linear encoder air pressure switch
+DEF M_SM_BQ716           M4097  ; Counterbalance chain right detector
+DEF M_SM_BQ722           M4098  ; Counterbalance chain left detector
+DEF M_SM_BRAKE_Z_ENA     M4099  ; Z axes brake enable
+DEF M_SM_14QM1           M4103  ; Paper filter thermal switch
+DEF M_SM_BN41            M4104  ; Paper filter level
+DEF M_SM_SQ40            M4105  ; Paper is missing
+DEF M_SM_KA00            M4106  ; Paper filter motor running
+;
+;==============================================================================
+;
+DEF M_CNCRD_SYN          M6000  ; Pause between lub.(h.)
+;
+;==============================================================================
+;                         REGISTERS
+;==============================================================================
+;
+DEF R_NULL               R21    ; Register whose value is always zero
+DEF R_AUXENDC1           R22    ; AUXEND due to M auxiliary functions
+DEF R_TIME_PAUSE_LUB     R23    ; Pause between lub.(h.)
+DEF R_MASTERAXIS         R24    ; Gantry master axis 1
+DEF R_SLAVEAXIS          R25    ; Gantry slave axis 1
+DEF R_WARNCOUPE          R26    ; Maximum difference for warning (WARNCOUPE)
+DEF R_MAXDIFF            R27    ; Maximum difference allowed (MAXCOUPE)
+DEF R_DIFFCOMPZ          R28    ; Automatic parallelism correction
+DEF R_AUTSTATUS          R29    ; CNC in automatic mode
+DEF R_TOOLINSP_C1        R30    ; CNC in tool inspection
+DEF R_TOOLINSP_MDIC1     R31    ; CNC in MDI tool inspection
+DEF R_REPOS_C1           R32    ; CNC in reposition
+DEF R_INTMAN             R33    ; CNC work mode
+DEF R_CNC_G200           R34    ; Reading if G200 active in CNC
+DEF R_CNC_G201           R35    ; Reading if G201 active in CNC
+DEF R_MAN_STATUS         R36    ;CNC status in manual mode
+DEF R_MAN_STATUS_FILTER  R37    ;CNC status in filtered manual mode
+DEF R_HGS1               R38    ; Read G functions C1
+DEF R_DRST_Z             R39    ; B0 Z drive status register
+DEF R_DR_STATUS          R40    ; No permission to apply power due to Z drive
+DEF R_DR_NOT_POWER       R41    ; Z without power
+DEF R_FEEDHOLC1          R42    ; FEEDHOLDC1, Z drive without torque
+DEF R_DR_TORQUE          R43    ; Z drive with torque
+DEF R_DRST_Z1            R44    ; B0 Z1 drive status register
+DEF R_DRST_C             R45    ; B0 C axis drive status register
+DEF R_ERR1_32            R46    ; Move ERR1-ERR32 to R_ERR1_32
+DEF R_ERR33_64           R47    ; Move ERR33-ERR64 to R_ERR33_64
+DEF R_ERR65_96           R48    ; Move ERR65-ERR96 to R_ERR65_96
+DEF R_ERR97_128          R49    ; Move ERR97-ERR128 to R_ERR97_128
+DEF R_STARTC1            R51    ; No START, machine without power
+DEF R_XFERINHC1          R52    ; Reading locked up, machine without power
+DEF R_TPOS_Z             R53    ; Z-axis position
+DEF R_L_LOW              R54    ; Lower limit of door opening position
+DEF R_L_UP               R55    ; Upper limit of door opening position
+DEF R_R_LOW              R56    ; Lower limit of door opening position
+DEF R_R_UP               R57    ; Upper limit of door opening position
+DEF R_INHIBITC           R58    ; Particular table axis feedhold
+DEF R_POSZ               R59    ; Z-axis position reading
+DEF R_POSZ1              R60    ; Z1-axis position reading
+DEF R_POS_DIFF           R61    ; Position difference (mm) between Z and Z1
+DEF R_LUBRICATION        R62    ; Request lubrication by distance (CNC)
+DEF R_LUB_CYCLE          R63    ; Request the first pulse of lubrication of the guides
+DEF R_STOPC1             R64    ; STOP, general air pressure failure
+DEF R_INHIBITZ           R65    ; Register bits to generate INHIBITZ
+DEF R_INHIBITZ1          R66    ; Register bits to generate INHIBITZ1
+DEF R_LUB_SETUP          R67    ; Filling function register
+DEF R_POSZ_L             R68    ; Z-axis position to open left door
+DEF R_POSZ_R             R69    ; Z-axis position to open right door
+DEF R_GANTRYOFF          R70    ; CNC decouples the gantry axis
+DEF R_POSZ_ZI            R71    ; Z-axis position for start of machining
+DEF R_ZI_UP              R72    ; Upper limit of Z-axis start position
+DEF R_ZI_LOW             R73    ; Lower limit of Z-axis start position
+DEF R_POSZ_ZF            R74    ; Z-axis position for end of machining
+DEF R_ZF_UP              R75    ; Upper limit of Z-axis end position
+DEF R_ZF_LOW             R76    ; Lower limit of Z-axis end position
+
+DEF R_TRIG_REC           R220
+
+DEF R_ACTIVAR_DATALOGER  R300
+;
+;==============================================================================
+;                         COUNTERS
+;==============================================================================
+;
+;C001                           ; Counter for seconds machine on = 60 s
+;C002                           ; Counter for minutes machine on = 60 min.
+;C004                           ; Total Counter for seconds CNC in execution = 60 s
+;C005                           ; Total Counter for minutes CNC in execution = 60 min.
+;C010                           ; From seconds to minutes
+;C011                           ; From minutes to hours
+;C012                           ; Pause between lubrications done
+;C014                           ; Partial Counter for seconds CNC in execution = 60 s
+;C015                           ; Partial Counter for minutes CNC in execution = 60 min.
+;
+;------------------------------------------------------------------------------
+;--------------------------- INITIAL CYCLE ------------------------------------
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; This cycle is execute just once on start up, and it is the first
+; execution module.
+;
+; Erase all possible:
+;   Outputs, both local (L01 up to LO8) and remote (01 up to O1024).
+;   Marks (M1 up to M8192) except those we want to memorise
+;             (in this case M1 up to M99).
+;   Register and counters except the first 20 (R1 up to R20, and C1 up to 20),
+;             which can be set-up through machine parameters as non erasable.
+;   Timmers (T1 up to T512).
+;
+; Set a mark called M_CY1 to "1" to use as a condition for first cycle
+;   execution in the main PLC program module (PRG).
+;
+; The register called R_NULL is set to "0", to use in main PLC program
+;   module (PRG).
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 100
+;
+;#END EXCEPTIONS
+;
+CY1                             ; Beginning of first (initial) cycle
+;
+()                              ; Logic "1"
+  = ERA O1 1024                 ; Output initialization
+  = ERA LO1 8                   ; Output initialization locales
+  = ERA M100 8192               ; Mark initialization
+  = ERA R21 1024                ; Register initialization
+  = ERA C021 256                ; Counter initialization
+  = ERA T001 512                ; Timer initialization
+  = SET M_CY1                   ; "first scan" bit
+  = MOV 0 R_NULL                ; Register whose value is always zero
+;
+END
+;
+;==============================================================================
+;                         MAIN PROGRAM
+;==============================================================================
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 105
+;
+;#END EXCEPTIONS
+;
+PRG                             ; Beginning of main program
+;
+()                              ; Logic '1'
+  = CAL INITIAL
+  = CAL STROBE
+;
+M_MSTROBEC1
+  = CAL MFUNC1
+;
+M_OPTIONS
+  = CAL OPTIONS
+;
+()                              ; Logic '1'
+  = CAL RESET
+  = CAL CNC_MODES
+  = CAL DIGITAL_DRIVE_FAGOR_AXES
+  = CAL EMERGENCY
+  = CAL DOORS_SAFETY
+  = CAL AXES_ENABLE
+  = CAL TABLE
+  = CAL GANTRY_Z
+  = CAL GUIDES_LUBRICATION_LUC400
+  = CAL BROACH_COOLANT
+  = CAL CHIP_CONVEYOR
+  = CAL COOLANT_PAPER_FILTER
+  = CAL PNEUMATIC
+  = CAL HYDRAULIC
+  = CAL CNC_CONDITIONALS
+  = CAL CNC_PERMISSIONS
+  = CAL SCREEN_MONITORING
+  = CAL MACHINE_TIMERS
+  = CAL MACHINE_LIGHTING
+  = CAL WARNING_LIGHT
+  = CAL ELECTRIC_CABINET
+  = CAL LECTURA_VARIABLES_DRIVER
+  = CAL TRIGGER_INICIO_FINAL_MEC
+  = CAL FINAL
+;
+END                             ; End of main PLC program
+;
+;------------------------------------------------------------------------------
+;                         BEGINNING OF THE PROGRAM
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; The header of the program contains definitions to bear in mind
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; RESETOUTC1                    ; CNC reset
+; M_CY1                         ; Bit of first cycle
+;
+;******************************************************************************
+;                         OUTPUT RESOURCE
+;******************************************************************************
+;
+; M_OPTIONS                     ; Aux. to call subroutine for machine options
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 110
+;
+;#END EXCEPTIONS
+;
+SUB INITIAL
+;
+DFD RESETOUTC1                  ; CNC reset
+  OR M_CY1                      ; Bit of first cycle
+  = M_OPTIONS                   ; Aux. to call subroutine for machine options
+;
+END
+;------------------------------------------------------------------------------
+;                        STROBE MANAGER
+;------------------------------------------------------------------------------
+;******************************************************************************
+; Check if an M function has been executed
+; Generate an AUXEND pulse for any M function
+; M function marks last one PLC scan (M100 up to M199 are in use)
+;
+;******************************************************************************
+;                         INPUT RESOURCE
+;******************************************************************************
+;
+; MSTROBEC1                     ; Flank of MSTROBEC1
+;
+;******************************************************************************
+;                         OUTPUT RESOURCE
+;******************************************************************************
+;
+; M_MSTROBEC1                   ; Scan with M functions
+; B1R_AUXENDC1                  ; AUXEND due to M auxiliary functions
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+; T001                          ; AUXEND pulse due to strobes (20 ms)
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 120
+;
+;#END EXCEPTIONS
+;
+SUB STROBE
+;
+DFU MSTROBEC1                   ; Flank of MSTROBEC1
+  = M_MSTROBEC1                 ; Scan with M functions
+  = TG1 001 20                  ; AUXEND pulse due to strobes (20 ms)
+;
+T001                            ; AUXEND pulse due to strobes (20 ms)
+  = B1R_AUXENDC1                ; AUXEND due to M auxiliary functions
+;
+DFD M_MSTROBEC1                 ; End of scan with M functions
+  = ERA M100 499                ; Erase M functions
+;
+END
+;
+;=============================================================================
+;                 DECODING OF M FUNCTIONS
+;=============================================================================
+;
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 130
+;
+;#END EXCEPTIONS
+;
+SUB MFUNC1
+;
+CPS MFUNC1* EQ 0 = M_M0_C1      ; Program stop M0
+CPS MFUNC1* EQ 1 = M_M1_C1      ; Conditional program stop
+CPS MFUNC1* EQ 2 = M_M2_C1      ; M2 function
+CPS MFUNC1* EQ 8 = M_M8_C1      ; M8: coolant by broach coolant
+CPS MFUNC1* EQ 9 = M_M9_C1      ; M9: Cancel tool coolant
+CPS MFUNC1* EQ 10 = M_M10_C1    ; M10: Table axis dead
+CPS MFUNC1* EQ 11 = M_M11_C1    ; M11: Table axis alive
+CPS MFUNC1* EQ 20 = M_M20_C1    ; M20: Tool cleaning backward
+CPS MFUNC1* EQ 21 = M_M21_C1    ; M21: Tool cleaning forward
+CPS MFUNC1* EQ 30 = M_M30_C1    ; M30 function
+CPS MFUNC1* EQ 50 = M_M50_C1    ; M50: Lights on
+CPS MFUNC1* EQ 51 = M_M51_C1    ; M51: Lights off
+CPS MFUNC1* EQ 90 = M_M90_C1    ; M90: Tune up mode
+CPS MFUNC1* EQ 91 = M_M91_C1    ; M91: End Tune up mode
+CPS MFUNC1* EQ 92 = M_M92_C1    ; M92: Activate chip conveyor
+CPS MFUNC1* EQ 93 = M_M93_C1    ; M93: Stop chip conveyor
+CPS MFUNC1* EQ 95 = M_M95_C1    ; M95: Additional lubrication
+CPS MFUNC1* EQ 96 = M_M96_C1    ; M96: Enable Z-axis movements without parallelism
+CPS MFUNC1* EQ 100 = M_M100_C1  ; M100: Start of broaching cycle
+CPS MFUNC1* EQ 101 = M_M101_C1  ; M101: End of broaching cycle
+;
+END                             ; End of subroutine to decode M functions
+;
+;------------------------------------------------------------------------------
+;                       READ PARAMETERS OF MACHINE OPTIONS
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; MTB machine parameters of the CNC are use to choose machine options
+;
+; MTB.P[2]                      ; Pause between lub.(min.)
+; MTB.P[10]                     ; Automatic parallelism correction
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+; M_GANTRY_ON_Z                 ; Gantry active on Z axis
+; M_GANTRY_DIFFCOMPZ            ; Automatic parallelism correctio
+; R_TIME_PAUSE_LUB              ; Pause between lub.(min.)
+; R_MASTERAXIS                  ; Gantry master axis 1
+; R_SLAVEAXIS                   ; Gantry slave axis 1
+; R_WARNCOUPE                   ; Maximum difference for warning (WARNCOUPE)
+; R_MAXDIFF                     ; Maximum difference allowed (MAXDIFF)
+; R_DIFFCOMPZ                   ; Automatic parallelism correction
+;
+;******************************************************************************
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #ERA_MARK2 M_CNCRD_SYN
+;
+; #Order number = 150
+;
+;#END EXCEPTIONS
+;
+SUB OPTIONS
+;
+; ------- Z-axis position -----------------------------------------
+;
+()                              ; Logic "1"
+  = CNCRD(MTB.PF[0],R_POSZ_L,M_CNCRD_SYN); Z-axis position to open left door
+  = ADS R_POSZ_L 50000 R_L_UP   ; Upper limit of door opening position
+  = SBS R_POSZ_L 10000 R_L_LOW  ; Lower limit of door opening position
+;
+()                              ; Logic "1"
+  = CNCRD(MTB.PF[1],R_POSZ_R,M_CNCRD_SYN); Z-axis position to open right door
+  = ADS R_POSZ_R 50000 R_R_UP   ; Upper limit of door opening position
+  = SBS R_POSZ_R 50000 R_R_LOW  ; Lower limit of door opening position
+;
+()                              ; Logic "1"
+  = CNCRD(MTB.PF[20],R_POSZ_ZI,M_CNCRD_SYN); Z-axis position for start of machining
+  = ADS R_POSZ_ZI 50000 R_ZI_UP  ; Upper limit of Z-axis start position
+  = SBS R_POSZ_ZI 10000 R_ZI_LOW ; Lower limit of Z-axis start position
+;
+()                              ; Logic "1"
+  = CNCRD(MTB.PF[21],R_POSZ_ZF,M_CNCRD_SYN); Z-axis position for end of machining
+  = ADS R_POSZ_ZF 50000 R_ZF_UP ; Upper limit of Z-axis end position
+  = SBS R_POSZ_ZF 10000 R_ZF_LOW ; Lower limit of Z-axis end position
+;
+; ------- Read lubrication parameters -----------------------------------------
+;
+()                              ; Logic "1"
+  = CNCRD(MTB.P[2],R_TIME_PAUSE_LUB,M_CNCRD_SYN); Pause between lub.(h.)
+;
+CPS R_TIME_PAUSE_LUB LE 0       ; Pause between lubrication not definited
+  = MOV 12 R_TIME_PAUSE_LUB     ; Preset 12 hours
+;
+; ------- Read Gantry parameters
+;
+()                              ; "1" logico
+  = CNCRD(MPG.MASTERAXIS[1],R_MASTERAXIS,M_CNCRD_SYN); Gantry master axis 1
+  = CNCRD(MPG.SLAVEAXIS[1],R_SLAVEAXIS,M_CNCRD_SYN) ; Gantry slave axis 1
+  = CNCRD(MPG.WARNCOUPE[1],R_WARNCOUPE,M_CNCRD_SYN); Maximum difference for warning (WARNCOUPE)
+  = CNCRD(MPG.MAXDIFF[1],R_MAXDIFF,M_CNCRD_SYN) ; Maximum difference allowed (MAXDIFF)
+  = CNCRD(MTB.P[10],R_DIFFCOMPZ,M_CNCRD_SYN) ; Automatic parallelism correction
+  = CNCRD(MTB.P[11],R_GANTRYOFF,M_CNCRD_SYN) ; CNC decouples the gantry axis
+;
+CPS R_GANTRYOFF EQ 1            ; CNC decouples the gantry axis
+  = M_GANTRYOFF                 ; CNC decouples the gantry axis
+;
+CPS R_MASTERAXIS EQ 1           ; Gantry master Z axis
+  AND CPS R_SLAVEAXIS EQ 3      ; Gantry slave Z1 axis
+  = M_GANTRY_ON_Z               ; Gantry active on Z axis
+;
+M_GANTRY_ON_Z                   ; Gantry active on Z axis
+  AND NOT M_GANTRYOFF           ; CNC decouples the gantry axis
+  AND CPS R_DIFFCOMPZ EQ 1      ; Automatic parallelism correction
+  = M_GANTRY_DIFFCOMPZ          ; Automatic parallelism correction
+;
+M_GANTRY_DIFFCOMPZ              ; Automatic parallelism correction
+  AND CPS R_MAXDIFF LE 0        ; Maximum permissible difference not defined
+  = ERR9                        ; Set Gantry 1 MAXDIFF parameter
+;
+END                             ; End reading of machine conditions parameters
+;
+;------------------------------------------------------------------------------
+;                         RESET memories
+;
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; Conditions that generate RESET
+; Erase all auxiliary marks for reading and writing variables
+; (marks M1500 up to M1599 in use)
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; M_M2_C1                       ; M2 function
+; M_M30_C1                      ; M30 function
+; RESETOUTC1                    ; CNC reset
+; M_EMERGEN                     ; CNC emergency
+; M_MACHINE_POWER               ; Machine with power (on)
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; M_RESET_C1                    ; General reset
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 160
+;
+;#END EXCEPTIONS
+;
+;
+SUB RESET
+;
+M_M2_C1                         ; M2 function
+  OR M_M30_C1                   ; M30 function
+  OR RESETOUTC1                 ; CNC reset
+  OR DFD M_EMERGEN              ; CNC emergency
+  OR DFD M_MACHINE_POWER        ; Machine with power (on)
+  = M_RESET_C1                  ; General reset
+  = ERA M6000 6999              ; Erase auxiliary marks CNCRD-CNCWR
+;
+M_RESET_C1                      ; General reset
+  = TG1 003 1000                ; Drive power supply reset pulse
+;
+T003                            ; Drive power supply reset pulse
+  = O_PS_DRIVE_RESET            ; Drive power supply reset
+;
+END
+;
+;------------------------------------------------------------------------------
+;                    MANAGEMENT OF CNC WORK MODES
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+;1.-Read some parameters to know the work mode
+;   the machine is in:
+;     Manual intervention in automatic (G200,G201)
+;     Manual mode C1
+;
+;******************************************************************************
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; M_MACHINE_POWER               ; Machine with power
+; MANUALC1                      ; CNC in manual modes
+; SBOUTC1                       ; CNC in single-block mode
+; RESETOUTC1                    ; CNC reset
+; B11KEYBD2                     ; Homing key
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; M_MANUALC1                    ; CNC in manual modes
+; M_MAN_MDIC1                   ; CNC in JOG and MDI mode
+; M_MAN_INT_AUTO                ; CNC in manual intervention in automatic
+; M_AUTO_INCYCLE                ; CNC in cycle in AUTOMAT mode
+; M_TOOLINSP_C1                 ; CNC in tool inspection
+; M_TOOLINSP_MDIC1              ; CNC in MDI tool inspection with open door
+; M_REPOS_C1                    ; CNC in reposition
+; M_ZERO                        ; CNC in homing mode
+; LATCHM                        ; Axes not maintained
+;
+;******************************************************************************
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+; M_CNCRD_SYN                   ; Mark to read synchronous CNC variables
+; R_INTMAN                      ; CNC in manual modes
+; R_CNC_G200                    ; G200 active at the CNC
+; R_CNC_G201                    ; G201 active at the CNC
+; R_MAN_STATUS                  ; CNC status in manual mode
+; R_MAN_STATUS_FILTER           ; CNC status in filtered manual mode
+; R_AUTSTATUS                   ; CNC in automatic mode
+; R_TOOLINSP_C1                 ; CNC in tool inspection
+; R_TOOLINSP_MDIC1              ; CNC in MDI tool inspection
+; R_REPOS_C1                    ; CNC in tool inspection
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #ERA_MARK2 M_CNCRD_SYN
+;
+; #Order number = 170
+;
+;#END EXCEPTIONS
+;
+SUB CNC_MODES
+;
+()                              ; Logic "1"
+  = CNCRD([1].G.CNCAUTSTATUS,R_AUTSTATUS,M_CNCRD_SYN); CNC in automatic mode
+  = AND R_AUTSTATUS $80 R_TOOLINSP_C1; CNC in tool inspection
+  = AND R_AUTSTATUS $10000080 R_TOOLINSP_MDIC1; CNC in MDI tool inspection
+  = AND R_AUTSTATUS $200 R_REPOS_C1; CNC in reposition
+;
+CPS R_TOOLINSP_C1 EQ $80        ; CNC in tool inspection
+  AND M_MACHINE_POWER           ; Machine with power
+  = M_TOOLINSP_C1               ; CNC in tool inspection
+;
+CPS R_TOOLINSP_MDIC1 EQ $10000080 ; CNC in MDI tool inspection
+  AND M_MACHINE_POWER           ; Machine with power
+  AND NOT M_DOOR_CLOSED         ; Door closed
+  = M_TOOLINSP_MDIC1            ; CNC in MDI tool inspection with open door
+;
+CPS R_REPOS_C1 EQ $200          ; CNC in reposition
+  AND M_MACHINE_POWER           ; Machine with power
+  = M_REPOS_C1                  ; CNC in reposition
+;
+()                              ; Logic "1"
+  = CNCRD([1].G.INTMAN,R_INTMAN,M_CNCRD_SYN); CNC work mode
+;
+(CPS R_INTMAN EQ 1              ; CNC in manual modes
+  OR MANUALC1                   ; CNC in manual modes
+  OR M_TOOLINSP_C1)             ; CNC in tool inspection
+  = M_MANUALC1                  ; CNC in manual modes
+;
+()                              ; Logic "1"
+  = CNCRD([1].G.GS[200],R_CNC_G200,M_CNCRD_SYN); Reading if G200 active in CNC
+  = CNCRD([1].G.GS[201],R_CNC_G201,M_CNCRD_SYN); Reading if G201 active in CNC
+;
+CPS R_CNC_G200 EQ 1             ; G200 active at the CNC
+  OR CPS R_CNC_G201 EQ 1        ; G201 active at the CNC
+  = M_MAN_INT_AUTO              ; CNC in manual intervention in automatic
+;
+M_MANUALC1                      ; CNC in manual modes
+  AND MDIC1                     ; CNC in MDI mode
+  = M_MAN_MDIC1                 ; CNC in Jog and MDI modes
+;
+AUTOMATC1                       ; CNC in AUTOMAT modes
+  AND INCYCLEC1                 ; CNC in cycle
+  = M_AUTO_INCYCLE              ; CNC in cycle in AUTOMAT mode
+;
+()                              ; Logic "1"
+  = RES LATCHM                  ; Axes not maintained
+;
+M_MACHINE_POWER                 ; Machine with power
+  = CNCRD([1].G.CNCMANSTATUS,R_MAN_STATUS,M_CNCRD_SYN);CNC status in manual mode
+  = AND R_MAN_STATUS $F0 R_MAN_STATUS_FILTER ;CNC status in filtered manual mode
+;
+(MANUALC1                       ; CNC in Manual mode
+  AND NOT MDIC1                 ; CNC in MDI mode
+  AND (CPS R_MAN_STATUS_FILTER EQ $10 ; Axis homing with subroutine
+  OR CPS R_MAN_STATUS_FILTER EQ $20)  ; Homing of one axis
+  OR ZERO)                      ; Running a reference search
+  AND M_MACHINE_POWER           ; Machine with power
+  = M_ZERO                      ; CNC in homing mode
+;
+M_MACHINE_POWER                 ; Machine with power
+  = CNCRD([1].G.HGS1, R_HGS1,M_CNCRD_SYN) ; Read G functions C1
+;
+()                              ; Logic "1"
+  = VIRTUALJOGENA               ; Enable virtual JOG panel
+;
+; ------------ Broaching cycle conditions
+;
+M_M100_C1                       ; M100: Start of broaching cycle
+  = SET M_BROACHING_CYCLE       ; Broaching cycle
+;
+M_BROACHING_CYCLE               ; Broaching cycle
+  AND NOT M_MACHINE_POWER       ; Machine with power
+  = SET M_BROACHING_EMERG       ; Emergency during broaching cycle
+;
+M_M101_C1                       ; M101: End of broaching cycle
+  = RES M_BROACHING_CYCLE       ; Broaching cycle
+  = RES M_BROACHING_EMERG       ; Emergency during broaching cycle
+;
+M_BROACHING_EMERG               ; Emergency during broaching cycle
+  = MSG2                        ; Broaching cycle emergency
+;
+M_BROACHING_EMERG               ; Emergency during broaching cycle
+  AND ENABLEZ                   ; Z axis in movement
+  AND M_MACHINE_POWER           ; Machine with power
+  AND (NOT MANUALC1             ; CNC in manual modes
+  OR M_MAN_MDIC1)               ; CNC in Jog and MDI modes
+  AND NOT M_BROACHING_REPOS     ; Post-Emergency Gantry Repositioning
+  AND NOT M_GANTRYOFF           ; CNC decouples the gantry axis
+  = ERR10                       ; Only gantry repositioning with M200
+;
+M_BROACHING_EMERG               ; Emergency during broaching cycle
+  AND NOT M_MAN_MDIC1           ; CNC in Jog and MDI modes
+  = B2R_STARTC1                 ; No START, Broaching cycle active
+;
+M_M90_C1                        ; M90: Tune up mode
+  AND M_MACHINE_POWER           ; Machine with power
+  = SET M_TUNE_MODE             ; Tune up mode
+;
+M_M91_C1                        ; M91: End Tune up mode
+  OR NOT M_MACHINE_POWER        ; Machine with power
+  = RES M_TUNE_MODE             ; Tune up mode
+;
+ENABLEZ                         ; Z axis in movement
+  AND ENABLEC                   ; C axis in movement
+  AND NOT M_TUNE_MODE           ; Tune up mode
+  = ERR22                       ; No interpolation allowed
+;
+END
+;
+;------------------------------------------------------------------------------
+;                        READ DRIVE STATUS AXES
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+;1.-Read variables of the drive
+;2.-Depending on the value of these variables:
+;   -->Drive without power
+;   -->Drive not OK
+;   -->Drive with power
+;
+;******************************************************************************
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; DRSTASZ1                      ; B0 Z axis drive status
+; DRSTAFZ1                      ; B1 Z axis drive status
+; DRSTASZ1                      ; B0 Z1 axis drive status
+; DRSTAFZ1                      ; B1 Z1 axis drive status
+; DRSTASC                       ; B0 C axis drive status
+; DRSTAFC                       ; B1 C axis drive status
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; B1R_DR_STATUS                 ; No permission to apply power due to Z drive
+; M_DR_STATUS_Z                 ; No permission to apply power due to Z drive
+; B1R_DR_NOT_POWER              ; Z drive without power
+; M_DR_NOT_POWER_Z              ; Z without power
+; B1R_FEEDHOLC1                 ; FEEDHOLDC1, Z drive without torque
+; M_FEEDHOLC1_Z                 ; FEEDHOLDC1, Z drive without torque
+; B1R_DR_TORQUE                 ; Z drive with torque
+; M_DR_TORQUE_Z                 ; Z drive with torque
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+; R_DRST_Z                      ; Z drive status register
+; R_DRST_Z1                     ; Z1 drive status register
+; R_DRST_C                      ; C drive status register
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 180
+;
+;#END EXCEPTIONS
+;
+SUB DIGITAL_DRIVE_FAGOR_AXES
+;
+DRSTASZ                         ; B0 Z drive status
+  = B0R_DRST_Z                  ; B0 Z drive status register
+;
+DRSTAFZ                         ; B1 Z drive status
+  = B1R_DRST_Z                  ; B1 Z drive status register
+;
+CPS R_DRST_Z LT 1               ; Z drive ready
+  = B1R_DR_STATUS               ; No permission to apply power due to Z drive
+  = M_DR_STATUS_Z               ; No permission to apply power due to Z drive
+;
+CPS R_DRST_Z LT 2               ; Z drive with power
+  = B1R_DR_NOT_POWER            ; Z without power
+  = M_DR_NOT_POWER_Z            ; Z without power
+;
+CPS R_DRST_Z LT 3               ; Z with torque
+  = B1R_FEEDHOLC1               ; FEEDHOLDC1, Z drive without torque
+  = M_FEEDHOLC1_Z               ; FEEDHOLDC1, Z drive without torque
+;
+CPS R_DRST_Z EQ 3               ; Z drive with torque
+  = B1R_DR_TORQUE               ; Z drive with torque
+  = M_DR_TORQUE_Z               ; Z drive with torque
+;
+DRSTASZ1                        ; B0 Z1 drive status
+  = B0R_DRST_Z1                 ; B0 Z1 drive status register
+;
+DRSTAFZ1                        ; B1 Z1 drive status
+  = B1R_DRST_Z1                 ; B1 Z1 drive status register
+;
+CPS R_DRST_Z1 LT 1              ; Z1 drive ready
+  = B4R_DR_STATUS               ; No permission to apply power due to Z1 drive
+  = M_DR_STATUS_Z1              ; No permission to apply power due to Z1 drive
+;
+CPS R_DRST_Z1 LT 2              ; Z1 drive with power
+  = B4R_DR_NOT_POWER            ; Z1 without power
+  = M_DR_NOT_POWER_Z1           ; Z1 without power
+;
+CPS R_DRST_Z1 LT 3              ; Z1 with torque
+  = B4R_FEEDHOLC1               ; FEEDHOLDC1, Z1 drive without torque
+  = M_FEEDHOLC1_Z1              ; FEEDHOLDC1, Z1 drive without torque
+;
+CPS R_DRST_Z1 EQ 3              ; Z1 drive with torque
+  = B4R_DR_TORQUE               ; Z1 drive with torque
+  = M_DR_TORQUE_Z1              ; Z1 drive with torque
+;
+DRSTASC                         ; B0 C axis drive status
+  = B0R_DRST_C                  ; B0 C axis drive status register
+;
+DRSTAFC                         ; B1 C axis drive status
+  = B1R_DRST_C                  ; B1 C axis drive status register
+;
+CPS R_DRST_C LT 1               ; C axis drive ready
+  = B5R_DR_STATUS               ; No permission to apply power due to C drive
+  = M_DR_STATUS_C               ; No permission to apply power due to C drive
+;
+CPS R_DRST_C LT 2               ; C axis drive with power
+  = B5R_FEEDHOLC1               ; FEEDHOLDC1, C axis drive without power
+  = B5R_DR_NOT_POWER            ; C axis drive has no power
+  = M_DR_NOT_POWER_C            ; C axis without power
+;
+CPS R_DRST_C EQ 3               ; C axis drive with torque
+  = B5R_DR_TORQUE               ; C axis drive with torque
+  = M_DR_TORQUE_C               ; C axis drive with torque
+;
+END
+;
+;------------------------------------------------------------------------------
+;                         CNC EMERGENCY SUBROUTINE
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; 1.-It checks all the PLC errors, but only errors 1 to 128 (ERR1 to ERR128)
+;    are taken into account to remove power.
+;
+;******************************************************************************
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; I_EMERGEN                     ; General emergency
+; I_POWER_ON                    ; Power on
+; R_DR_STATUS                   ; Power enable register
+; R_DR_NOT_POWER                ; Drives without power
+;
+;*************************************************************************
+;                         OUTPUT RESOURCES
+;*************************************************************************
+;
+; O_EMERGEN                     ; Emergency from the CNC
+; M_MACHINE_POWER               ; Machine with power
+; _EMERGEN                      ; Emergency to the CNC
+; B0R_FEEDHOLC1                 ; FEEDHOLDC1, machine without power
+; B0R_STARTC1                   ; No START, machine without power
+; B0R_AUXENDC1                  ; AUXEND because the machine has no power
+; B0R_XFERINHC1                 ; Reading locked up, machine without power
+; B11KEYDIS2                    ; Inhibit homing (ZERO) key
+; MSG1                          ; Machine without power
+; ERR11                         ; Discrepancy safety relay
+; ERR12                         ; Emergency switch from Operator panel
+; ERR13                         ; Power supply external I/O outputs fault
+; ERR14                         ; Inputs power supply ET200SP fault
+; ERR15                         ; Safety power supply fault
+; ERR16                         ; CNC power supply fault
+; ERR17                         ; Operator panel power supply fault
+; ERR18                         ; Output power supply ET200SP fault
+; ERR19                         ; Fagor power supply protection fault
+; ERR20                         ; Drives power supply fault
+;*************************************************************************
+;                         INTERNAL RESOURCES
+;*************************************************************************
+;
+; M_PLC_ERROR                   ; Some PLC error activated
+; R_ERR1_32                     ; ERR1-ERR32
+; R_ERR33_64                    ; ERR33-ERR64
+; R_ERR65_96                    ; ERR65-ERR96
+; R_ERR97_128                   ; ERR97-ERR128
+;
+;*************************************************************************
+;                         EXCEPTIONS
+;*************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 190
+;
+;#END EXCEPTIONS
+;
+SUB EMERGENCY
+;
+NOT I_SAFETY_RELAY              ; Discrepancy safety relay
+  AND CNCREADY                  ; CNC with no errors
+  = ERR11                       ; Discrepancy safety relay
+;
+NOT I_PS_EXT_IO_HEADER          ; Power supply external I/O header
+  AND CNCREADY                  ; CNC with no errors
+  = ERR12                       ; Emergency switch from Operator panel
+;
+NOT I_PS_EXT_IO_OUT             ; Power supply external I/O outputs
+  AND CNCREADY                  ; CNC with no errors
+  = ERR13                       ; Power supply external I/O outputs fault
+;
+NOT I_PS_IN_ET200SP             ; Inputs power supply ET200SP
+  AND CNCREADY                  ; CNC with no errors
+  = ERR14                       ; Inputs power supply ET200SP fault
+;
+NOT I_PS_SAFETY                 ; Safety power supply
+  AND CNCREADY                  ; CNC with no errors
+  = ERR15                       ; Safety power supply fault
+;
+NOT I_PS_CNC                    ; CNC power supply
+  AND CNCREADY                  ; CNC with no errors
+  = ERR16                       ; CNC power supply fault
+;
+NOT I_PS_PPC                    ; Operator panel power supply
+  AND CNCREADY                  ; CNC with no errors
+  = ERR17                       ; Operator panel power supply fault
+;
+NOT I_PS_OUT_ET200SP            ; Output power supply ET200SP
+  AND CNCREADY                  ; CNC with no errors
+  = ERR18                       ; Output power supply ET200SP fault
+;
+NOT I_RPS_SYSTEM_OK             ; Drives power supply OK
+  AND CNCREADY                  ; CNC with no errors
+  = ERR20                       ; Drives power supply fault
+;
+;## Test of activated errors
+;   ---------------------------
+()                              ; Logic "1"
+  = MOV ERR1 R_ERR1_32          ; Move ERR1-ERR32 to R_ERR1_32
+  = MOV ERR33 R_ERR33_64        ; Move ERR33-ERR64 to R_ERR33_64
+  = MOV ERR65 R_ERR65_96        ; Move ERR65-ERR96 to R_ERR65_96
+  = MOV ERR97 R_ERR97_128       ; Move ERR97-ERR128 to R_ERR97_128
+;
+CPS R_ERR1_32 NE 0              ; There are errors between ERR1 and ERR32
+  OR CPS R_ERR33_64 NE 0        ; There are errors between ERR33 and ERR64
+  OR CPS R_ERR65_96 NE 0        ; There are errors between ERR65 and ERR96
+  OR CPS R_ERR97_128 NE 0       ; There are errors between ERR97 and ERR128
+  = M_PLC_ERROR                 ; Some PLC error activated
+;
+;## Management of the emergency input/output
+;   ------------------------------------------
+;
+CPS R_DR_STATUS EQ 0            ; Power enable register
+  AND NOT M_PLC_ERROR           ; Some error activated
+  = O_EMERGEN                   ; Emergency from the CNC
+;
+I_PILZ_OK                       ; Condiciones de rearme OK
+  AND _ALARM                    ; Hard-soft CNC ready
+  AND NOT M_PLC_ERROR           ; Some error activated
+  AND CPS R_DR_STATUS EQ 0      ; Power enable register
+  = _EMERGEN                    ; Emergency to the CNC.
+  = M_EMERGEN                   ; Emergency from the CNC
+;
+M_EMERGEN                       ; Emergency to the CNC
+  AND CPS R_DR_NOT_POWER EQ 0   ; Drives without power
+  AND I_POWER_ON                ; Power on
+  = M_MACHINE_POWER             ; Machine with power
+;
+M_EMERGEN                       ; Emergency from the CNC
+  AND (NOT M_MACHINE_POWER      ; Machine with power
+  AND CLK400                    ; Impulse train 400 ms
+  OR M_MACHINE_POWER)           ; Machine with power
+  = O_LED_POWER_ON              ; Machine with power on LED azul
+;
+NOT M_MACHINE_POWER             ; Machine with power
+  = MSG1                        ; Machine without power
+;
+NOT M_MACHINE_POWER             ; Machine with power
+  = B0R_FEEDHOLC1               ; FEEDHOLDC1, machine without power
+  = B0R_STARTC1                 ; No START, machine without power
+  = B0R_AUXENDC1                ; AUXEND because machine has not power
+  = B0R_XFERINHC1               ; Reading locked up, machine without power
+;
+END
+;
+;------------------------------------------------------------------------------
+;                         DOOR SAFETY
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; I_DOOR_F_CLOSED               ; Front door closed
+; I_DOOR_L_CLOSED               ; Left door closed
+; I_DOOR_R_CLOSED               ; Right door closed
+; I_DOOR_F_KEY_OUT              ; Front doors key out
+; I_DOOR_L_KEY_IN               ; Left door key in
+; I_DOOR_R_KEY_IN               ; Right door key in
+; I_DOOR_SC_KEY_IN              ; Interior scuttle key in
+;
+; I_DOOR_OPEN_PB                ; Door opening push-button
+; M_MACHINE_POWER               ; Machine with power
+; INPOSZ                        ; Z axis in position
+; INPOSC                        ; C axis in position
+; INCYCLEC1                     ; CNC in execution
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; O_DOOR_F_LOW_UNLOCK           ; Front lower door unlock
+; O_DOOR_F_UP_UNLOCK            ; Front upper door unlock
+; O_DOOR_L_UNLOCK               ; Left door unlock
+; O_DOOR_R_UNLOCK               ; Right door unlock
+; O_DOOR_SCUTTLE_UNLOCK         ; Interior scuttle unlock
+; M_DOOR_CLOSED                 ; Door closed
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+;T049                           ; Time to Unlock door
+;T086                           ; Delay axis enable permission
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 194
+;
+;#END EXCEPTIONS
+;
+SUB DOORS_SAFETY
+;
+I_DOOR_F_CLOSED                 ; Front door closed
+  AND NOT I_DOOR_F_KEY_OUT      ; Front door key present
+  = M_DOOR_F_CLOSE              ; Front door closed
+;
+NOT I_DOOR_F_CLOSED             ; Front door opened
+  OR I_DOOR_F_KEY_OUT           ; Front door key not present
+  = MSG3                        ; Front door opened
+;
+I_DOOR_L_CLOSED                 ; Left door closed
+  AND  I_DOOR_L_KEY_IN          ; Left door key present
+  = M_DOOR_L_CLOSE              ; Left  door closed
+;
+NOT I_DOOR_L_CLOSED             ; Left door opened
+  OR NOT I_DOOR_L_KEY_IN        ; Left door not key present
+  = MSG4                        ; Left door opened
+;
+I_DOOR_R_CLOSED                 ; Right door closed
+  AND  I_DOOR_R_KEY_IN          ; Right door key present
+  = M_DOOR_R_CLOSE              ; Right  door closed
+;
+NOT I_DOOR_R_CLOSED             ; Right door opened
+  OR NOT I_DOOR_R_KEY_IN        ; Right door key not present
+  = MSG5                        ; Right door opened
+;
+ I_DOOR_SC_KEY_IN               ; Interior scuttle door closed
+  = M_DOOR_SCUTTLE_CLOSE        ; Interior scuttle door closed
+;
+NOT I_DOOR_SC_KEY_IN            ; Interior scuttle key out
+  = M_DOOR_SCUTTLE_OPEN         ; Interior scuttle door opened
+  = MSG6                        ; Interior scuttle door opened
+;
+M_DOOR_F_CLOSE                  ; Front door closed
+  AND M_DOOR_L_CLOSE            ; Left  door closed
+  AND M_DOOR_R_CLOSE            ; Right  door closed
+  AND M_DOOR_SCUTTLE_CLOSE      ; Interior scuttle door closed
+  = M_DOOR_CLOSED               ; Doors closed
+;
+NOT M_DOOR_CLOSED               ; Doors closed
+  = B4R_STARTC1                 ; No START: Door open, CNC not manual modes
+;
+STARTC1                         ; START key, CNC operator panel
+  AND B4R_STARTC1               ; No START: Door open, CNC not manual modes
+  = SET M_DOOR_OPEN_NO_START    ; Start has been pressed while door open
+;
+RESETOUTC1                      ; CNC reset
+  OR DFD B4R_STARTC1            ; No START: Door open, CNC not manual modes
+  OR NOT M_MACHINE_POWER        ; Machine with power
+  = RES M_DOOR_OPEN_NO_START    ; Start has been pressed while door open
+;
+M_DOOR_OPEN_NO_START            ; Start has been pressed while door open
+  AND CLK800                    ; Intermittent mark, 800 ms
+  = MSG24                       ; No Start while door open.
+;
+I_SETUP_MODE                    ; Machine selector in SETUP mode
+  = TG3 081 1000                ; SETUP mode selector input extension
+;
+T081                            ; SETUP mode selector input extension
+  = M_SETUP_MODE                ; Machine in SETUP mode
+;
+M_SETUP_MODE                    ; Machine in SETUP mode
+  = B7R_STARTC1                 ; No START: SETUP mode
+  = MSG31                       ; Machine in SETUP mode
+;
+I_DOOR_OPEN_ENABLE              ; Opening doors enabled
+  AND M_SETUP_MODE              ; Machine in SETUP mode
+  = M_DOOR_OPEN_ENABLE          ; Enable operate with open doors
+;
+()                              ; "1" logico
+  = CNCRD(A.TPOS.Z,R_TPOS_Z,M_CNCRD_SYN); Z-axis position
+;
+INPOSZ                          ; Z axis in position
+  AND INPOSC                    ; C axis in position
+  AND NOT INCYCLEC1             ; CNC in execution
+  AND M_MANUALC1                ; CNC in manual modes
+  AND M_SETUP_MODE              ; Machine in SETUP mode
+  = M_DOOR_OPEN_COND            ; Door opening conditions
+;
+CPS R_TPOS_Z GE R_L_LOW         ; Lower limit of door opening position
+  AND CPS R_TPOS_Z LE R_L_UP    ; Upper limit of door opening position
+  AND M_DOOR_OPEN_COND          ; Door opening conditions
+  = M_DOOR_L_INPOSZ             ; Z-axis in position to open left door
+;
+CPS R_TPOS_Z GE R_R_LOW         ; Lower limit of door opening position
+  AND CPS R_TPOS_Z LE R_R_UP    ; Upper limit of door opening position
+  = M_GANTRY_POS_MIDDLE         ; Z-axis middle position
+;
+M_GANTRY_POS_MIDDLE             ; Z-axis middle position
+  AND M_DOOR_OPEN_COND          ; Door opening conditions
+  = M_DOOR_R_INPOSZ             ; Z-axis in position to open right door
+;
+I_DOOR_OPEN_PB                  ; Door opening push-button
+  AND M_DOOR_L_INPOSZ           ; Z-axis in position to open left door
+  = SET M_DOOR_L_OPEN_REQ       ; Left door opening request accepted
+;
+M_DOOR_L_OPEN_REQ               ; Left door opening request accepted
+  = TG2 083 10000               ; Keep doors open request
+;
+T083                            ; Keep doors open request
+  = RES M_DOOR_L_OPEN_REQ       ; Left door opening request accepted
+;
+I_DOOR_OPEN_PB                  ; Door opening push-button
+  AND M_DOOR_R_INPOSZ           ; Z-axis in position to open left door
+  = SET M_DOOR_R_OPEN_REQ       ; Right door opening request accepted
+;
+M_DOOR_R_OPEN_REQ               ; Right door opening request accepted
+  = TG2 084 10000               ; Keep doors open request
+;
+T084                            ; Keep doors open request
+  = RES M_DOOR_R_OPEN_REQ       ; Right door opening request accepted
+;
+I_DOOR_OPEN_PB                  ; Door opening push-button
+  AND M_DOOR_OPEN_COND          ; Door opening conditions
+  = SET M_DOOR_F_OPEN_REQ       ; Front door opening request accepted
+;
+M_DOOR_F_OPEN_REQ               ; Front door opening request accepted
+  = TG2 085 10000               ; Keep doors open request
+;
+T085                            ; Keep doors open request
+  = RES M_DOOR_F_OPEN_REQ       ; Front door opening request accepted
+;
+M_DOOR_L_OPEN_REQ               ; Left door opening request accepted
+  = O_DOOR_L_UNLOCK             ; Left door unlock
+  = MSG7                        ; Unlock left door enable
+;
+M_DOOR_R_OPEN_REQ               ; Right door opening request accepted
+  = O_DOOR_R_UNLOCK             ; Right door unlock
+  = MSG8                        ; Unlock right door enable
+;
+M_DOOR_F_OPEN_REQ               ; Front door opening request accepted
+  = O_DOOR_F_UNLOCK             ; Front door unlock
+  = O_DOOR_S_UNLOCK             ; Interior scuttle unlock
+  = MSG9                        ; Unlock front door enable
+;
+M_DOOR_OPEN_COND                ; Door opening conditions
+  AND M_DOOR_CLOSED             ; Door closed
+  OR NOT M_DOOR_CLOSED          ; Door closed
+  AND CLK800                    ; Intermittent mark, 800 ms
+  = O_LED_DOOR_OPEN             ; Door opening conditions led
+;
+NOT M_DOOR_CLOSED               ; Door closed
+  AND M_SETUP_MODE              ; Machine in SETUP mode
+  AND M_DOOR_OPEN_ENABLE        ; Opening doors enabled
+  = M_DOOR_AUX_LIMIT            ; Limitations due to open door
+  = O_LED_DOOR_ENABLE           ; Enable operate with open doors
+;
+M_MAN_INT_AUTO                  ; CNC in manual intervention in automatic
+  OR M_DOOR_AUX_LIMIT           ; Limitations due to open door
+  = FLIMITAC                    ; Fmax with open door
+;
+NOT M_DOOR_CLOSED               ; Door closed
+  AND NOT M_DOOR_AUX_LIMIT      ; Limitations due to open door
+  = B4R_STOPC1                  ; STOP, open door
+  = B8R_FEEDHOLC1               ; FEEDHOLDC1, open door
+;
+(M_DOOR_CLOSED                  ; Doors closed
+  OR M_DOOR_AUX_LIMIT)          ; Limitations due to open door
+  AND I_PILZ_OK                 ; Condiciones de rearme OK
+  = M_AXES_ENABLE_AUX           ; Aux. axis enable permission
+  = TG3 086 500                 ; Delay axis enable permission
+;
+T086                            ; Delay axis enable permission
+  = M_AXES_ENABLE               ; Axis enable permission
+;
+NOT M_AXES_ENABLE               ; Axis enable permission
+  = B17KEYDIS1                  ; Inhibit Z+ key
+  = B23KEYDIS1                  ; Inhibit Z- key
+  = B21KEYDIS1                  ; Inhibit C+ key
+  = B19KEYDIS1                  ; Inhibit C- key
+;
+NOT M_DOOR_CLOSED               ; Door closed
+  AND M_DOOR_OPEN_NO_START      ; Start has been pressed while door open
+  AND NOT MSG24                 ; No Start while door open.
+  = MSG25                       ; Door open
+;
+END
+;
+;------------------------------------------------------------------------------
+;                         AXIS ENABLE
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; 1.-It closes the SERVO loop of each axis, checking relevant conditions.
+;   At the same time:
+;       -->It deactivates the brake.
+;       -->It sends SPENA to SP1 drive  (feedrate enable).
+;       -->It sends DRENA to the drive (power enable).
+; 2.-Once SPENA drops (feed enable) it is maintained for a while
+;   until dropping DRENA (power enable), so the axis does not stop
+;   by friction.
+; 3.-It checks if there is a  request for dead axis.
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; M_MACHINE_POWER               ; Machine with power
+; M_AXES_ENABLE                 ; Axes enable permission
+; M_DR_TORQUE_Z                 ; Z drive with torque
+; M_DR_TORQUE_Z1                ; Z1 drive with torque
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; O_Z_BRAKE                     ; Z brake
+; O_Z1_BRAKE                    ; Z1 brake
+; SERVOZON                      ; Z servo active
+; SPENAZ                        ; Z enable via SERCOS
+; DRENAZ                        ; Drive enable via SERCOS
+; SERVOZ1ON                     ; Z1 servo active
+; SPENAZ1                       ; Z1 enable via SERCOS
+; DRENAZ1                       ; Drive enable via SERCOS
+; ERR211                        ; Error Z drive without torque
+; ERR212                        ; Error Z1 drive without torque
+;
+;******************************************************************************
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+; T002                          ; 300 ms delay to cancel DRENAZ
+; T005                          ; 300 ms delay to cancel DRENAZ1
+; T121                          ; Maximum time Z without torque
+; T124                          ; Maximum time Z1 without torque
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 200
+;
+;#END EXCEPTIONS
+;
+SUB AXES_ENABLE
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT LOPENZ                ; Z controlled by CNC
+  AND M_AXES_ENABLE             ; Axes enable permission
+  = SERVOZON                    ; Z servo active
+  = SPENAZ                      ; Z enable via SERCOS
+  = TG3 002 300                 ; Delay for DRENAZ
+;
+T002                            ; 300 ms delay to cancel DRENAZ
+  = DRENAZ                      ; Drive enable via SERCOS
+  = TG2 121 3000                ; Maximum time Z without torque
+;
+T121                            ; Maximum time Z without torque
+  AND SPENAZ                    ; Z enable via SERCOS
+  AND NOT M_DR_TORQUE_Z         ; Z drive with torque
+  AND M_AXES_ENABLE_AUX         ; Aux. Axis enable permission
+  = ERR211                      ; Error Z drive without torque
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND SPENAZ                    ; Z enable via SERCOS
+  AND M_DR_TORQUE_Z             ; Z drive with torque
+  = M_Z_BRAKE                   ; Aux. Z brake
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT LOPENZ1               ; Z1 controlled by CNC
+  AND M_AXES_ENABLE             ; Axes enable permission
+  = SERVOZ1ON                   ; Z1 servo active
+  = SPENAZ1                     ; Z1 enable via SERCOS
+  = TG3 005 300                 ; Delay for DRENAZ1
+;
+T005                            ; 300 ms delay to cancel DRENAZ1
+  = DRENAZ1                     ; Drive enable via SERCOS
+  = TG2 124 3000                ; Maximum time Z1 without torque
+;
+T124                            ; Maximum time Z1 without torque
+  AND SPENAZ1                   ; Z1 enable via SERCOS
+  AND NOT M_DR_TORQUE_Z1        ; Z1 drive with torque
+  AND M_AXES_ENABLE_AUX         ; Aux. Axis enable permission
+  = ERR212                      ; Error Z1 drive without torque
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND SPENAZ1                   ; Z1 enable via SERCOS
+  AND M_DR_TORQUE_Z1            ; Z1 drive with torque
+  = M_Z1_BRAKE                  ; Aux. Z1 brake
+;
+M_Z_BRAKE                       ; Aux. Z brake
+  AND M_Z1_BRAKE                ; Aux. Z1 brake
+  = O_PILZ_BRAKE                ; Pilz brake signal
+;
+I_BRAKE_Z_ENA                   ; Z axes brake enable
+  = M_BRAKE_Z_ENA               ; Z axes brake enable
+;
+NOT M_BRAKE_Z_ENA               ; Z axes brake enable
+  = B0R_INHIBITZ                ; INHIBITZ,Z axes brake enable
+  = B0R_INHIBITZ1               ; INHIBITZ1,Z axes brake enable
+;
+END
+;
+;------------------------------------------------------------------------------
+;                         TABLE AXIS ENABLE
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; M10: Table axis dead
+; M11: Table axis alive
+; A maximum operation time is set to lock/unlock the Table axis
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; I_TABLE_LOCKED                ; Table axis locked detector
+; I_TABLE_UNLOCKED              ; Table axis unlocked detector
+; I_TABLE_LOCK_PRESS            ; Table axis locked pressure
+; M_CY1                         ; First cycle scan
+; M_MACHINE_POWER               ; Machine with power
+; M_MANUALC1                    ; CNC in manual modes
+; M_M11_C1                      ; M11: Table axis alive
+; M_M10_C1                      ; M10: Table axis dead
+; PARKC                         ; Park Table axis via CNC
+; UNPARKC                       ; Unpark Table axis via CNC
+; ENABLEC                       ; Table axis in motion
+; RESETOUT                      ; Reset CNC
+; B25KEYBD1                     ; C+ key pressed
+; B28KEYBD1                     ; C- key pressed
+; R_DRST_C                      ; Table axis drive status
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; M_TABLE_UNLOCK                ; Unlock Table axis, moving permission
+; MSG125                        ; Waiting for Table axis to be unlocked
+; MSG126                        ; Waiting for Table axis unlocking pressure
+; MSG129                        ; INDEXER:Table axis alive
+; ERR154                        ; Error Maximum Table axis unlocking time
+; ERR155                        ; Error Maximum Table axis locking time
+; ERR213                        ; Error Table axis drive without torque
+; DEADC                         ; Axis blend not applied
+; PARKEDC                       ; Table axis parked
+; DRENAC                        ; Drive enable via SERCOS Table axis
+; SPENAC                        ; Table axis enable via SERCOS
+; SERVOCON                      ; Table axis servo active
+; INHIBITC                      ; Particular Table axis feedhold
+; B25KEYDIS1                    ; C+ key of operator panel inhibited
+; B28KEYDIS1                    ; C- key of operator panel inhibited
+; B25KEYLED1                    ; Led C+ key
+; B28KEYLED1                    ; Led C- key
+; B5R_XFERINHC1                 ; Reading locked up, Table axis is dead
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+
+; M_TABLE_TORQUE                ; Table axis alive
+; M_TABLE_PARK_CY1              ; Park Table axis in first cycle
+; M_TABLE_UNPARK_CY1            ; Unpark Table axis in first cycle
+; M_TABLE_PARKED                ; Request to park Table axis
+; T150                          ; Delay Table axis unlocked
+; T151                          ; Delay Table axis locked
+; T152                          ; Display timing MSG129
+; T153                          ; Display timing MSG129
+; T154                          ; Table axis drive disable delay
+; T155                          ; Maximum time table axis without torque
+; T156                          ; Maximum Table axis unlocking time
+; T157                          ; Maximum Table axis locking time
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 201
+;
+;#END EXCEPTIONS
+;
+SUB TABLE
+;
+CPS R_TPOS_Z GE R_ZI_LOW        ; Upper limit of Z-axis start position
+  AND CPS R_TPOS_Z LE R_ZI_UP   ; Lower limit of Z-axis start position
+  = M_GANTRY_POS_DOWN           ; Z-axis start position
+;
+CPS R_TPOS_Z GE R_ZF_LOW        ; Upper limit of Z-axis end position
+  AND CPS R_TPOS_Z LE R_ZF_UP   ; Lower limit of Z-axis end position
+  = M_GANTRY_POS_UP             ; Z-axis end position
+;
+M_GANTRY_POS_DOWN               ; Z-axis start position
+  OR M_GANTRY_POS_UP            ; Z-axis end position
+  = M_TABLE_COND                ; Table movement conditions
+;
+NOT M_TABLE_COND                ; Table movement conditions
+  AND NOT M_TUNE_MODE           ; Tune up mode
+  = B1R_INHIBITC                ; Particular table axis feedhold
+;
+;   ************** TABLE AXIS CONTROL *******************************************
+;
+()                              ; Logic '1'
+  = M_TABLE_CONNECTED           ; Table axis connected
+;
+I_TABLE_UNLOCKED                ; Table axis unlocked detector
+  AND NOT I_TABLE_LOCKED        ; Table axis locked detector
+  AND I_TABLE_LOCK_PRESS        ; Table axis locked pressure
+  = TG2 150 500                 ; Delay table axis unlocked
+;
+T150                            ; Delay table axis unlocked
+  = M_TABLE_UNLOCKED            ; Confirmation table axis unlocked
+;
+I_TABLE_LOCKED                  ; Table axis locked detector
+  AND NOT I_TABLE_UNLOCKED      ; Table axis unlocked detector
+  AND NOT I_TABLE_LOCK_PRESS    ; Table axis locked pressure
+  = TG2 151 500                 ; Delay table axis locked
+;
+T151                            ; Delay table axis locked
+  = M_TABLE_LOCKED              ; Confirmation table axis locked
+;
+M_M11_C1                        ; M11: Table axis alive
+  = SET M_TABLE_TORQUE          ; Table axis alive
+;
+M_M10_C1                        ; M10: Table axis dead
+  OR PARKEDC                    ; Table axis parked
+  = RES M_TABLE_TORQUE          ; Table axis alive
+;
+NOT M_TABLE_TORQUE              ; Table axis alive
+  AND NOT PARKEDC               ; Table axis parked
+  = DEADC                       ; Table axis blend not applied
+;
+M_TABLE_TORQUE                  ; Table axis alive
+  AND NOT T153                  ; display timing MSG129
+  = TG2 152 600000              ; Display timing MSG129
+;
+T152                            ; Display timing MSG129
+  = MSG129                      ; INDEXER:Table axis alive
+  = TG2 153 60000               ; Display timing MSG129
+;
+M_CY1                           ; First cycle scan
+  AND NOT M_TABLE_CONNECTED     ; Table axis connected
+  = M_TABLE_PARK_CY1            ; Park table axis in first cycle
+;
+M_CY1                           ; First cycle scan
+  AND M_TABLE_CONNECTED         ; Table axis connected
+  = M_TABLE_UNPARK_CY1          ; Unpark table axis in first cycle
+;
+DFU PARKC                       ; Park table axis via CNC
+  OR M_TABLE_PARK_CY1           ; Park table axis in first cycle
+  OR NOT M_TABLE_CONNECTED      ; Table axis connected
+  = SET M_TABLE_PARKED          ; Request to park table axis
+;
+DFU UNPARKC                     ; Unpark table axis via CNC
+  OR M_TABLE_UNPARK_CY1         ; Unpark table axis in first cycle
+  = RES M_TABLE_PARKED          ; Request to park table axis
+;
+M_TABLE_PARKED                  ; Request to park table axis
+  AND NOT DRENAC                ; Drive enable via SERCOS table axis
+  AND NOT SPENAC                ; Table axis enable via SERCOS
+  AND CPS R_DRST_C NE 3         ; Table axis drive disabled
+  = PARKEDC                     ; Table axis parked
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT M_DR_NOT_POWER_C      ; Table axis without power
+  AND NOT PARKEDC               ; Table axis parked
+  AND NOT UNPARKC               ; Activate table axis
+  AND NOT PARKC                 ; Park Table axis via CNC
+  AND NOT ERR154                ; Error Maximum table axis unlocking time
+  AND (ENABLEC                  ; Table axis in motion
+  OR M_TABLE_TORQUE)            ; Table axis alive
+  = M_TABLE_UNLOCK              ; Unlock table axis, moving permission
+;
+(M_TABLE_UNLOCKED               ; Confirmation table axis unlocked
+  OR NOT M_TABLE_LOCKED)        ; Confirmation table axis locked
+  AND M_TABLE_UNLOCK            ; Unlock table axis, moving permission
+  AND NOT M_DR_NOT_POWER_C      ; Table axis without power
+  AND NOT PARKEDC               ; Table axis parked
+  AND NOT UNPARKC               ; Activate table axis
+  AND NOT PARKC                 ; Table axis parked
+  AND NOT LOPENC                ; Table controlled by CNC
+  AND NOT M_TABLE_PARKED        ; Request to park table axis
+  AND M_AXES_ENABLE             ; Axes enable permission
+  = SERVOCON                    ; Table axis servo active
+  = SPENAC                      ; Table axis enable via SERCOS
+  = TG3 154 300                 ; Table axis drive disable delay
+;
+T154                            ; Table axis drive disable delay
+  = DRENAC                      ; Drive enable table axis via SERCOS
+  = TG2 155 3000                ; Maximum time table axis without torque
+;
+T155                            ; Maximum time table axis without torque
+  AND SPENAC                    ; Table axis enable via SERCOS
+  AND NOT M_DR_TORQUE_C         ; Table axis drive with torque
+  = ERR213                      ; Error Table axis drive without torque
+;
+(DRENAC                         ; Drive enable table axis via SERCOS
+  OR M_TABLE_XFERINH            ; Aux axis locked xferinh
+  AND MATCHC)                   ; C axis in Hirth position
+  AND NOT M_TABLE_TORQUE        ; Table axis alive
+  AND NOT M_TABLE_LOCKED        ; Table axis locked
+  = M_TABLE_XFERINH             ; Aux axis locked xferinh
+;
+M_TABLE_XFERINH                 ; Aux axis locked xferinh
+  = B5R_XFERINHC1               ; Reading locked up, table axis is dead
+;
+M_TABLE_UNLOCK                  ; Unlock table axis, moving permission
+  AND NOT M_TABLE_UNLOCKED      ; Confirmation table axis unlocked
+  OR M_TABLE_LOCKED             ; Confirmation table axis locked
+  = B5R_INHIBITC                ; Particular table axis feedhold
+;
+M_TABLE_UNLOCK                  ; Unlock table axis, moving permission
+  AND M_HYD_PUMP_ON             ; Hydraulic group motor running
+  = O_TABLE_UNLOCK              ; Unlock table axis
+;
+NOT M_TABLE_UNLOCK              ; Unlock table axis, moving permission
+  AND MATCHC                    ; C axis in Hirth position
+  AND NOT M_TABLE_LOCKED        ; Confirmation table axis locked
+  AND M_HYD_PUMP_ON             ; Hydraulic group motor running
+  = O_TABLE_LOCK                ; Lock table axis
+;
+O_TABLE_UNLOCK                  ; Unlock table axis
+  AND NOT M_TABLE_UNLOCKED      ; Confirmation table axis unlocked
+  = MSG125                      ; Waiting for table axis to be unlocked
+  = TG2 156 10000               ; Maximum table axis unlock time
+;
+T156                            ; Maximum table axis unlock time
+  = SET M_TABLE_UNLOCK_FAULT    ; Error maximum table axis unlocking
+;
+DFU M_TABLE_UNLOCK_FAULT        ; Error maximum table axis unlocking
+  = SET ERR154                  ; Error Maximum table axis unlocking time
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT PARKEDC               ; Table axis parked
+  AND NOT M_TABLE_UNLOCK        ; unlock table axis, moving permission
+  AND NOT M_TABLE_LOCKED        ; Confirmation table axis locked
+  = MSG126                      ; Waiting for table axis unlocking pressure
+  = TG2 157 6000                ; Maximum table axis locking time
+;
+T157                            ; Maximum table axis locking time
+  = SET M_TABLE_LOCK_FAULT      ; Error maximum table axis locking
+;
+DFU M_TABLE_LOCK_FAULT          ; Error maximum table axis locking
+  = SET ERR155                  ; Error maximum table axis locking time
+;
+RESETOUT                        ; Reset CNC
+  = RES ERR154                  ; Error maximum table axis unlocking time
+  = RES ERR155                  ; Error maximum table axis locking time
+  = RES M_TABLE_LOCK_FAULT      ; Error maximum table axis locking
+;
+END
+;
+;-------------------------------------------------------------------------
+;                         Z-Z1 GANTRY
+;-------------------------------------------------------------------------
+;
+; To correct a difference in dimensions between Z and Z1, the difference
+; (DIFFCOMPZ) must be smaller than R_MAXDIFF (MAXCOUPE) in mm.
+;
+; Homed the Z and Z1 axes
+;     1.- Autom?ticamente al finalizar la referencia del eje Z maestro (*)
+;
+;  (*) NOTA: El par?metro (OEM) MTB.P10 activa la opci?n del punto 1
+;
+; Si la diferencia de cotas es > de R_MAXDIFF mm tenemos 2 opciones:
+;    Opci?n 1: Si el paralelismo esta bien corregir el REFVALUE
+;    Opci?n 2: Desacoplar ejes y corregir paralelismo
+;
+; Si cae la se?al SERVOZON, se anula el error de seguimiento del eje esclavo.
+; Si se anula el Gantry no se puede referenciar el eje Z
+; M96: Permite mover el eje Z, una vez referenciado, sin paralelismo
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;
+;*************************************************************************
+;                         INPUT RESOURCES
+;*************************************************************************
+;
+; M_MACHINE_POWER               ; Machine with power
+; M_DR_TORQUE_Z                 ; Z drive with torque
+; M_DR_TORQUE_Z1                ; Z1 drive with torque
+; M_GANTRY_ON_Z                 ; Gantry active on Z axis
+; M_GANTRYOFF                   ; CNC decouples the gantry axis
+; M_M96_C1                      ; M96: Enable Z-axis movements without parallelism
+; M_MANUALC1                    ; Channel C1 in manual mode
+; M_ZERO                        ; CNC in homing mode
+; ENABLEZ                       ; Z axis in movement
+; ENABLEZ1                      ; Z1 axis in movement
+; SERVOZON                      ; Active Z axis servo
+; SERVOZ1ON                     ; Active Z1 axis servo
+; REFPOINZ                      ; Z axis homing has been made
+; REFPOINZ1                     ; Z1 axis homing has been made
+; MAXDIFFZ                      ; CNC cannot correct the position difference
+; RESETOUT                      ; Reset from operator panel
+; B9KEYBD1                      ; Operator panel pushbutton Z1+
+; B10KEYBD1                     ; Operator panel pushbutton Z1-
+; R_WARNCOUPE                   ; Maximum difference for warning (WARNCOUPE)
+; R_MAXDIFF                     ; Maximum difference allowed (MAXCOUPE)
+;
+;*************************************************************************
+;                         OUTPUT RESOURCES
+;*************************************************************************
+; GANTRYOFFZ1                   ; CNC decouples the gantry Z-Z1 axes
+; DIFFCOMPZ                     ; Correction of the parallelism between Z-Z1
+; AXISPOSZ1                     ; Manual movement request Z1+
+; B9KEYLED1                     ; Z1+ operator panel LEDs
+; AXISNEGZ1                     ; Manual movement request Z1-
+; B10KEYLED1                    ; Z1- operator panel LEDs
+; DROZ                          ; Z axis as DRO mode
+; DROZ1                         ; Z1 axis as DRO mode
+; MSG14                         ; GANTRY: Difference between Z-Z1 > R_WARNCOUPE (mm)
+; MSG15                         ; GANTRY: Non coupled Z-Z1 axes
+; MSG16                         ; GANTRY: Disable  Z axis movements (M96)
+; MSG17                         ; GANTRY: Automatic correction of parallelism cancelled
+; ERR48                         ; GANTRY: Difference between Z-Z1 > MAXCOUPE (mm)
+; ERR30                         ; GANTRY: There is no Z axis homing permission
+;
+;*************************************************************************
+;*************************************************************************
+;                         INTERNAL RESOURCES
+;*************************************************************************
+; M_CNCRD_SYN                   ; Mark to read synchronous CNC variables
+; M_REFZ                        ; Z-Z1 axes in homing mode
+; M_REFPOINZ                    ; Gantry axis homing has been made
+; M_GANTRY_MAXDIFFZ             ; Difference between Z-Z1 > MAXCOUPE (mm)
+; M_GANTRY_BYPASZ               ; Enable Z-axis movements without parallelism
+; R_POSZ                        ; Z-axis position reading
+; R_POSZ1                       ; Z1-axis position reading
+; R_POS_DIFF                    ; Position difference (mm) between Z and Z1
+;
+;*************************************************************************
+;                         EXCEPTIONS
+;*************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 210
+;
+;#END EXCEPTIONS
+
+SUB GANTRY_Z
+;
+M_GANTRYOFF                     ; CNC decouples the gantry axis
+  = GANTRYOFFZ1                 ; CNC decouples the gantry Z-Z1 axes
+  = MOV $F3800000 KEYDIS3       ; Movement selector
+;
+NOT M_GANTRYOFF                 ; CNC decouples the gantry axis
+  = MOV R_NULL KEYDIS3          ; Movement selector
+;
+()                              ; Logic "1"
+  = CNCRD(A.POS.Z,R_POSZ,M_CNCRD_SYN)  ; Z-axis position reading
+  = CNCRD(A.POS.Z1,R_POSZ1,M_CNCRD_SYN); Z1-axis position reading
+  = SBS R_POSZ R_POSZ1 R_POS_DIFF ; Position difference (mm) between Z and Z1
+;
+B31R_POS_DIFF                   ;Sign bit
+  = MLS -1 R_POS_DIFF R_POS_DIFF; Change sign
+;
+M_ZERO                          ; CNC in homing mode
+  AND (ENABLEZ                  ; Z axis in movement
+  OR ENABLEZ1)                  ; Z1 axis in movement
+  = M_REFZ                      ; Z-Z1 axes in homing mode
+;
+M_REFZ                          ; Z-Z1 axes in homing mode
+  OR CPS R_POS_DIFF GT R_MAXDIFF ; Difference between Z and Z1 > MAXCOUPE (mm)
+  OR NOT SERVOZON               ; Active Z axis servo
+  OR NOT SERVOZ1ON              ; Active Z1 axis servo
+  = RES DIFFCOMPZ               ; Correction of the parallelism between Z-Z1
+;
+NOT M_REFZ                      ; Z-Z1 axes in homing mode
+  AND REFPOINZ                  ; Z axis homing has been made
+  AND REFPOINZ1                 ; Z1 axis homing has been made
+  = M_REFPOINZ                  ; Gantry axis homing has been made
+;
+M_GANTRY_ON_Z                   ; Gantry active on Z axis
+  AND M_REFPOINZ                ; Gantry axis homing has been made
+  AND SERVOZON                  ; Active Z axis servo
+  AND SERVOZ1ON                 ; Active Z1 axis servo
+  AND CPS R_POS_DIFF GE R_WARNCOUPE ; Difference between Z and Z1 >= R_WARNCOUPE (mm)
+  AND CPS R_POS_DIFF LE R_MAXDIFF ; Difference between Z and Z1 <= MAXCOUPE (mm)
+  = MSG14                       ; GANTRY: Difference between Z-Z1 > R_WARNCOUPE (mm)
+;
+NOT M_GANTRY_ON_Z               ; Gantry active on Z axis
+  OR M_GANTRYOFF                ; CNC decouples the gantry Z-Z1 axes
+  = MSG15                       ; GANTRY: Non coupled Z-Z1 axes
+;
+MSG15                           ; GANTRY: Non coupled Z-Z1 axes
+  AND NOT M_MAN_MDIC1           ; CNC in Jog and MDI modes
+  = B10R_STARTC1                ; No START, GANTRY: Non coupled Z-Z1 axes
+;
+M_GANTRY_ON_Z                   ; Gantry active on Z axis
+  AND M_REFPOINZ                ; Gantry axis homing has been made
+  AND SERVOZON                  ; Active Z axis servo
+  AND SERVOZ1ON                 ; Active Z1 axis servo
+  AND (CPS R_POS_DIFF GT R_MAXDIFF ; Difference between Z and Z1 > MAXCOUPE (mm)
+  OR MAXDIFFZ)                  ; CNC cannot correct the position difference
+  = M_GANTRY_MAXDIFFZ           ; Difference between Z-Z1 > MAXCOUPE (mm)
+;
+M_M96_C1                        ; M96: Enable Z-axis movements without parallelism
+  AND M_GANTRY_MAXDIFFZ         ; Difference between Z-Z1 > MAXCOUPE (mm)
+  = SET M_GANTRY_BYPASZ         ; Enable Z-axis movements without parallelism
+;
+M_GANTRY_MAXDIFFZ               ; Difference between Z-Z1 > MAXCOUPE (mm)
+  AND NOT M_GANTRY_BYPASZ       ; Enable Z-axis movements without parallelism
+  = MSG16                       ; GANTRY: Disable  Z axis movements (M96)
+;
+M_GANTRY_MAXDIFFZ               ; Difference between Z-Z1 > MAXCOUPE (mm)
+  AND NOT M_ZERO                ; CNC in homing mode
+  AND NOT M_GANTRY_BYPASZ       ; Enable Z-axis movements without parallelism
+  AND ENABLEZ                   ; Z axis in movement
+  = SET ERR48                   ; GANTRY: Difference between Z-Z1 > MAXCOUPE (mm)
+;
+RESETOUT                        ; Reset from operator panel
+  OR NOT M_GANTRY_ON_Z          ; Gantry active on Z axis
+  OR CPS R_POS_DIFF LE 200      ; Difference between Z and Z1 <= 0.02 mm
+  OR DFD M_MANUALC1             ; Channel C1 in manual mode
+  = RES M_GANTRY_BYPASZ         ; Enable Z-axis movements without parallelism
+  = RES ERR48                   ; Diferencia entre Z-Z1 > MAXCOUPE (mm)
+;
+M_ZERO                          ; CNC in homing mode
+  AND NOT M_GANTRY_ON_Z         ; Gantry active on Z axis
+  = ERR30                       ; GANTRY: There is no Z axis homing permission
+;
+NOT SERVOZON                    ; Active Z axis servo
+  = DROZ                        ; Z axis as DRO mode
+;
+NOT SERVOZ1ON                   ; Z1 servo active
+  = DROZ1                       ; Z1 axis as DRO mode
+;
+M_GANTRY_DIFFCOMPZ              ; Automatic parallelism correction
+  AND M_GANTRY_ON_Z             ; Gantry active on Z axis
+  AND M_REFPOINZ                ; Gantry axis homing has been made
+  AND NOT CPS R_POS_DIFF GT R_MAXDIFF ; Difference between Z and Z1 > MAXCOUPE (mm)
+  AND M_DR_TORQUE_Z             ; Z drive with torque
+  AND M_DR_TORQUE_Z1            ; Z1 drive with torque
+  AND NOT M_GANTRYOFF           ; CNC decouples the gantry axis
+  AND NOT INHIBITZ
+  = SET DIFFCOMPZ               ; Correction of the parallelism between Z-Z1
+;
+NOT M_GANTRY_DIFFCOMPZ          ; Automatic parallelism correction
+  = MSG17                       ; GANTRY: Automatic correction of parallelism cancelled
+;
+END
+;
+;------------------------------------------------------------------------------
+;                         GUIDE WAY LUBRICATION
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; 1.-This subroutine contemplates diferents types of lubrication:
+;    -->Lubrication by CNC distance
+;    -->Lubrication by time
+;    -->Lubrication under request.
+; 2.-It activates the lubrication by the first condition met and resets all.
+; 3.-The distance values are set by machine parameters and the time is validated
+;    in the OPTIONS subroutine
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; I_LUC400_FAULT                ; LUC 400 Lubrication failure
+; BD1_LUB_REQUEST               ; Lubrication request
+; M_MACHINE_POWER               ; Machine with power
+; M_MANUALC1                    ; CNC in manual modes
+; M_RESET_C1                    ; General reset
+; LUBRZ                         ; Lube distance Z reached (CNC)
+; ENABLEZ                       ; Z axis in movement
+; RAPID                         ; CNC in G0 feed
+; R_TIME_PULSE_LUB_S            ; Extra lubrication time with pressure (sec.)
+; R_TIME_PULSE_LUB_MS           ; Extra lubrication time with pressure (ms.)
+; R_TIME_PAUSE_LUB_S            ; Pause between lubrications (seconds)
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; O_LUB_GUIDES                  ; Activate way lubrication
+; B5R_STARTC1                   ; No START, lubrication failure
+; LUBRENAZ                      ; Enable Z lubrication distance by CNC
+; LUBROKZ                       ; Reset Z lubrication distance (CNC)
+; MSG32                         ; E1: Empty indicator
+; MSG33                         ; E2: Overcurrent
+; MSG34                         ; Way lubrication LUC400 failure
+; MSG141                        ; Way lubrication pressure failure
+; MSG142                        ; Way lubrication pressure switch stuck
+; MSG145                        ; Way Lubrication thermal switch failure
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+; M_LUB_THS                     ; Lubrication thermal switch
+; M_LUB_PRESSURE                ; Way lubrication pressure
+; M_LUB_LEVEL                   ; Way lubrication oil level
+; M_LUB_REQUEST                 ; Way lubrication request memory
+; M_LUB_GUIDES                  ; Activate way lubrication guides
+; M_LUB_PRESS_FAILURE           ; Way lubrication pressure failure
+; M_LUB_CONDITIONS              ; Lub. conditions
+; B0R_LUBRICATION               ; Request lubrication by machine power-up
+; B1R_LUBRICATION               ; Request lubrication by distance (CNC)
+; B2R_LUBRICATION               ; Request lubrication by time
+; C021                          ; Counter of seconds between lubrications
+; T021                          ; Extra time for lubrication with pressure
+; T022                          ; Time to reach pressure
+; T023                          ; Delay failure, lub. pressure switch stuck
+; T024                          ; Delay way lubrication level failure
+; T025                          ; Delay Error lubrication pressure switch stuck
+; T026                          ; Delay Error lubrication pressure failure
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 305
+;
+;#END EXCEPTIONS
+;
+SUB GUIDES_LUBRICATION_LUC400
+;
+NOT I_LUC400_FAULT              ; LUC 400 Lubrication failure
+ = M_LUC400_FAULT               ; LUC 400 Lubrication failure
+;
+NOT MSG32                       ; E1: Empty indicator
+  AND NOT MSG33                 ; E2: Overcurrent
+  AND M_MACHINE_POWER           ; Machine with power
+  = M_LUB_CONDITIONS            ; Lub. conditions
+;
+M_MACHINE_POWER                 ; Machine with power
+  = LUBRENAZ                    ; Enable Z lubrication distance by CNC
+;
+LUBRZ                           ; Lube distance Z reached (CNC)
+  = SET B1R_LUBRICATION         ; Request lubrication by distance (CNC)
+;
+ENABLEZ                         ; Z axis in movement
+  AND NOT M_LUB_GUIDES          ; Activate way lubrication
+  AND (DFU CLK1000              ; Flank every second
+  OR DFD CLK1000)               ; Flank every second
+  = CUP 010                     ; Counter of seconds between lubrications
+;
+CPS C010 GE 60                  ; From seconds to minutes
+  = CUP 011                     ; Counter of minutes between lubrications
+  = CPR 010 0                   ; Reset counter of seconds
+;
+CPS C011 GE 60                  ; From minutes to hours
+  = CUP 012                     ; Counter of hours between lubrications
+  = CPR 011 0                   ; Reset counter of minutes
+;
+CPS C012 GE R_TIME_PAUSE_LUB    ; Pause between lubrications done
+  = SET B2R_LUBRICATION         ; Request lubrication by time
+  = CPR 012 0                   ; Reset counter of hours
+;
+M_M95_C1                        ; Aux. lubrication filling function
+  AND NOT M_LUB_CYCLE           ; Lubrication cycle
+  = SET M_LUB_FILL              ; Filling function
+  = MOV 0 R_LUB_SETUP
+;
+CPS R_LUB_SETUP GE 10
+  OR NOT M_LUB_CONDITIONS       ; Lub. conditions
+  OR DFD M_LUB_CYCLE            ; Lub. cycle down flank
+  = MOV 0 R_LUB_SETUP
+  = RES M_LUB_FILL              ; Filling function
+;
+(M_LUB_FILL                     ; Filling function
+  OR M_SM_LUB_ON)               ; Screen monitoring: Lubrication ON
+  AND NOT M_LUB_CYCLE           ; Lubrication cycle
+  AND M_LUB_CONDITIONS          ; Lub. conditions
+  = B3R_LUBRICATION             ; Request lubrication manual
+;
+CPS R_LUBRICATION NE 0          ; Request to lubricate machine
+  AND NOT MSG34                 ; Way lubrication LUC400 failure
+  = MOV 1 R_LUB_CYCLE           ; Request the first pulse of lubrication of the guides
+  = MOV 0 R_LUBRICATION         ; Cancel lubrication requests
+  = ADS R_LUB_SETUP 1 R_LUB_SETUP
+;
+B0R_LUB_CYCLE                   ; Initial lubrication of the guides
+  = TG2 021 15000               ; Initial timing of the lubrication cycle
+;
+B0R_LUB_CYCLE                   ;
+  AND T021                      ; Initial timing of the lubrication cycle
+  = RL1 R_LUB_CYCLE 1 R_LUB_CYCLE ; Pause between lubrications pulses
+;
+B1R_LUB_CYCLE                   ; Request the first pulse of lubrication of the guides
+  = M_LUB_PULSE_1               ; Way lubrication request first pulse
+;
+B1R_LUB_CYCLE                   ; Request first pulse lubrication of the guides
+  AND M_LUB_PULSE_1             ; Way lubrication request first pulse
+  = TG2 022 2000                ; Amount of lubrical pulse 0.15 cm3
+;
+B1R_LUB_CYCLE                   ; Request first pulse lubrication of the guides
+  AND T022                      ; Amount of lubrical pulse 0.15 cm3
+  = RL1 R_LUB_CYCLE 1 R_LUB_CYCLE ; Pause between lubrications pulses
+;
+B2R_LUB_CYCLE                   ; Pause between lubrications pulses
+  = TG2 023 15000               ; Pause between lubrications pulses
+;
+T023                            ; Pause between lubrications pulses
+  = RL1 R_LUB_CYCLE 1 R_LUB_CYCLE ; Request second pulse lubrication of the guides
+;
+B3R_LUB_CYCLE                   ; Request second pulse lubrication of the guides
+  = M_LUB_PULSE_2               ; Way lubrication request second pulse
+;
+B3R_LUB_CYCLE                   ; Request second pulse lubrication of the guides
+  AND M_LUB_PULSE_2             ; Way lubrication request second pulse
+  = TG2 024 2000                ; Amount of lubrical pulse 0.15 cm3
+;
+B3R_LUB_CYCLE                   ; Request second pulse lubrication of the guides
+  AND T024                      ; Amount of lubrical pulse 0.15 cm3
+  = MOV 0 R_LUB_CYCLE           ; End of lubtications cycle
+;
+M_LUB_PULSE_1                   ; Way lubrication request first pulse
+  OR M_LUB_PULSE_2              ; Way lubrication request second pulse
+  = O_LUB_GUIDES                ; Activate way lubrication guides
+  = TG3 028 14000               ; Delay post-Lubrication cycle
+  = LD1_LUB_REQUEST             ; Lubrication request
+;
+CPS R_LUB_CYCLE NE 0            ; Lubrication cycle
+  = M_LUB_CYCLE                 ; Lubrication cycle
+;
+DFD M_LUB_CYCLE                 ; Lubrication cycle
+  = LUBROKZ                     ; Reset X lubrication distance (CNC)
+  = CPR 010 0                   ; Reset counter of seconds
+  = CPR 011 0                   ; Reset counter of minutes
+  = CPR 012 0                   ; Reset counter of hours
+;
+M_LUC400_FAULT                  ; LUC 400 Lubrication failure
+  AND NOT T028                  ; Delay post-Lubrication cycle
+  AND M_MACHINE_POWER           ; Machine with power
+  = TG2 025 750                 ; Delay to identify fault
+  = TG2 026 2000                ; Delay to identify fault
+;
+T025                            ; Delay to identify fault
+  = SET M_LUC400_FAULT_E1       ; E1: Empty indicator
+;
+M_LUC400_FAULT_E1               ; E1: Empty indicator
+  AND T026                      ; Delay to identify fault
+  = RES M_LUC400_FAULT_E1       ; E1: Empty indicator
+;
+M_LUC400_FAULT_E1               ; E1: Empty indicator
+  = TG2 027 3000                ; Delay to identify fault
+;
+T027                            ; Delay to identify fault
+  = SET MSG32                   ; E1: Empty indicator
+;
+T026                            ; Delay to identify fault
+  = SET MSG33                   ; E2: Overcurrent
+;
+RESETOUTC1                      ; CNC reset
+  = RES MSG32                   ; E1: Empty indicator
+  = RES MSG33                   ; E2: Overcurrent
+;
+MSG32                           ; E1: Empty indicator
+  OR MSG33                      ; E2: Overcurrent
+  = B5R_STARTC1                 ; No START, lubrication failure
+;
+END
+;
+;------------------------------------------------------------------------------
+;                        Broach coolant
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; Via program or MDI:
+;             M9 : Cancel broach coolant
+;             M8 : Broach coolant
+; The status is complemented from the operator panel
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; I_COOL_TRANSF_THS             ; Coolant transfer motor circuit breaker
+; I_COOL_MAIN_THS               ; Coolant motor main circuit breaker
+; M_DOOR_CLOSED                 ; Door closed
+; M_MACHINE_POWER               ; Machine with power
+; M_RESET_C1                    ; General reset
+; M_M8_C1                       ; M8: coolant by broach coolant
+; M_M9_C1                       ; M9: Cancel tool coolant
+; RESETOUTC1                    ; CNC reset
+; BD1_COOL_BROACH               ; Button for broach coolant
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; O_COOL_MAIN                   ; Frame cleaning motor start
+; O_COOL_TRANSFER               ; Coolant transfer motor start
+; O_FRAME_CLEAN                 ; Activate frame cleaning
+; MSG26                         ; Broach coolant impossible due to open door
+; MSG27                         ; Broach coolant thermal switch failure
+; B6R_STARTC1                   ; START: Ext. coolant thermal switch failure
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+; M_COOL_TRANSF_THS             ; Coolant transfer motor circuit breaker
+; M_COOL_MAIN_THS               ; Frame cleaning motor circuit breaker
+; M_COOL_MAIN _COND             ; Broach coolant condition
+; M_COOL_MAIN                   ; Request for broach coolant
+; T132                          ; Delay broach coolante level failure
+;******************************************************************************
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 320
+;
+;#END EXCEPTIONS
+;
+;
+SUB BROACH_COOLANT
+;
+I_COOL_TRANSF_THS               ; Coolant transfer motor circuit breaker
+  = M_COOL_TRANSF_THS           ; Coolant transfer motor circuit breaker
+;
+I_COOL_MAIN_THS                 ; Coolant motor main circuit breaker
+  = M_COOL_MAIN_THS             ; Coolant motor main circuit breaker
+;
+I_COOL_TRANSFER_ON              ; Coolant transfer motor on
+  = M_COOL_TRANSFER_ON          ; Coolant transfer motor on
+;
+I_COOL_MAIN_ON                  ; Coolant motor main on
+  = M_COOL_MAIN_ON              ; Coolant motor main on
+;
+I_COOL_FLOW                     ; Coolant flow
+  = TG2 128 3000                ; Delay Coolant flow
+;
+T128                            ; Delay Coolant flow
+  = M_COOL_FLOW                 ; Coolant flow
+;
+I_COOL_TANK_MIN                 ; Coolant tank level minimum
+  = M_COOL_TANK_MIN             ; Coolant tank level minimum
+;
+M_DOOR_CLOSED                   ; Door closed
+  AND M_COOL_TRANSF_THS         ; Coolant transfer motor circuit breaker
+  AND M_COOL_MAIN_THS           ; Coolant motor main circuit breaker
+  AND NOT MSG29                 ; Coolant tank level minimum failure
+  AND M_MACHINE_POWER           ; Machine with power
+  = M_COOL_MAIN_COND            ; Coolant motor main condition
+;
+M_M8_C1                         ; M8: Coolant
+  AND NOT M_COOL_MAIN           ; Request for coolant
+  OR M_SM_COOLANT_ON            ; Screen monitoring: Coolant ON
+  AND NOT M_BROACHING_CYCLE     ; Broaching cycle
+  = SET M_COOL_MAIN             ; Coolant motor main ON
+;
+DFU M_COOL_MAIN                 ; Coolant motor main ON
+  AND NOT M_COOL_MAIN_COND      ; Coolant motor main condition
+  AND NOT M_TUNE_MODE           ; Tune up mode
+  AND NOT M_BROACHING_CYCLE     ; Broaching cycle
+  = SET ERR119                  ; Coolant motor main not condition
+;
+M_M9_C1                         ; M9: Cancel coolant
+  OR M_SM_COOLANT_OFF           ; Screen monitoring: Coolant OFF
+  AND NOT M_BROACHING_CYCLE     ; Broaching cycle
+  OR NOT M_COOL_MAIN_COND       ; Coolant motor main conditionn
+  OR M_RESET_C1                 ; General reset
+  OR ERR120                     ; Broach coolant motor not operational
+  OR ERR121                     ; Coolant transfer motor not operational
+  OR ERR122                     ; Frame cleanin motor not operational
+  = RES M_COOL_MAIN             ; Request for coolant
+;
+M_COOL_MAIN                     ; Request for coolant
+  AND DFU M_BROACHING_CYCLE     ; Broaching cycle
+  = SET M_COOL_FLOW_AUX         ; Aux. coolant flow
+;
+NOT M_COOL_MAIN                 ; Request for coolant
+  OR M_COOL_FLOW                ; Coolant flow
+  OR NOT M_MACHINE_POWER        ; Machine with power
+  = RES M_COOL_FLOW_AUX         ; Aux. coolant flow
+
+M_COOL_FLOW_AUX                 ; Aux. coolant flow
+  = B2R_AUXENDC1                ; AUXEND: Coolant flow
+  = MSG30                       ; Coolant flow failure
+;
+M_COOL_MAIN                     ; Request for frame cleaning
+  AND M_COOL_MAIN_COND          ; Frame cleaning condition
+  = O_COOL_MAIN                 ; Coolant motor main
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT M_TUNE_MODE           ; Tune up mode
+  AND (O_COOL_MAIN              ; Coolant motor main
+  AND NOT M_COOL_MAIN_ON        ; Coolant motor main on
+  OR NOT O_COOL_MAIN            ; Coolant motor main
+  AND M_COOL_MAIN_ON)           ; Coolant motor main on
+  = TG2 130 2000                ; Delay coolant motor main monitoring
+;
+T130                            ; Delay coolant motor main monitoring
+  AND NOT M_BROACHING_CYCLE     ; Broaching cycle
+  = SET ERR120                  ; Coolant motor main does not work properly
+;
+M_COOL_MAIN                     ; Request for coolant motor main
+  AND M_COOL_MAIN_COND          ; Coolant motor main condition
+  = TG3 131 5000                ; Delay coolant transfer motor switch-off
+;
+T131                            ; Delay coolant transfer motor switch-off
+  = M_COOL_TRANSFER             ; Coolant transfer motor start
+;
+M_COOL_TRANSFER                 ; Coolant transfer motor start
+  = O_COOL_TRANSFER             ; Coolant transfer motor start
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT M_TUNE_MODE           ; Tune up mode
+  AND (O_COOL_TRANSFER          ; Coolant transfer motor start
+  AND NOT M_COOL_TRANSFER_ON    ; Coolant transfer motor on
+  OR NOT O_COOL_TRANSFER        ; Coolant transfer motor start
+  AND M_COOL_TRANSFER_ON)       ; Coolant transfer motor on
+  = TG2 132 2000                ; Delay coolant transfer motor monitoring
+;
+T132                            ; Delay coolant transfer motor monitoring
+  AND NOT M_BROACHING_CYCLE     ; Broaching cycle
+  = SET ERR121                  ; Coolant transfer motor does not work properly
+;
+M_COOL_MAIN                     ; Request for broach coolant
+  AND M_COOL_MAIN_COND          ; Broach coolant condition
+  AND NOT ENABLEZ               ; Z axe in moviment
+  AND NOT M_BROACHING_CYCLE     ; Broaching cycle
+  = O_FRAME_CLEAN               ; Activate frame cleaning
+;
+M_COOL_MAIN                     ; Request for broach coolant
+   AND NOT M_DOOR_CLOSED        ; Door closed
+  = MSG26                       ; Broach coolant impossible due to open door
+;
+M_COOL_MAIN                     ; Request for broach coolant
+  AND NOT M_COOL_TRANSF_THS     ; Coolant transfer motor circuit breaker
+  = SET MSG27                   ; Coolant transfer motor thermal switch failure
+;
+M_COOL_MAIN                     ; Request for broach coolant
+  AND NOT M_COOL_MAIN_THS       ; Coolant motor main circuit breaker
+  = SET MSG28                   ; Coolant motor main thermal switch failure
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT M_COOL_TANK_MIN       ; Coolant tank level minimum
+  AND NOT M_TUNE_MODE           ; Tune up mode
+  AND NOT M_BROACHING_REPOS     ; Post-Emergency Gantry Repositioning
+  = TG2 133 30000               ; Delay coolant tank level minimum failure
+;
+T133                            ; Delay coolant tank level minimum failure
+  = SET MSG29                   ; Coolant tank level minimum failure
+;
+RESETOUTC1                      ; CNC reset
+  = RES MSG27                   ; Coolant transfer motor thermal switch failure
+  = RES MSG28                   ; Coolant motor main thermal switch failure
+  = RES MSG29                   ; Coolant tank level minimum failure
+  = RES ERR119                  ; Coolant motor main not condition
+  = RES ERR120                  ; Broach coolant motor not operational
+  = RES ERR121                  ; Coolant transfer motor not operational
+  = RES ERR122                  ; Frame cleanin motor not operational
+;
+(MSG27                          ; Broach coolant thermal switch failure
+  OR MSG28)                     ; Coolant motor main thermal switch failure
+  AND NOT M_TUNE_MODE           ; Tune up mode
+  = B6R_STARTC1                 ; START: Ext. coolant thermal switch failure
+;
+END
+;
+;-------------------------------------------------------------------------
+;                       CHIP CONVEYOR
+;-------------------------------------------------------------------------
+;*************************************************************************
+;
+; Chip conveyor only rotates in one direction.
+; Magnetic roller. Works in conjunction with coolant transfer.
+;
+; 1.- Programming via CNC:
+;    M92: Activate chip conveyor
+;    M93: Stop chip conveyor
+; 2.- Handled from operator panel
+;    BD1_CHIP_CONVEYOR: Button to activate chip conveyor
+;
+;*************************************************************************
+;                         INPUT RESOURCES
+;*************************************************************************
+;
+; M_MACHINE_POWER               ; Machine with power
+; M_COOL_TRANSFER               ; Coolant transfer motor start
+; BD1_CHIP_CONVEYOR             ; Button to activate chip conveyor
+; M_M92_C1                      ; Activate chip conveyor
+; M_M93_C1                      ; Stop chip conveyor
+;
+;*************************************************************************
+;                         OUTPUT RESOURCES
+;*************************************************************************
+;
+; O_CHIP_CONVEYOR               ; Chip conveyor
+; LD1_CHIP_CONVEYOR             ; LED Chip conveyor on
+; MSG53                         ; Chip conveyor motor not operational
+; MSG54                         ; Chip conveyor thermal switch failure
+;
+;*************************************************************************
+;                         INTERNAL RESOURCES
+;*************************************************************************
+;
+; M_CHIP_CONVEYOR_THS           ; Chip conveyor thermal switch
+; M_CHIP_CONVEYOR_COND          ; Chip conveyor condition
+; M_CHIP_CONVEYOR               ; Request for chip conveyor
+;
+;*************************************************************************
+;                         EXCEPTIONS
+;*************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 355
+;
+;#END EXCEPTIONS
+;
+SUB CHIP_CONVEYOR
+;
+I_CHIP_CONVEYOR_THS             ; Chip conveyor thermal switch
+  = M_CHIP_CONVEYOR_THS         ; Chip conveyor thermal switch
+;
+I_CHIP_CONVEYOR_ON              ; Chip conveyor motor on
+  = M_CHIP_CONVEYOR_ON          ; Chip conveyor motor on
+;
+M_CHIP_CONVEYOR_THS             ; Chip conveyor thermal switch
+  AND M_MACHINE_POWER           ; Machine with power
+  = M_CHIP_CONVEYOR_COND        ; Chip conveyor condition
+;
+(M_M92_C1                       ; M92: Activate chip conveyor
+  OR DFU M_COOL_TRANSFER        ; Coolant transfer motor start
+  OR M_SM_CHIP_ON)              ; Screen monitoring: Activate chip conveyor
+  AND NOT M_CHIP_CONVEYOR       ; Request for chip conveyor
+  AND M_CHIP_CONVEYOR_COND      ; Chip conveyor condition
+  AND M_DOOR_CLOSED             ; Door closed
+  = SET M_CHIP_CONVEYOR         ; Request for chip conveyor
+;
+M_M93_C1                        ; M93: Stop chip conveyor
+  OR M_SM_CHIP_OFF              ; Screen monitoring: Stop chip conveyor
+  OR DFD M_COOL_TRANSFER        ; Coolant transfer motor start
+  OR NOT M_CHIP_CONVEYOR_COND   ; Chip conveyor condition
+  OR MSG53                      ; Chip conveyor motor not operational
+  = RES M_CHIP_CONVEYOR         ; Request for chip conveyor
+;
+M_CHIP_CONVEYOR                 ; Request for chip conveyor
+  AND M_CHIP_CONVEYOR_COND      ; Chip conveyor condition
+  = O_CHIP_CONVEYOR             ; Chip conveyor
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND (O_CHIP_CONVEYOR          ; Chip conveyor
+  AND NOT M_CHIP_CONVEYOR_ON    ; Chip conveyor motor on
+  OR NOT O_CHIP_CONVEYOR        ; Chip conveyor
+  AND M_CHIP_CONVEYOR_ON)       ; Chip conveyor motor on
+  = TG2 015 2000                ; Delay chip conveyor motor monitoring
+;
+T015                            ; Delay chip conveyor motor monitoring
+  = SET MSG53                   ; Chip conveyor motor does not work properly
+;
+RESETOUTC1                      ; CNC reset
+  = RES MSG53                   ; Chip conveyor motor does not work properly
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT M_CHIP_CONVEYOR_THS   ; Chip conveyor thermal switch
+  = MSG54                       ; Chip conveyor thermal switch failure
+;
+END
+;
+;------------------------------------------------------------------------------
+;                         COOL PAPER FILTER
+;------------------------------------------------------------------------------
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; I_PAPER_FILTER_THS            ; Paper filter thermal switch
+; I_PAPER_FILTER_LEVEL          ; Paper filter level
+; I_PAPER_FILTER_FAULT          ; Paper is missing
+; M_MACHINE_POWER               ; Machine with power
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; O_PAPER_FILTER                ; Paper filter output
+; MSG58                         ; Paper filter output max time exceed
+; MSG59                         ; Paper filter motor does not work properly
+; MSG60                         ; Paper filter level
+; MSG61                         ; Paper is missing
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+; M_PAPER_FILTER_THS            ; Paper filter thermal switch
+; M_PAPER_FILTER_LEVEL          ; Paper filter level
+; M_PAPER_FILTER_FAULT          ; Paper is missing
+; M_PAPER_FILTER_COND           ; Paper filter conditions
+; T058                          ; Paper filter output max time
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+;#Order number = 356
+;
+;#END EXCEPTIONS
+;
+SUB COOLANT_PAPER_FILTER
+;
+I_PAPER_FILTER_THS              ; Paper filter thermal switch
+  = M_PAPER_FILTER_THS          ; Paper filter thermal switch
+;
+I_PAPER_FILTER_LEVEL            ; Paper filter level
+  = M_PAPER_FILTER_LEVEL        ; Paper filter level
+;
+NOT I_PAPER_FILTER_FAULT        ; Paper is missing
+  = M_PAPER_FILTER_FAULT        ; Paper is missing
+;
+I_PAPER_FILTER_ON               ; Paper filter motor running
+  = M_PAPER_FILTER_ON           ; Paper filter motor running
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND M_PAPER_FILTER_THS        ; Paper filter thermal switch
+  AND M_PAPER_FILTER_LEVEL      ; Paper filter level
+  AND NOT M_PAPER_FILTER_FAULT  ; Paper is missing
+  = M_PAPER_FILTER_COND         ; Paper filter conditions
+;
+M_PAPER_FILTER_COND             ; Paper filter conditions
+  AND NOT MSG58                 ; Paper filter output max time exceed
+  AND NOT MSG59                 ; Paper filter motor does not work properly
+  = O_PAPER_FILTER              ; Paper filter motor on
+  = TG2 058 60000               ; Paper filter output max time
+;
+T058                            ; Paper filter output max time
+  = SET MSG58                   ; Paper filter output max time exceed
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND (O_PAPER_FILTER           ; Paper filter motor on
+  AND NOT M_PAPER_FILTER_ON     ; Paper filter motor running
+  OR NOT O_PAPER_FILTER         ; Paper filter motor on
+  AND M_PAPER_FILTER_ON)        ; Paper filter motor running
+  = TG2 059 2000                ; Delay paper filter engine monitoring
+;
+T059                            ; Delay paper filter engine monitoring
+  = SET MSG59                   ; Paper filter motor does not work properly
+;
+RESETOUTC1                      ; CNC reset
+  = RES MSG58                   ; Paper filter output max time exceed
+  = RES MSG59                   ; Paper filter motor does not work properly
+;
+M_PAPER_FILTER_LEVEL            ; Paper filter level
+  AND M_MACHINE_POWER           ; Machine with power
+  = MSG60                       ; Paper filter level
+;
+M_PAPER_FILTER_FAULT            ; Paper is missing
+  AND M_MACHINE_POWER           ; Machine with power
+  = MSG61                       ; Paper is missing
+;
+END
+;
+;------------------------------------------------------------------------------
+;                           PNEUMATIC
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; It monitors the pressure of general air input
+; Activation of general air flow
+; Tool cleaner
+;******************************************************************************
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; I_AIR_PRESSURE                ; General air pressure switch
+; I_TOOL_CLEANER_OUT            ; Tool cleaning detector forward
+; I_TOOL_CLEANER_IN             ; Tool cleaning detector back
+; M_M20_C1                      ; M20: Tool cleaning backward
+; M_M21_C1                      ; M21: Tool cleaning forward
+; M_MACHINE_POWER               ; Machine with power
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; O_AIR_GENERAL                 ; Activation of general air flow
+; O_TOOL_CLEANER_BACK           ; Retracting tool cleaning device
+; O_TOOL_CLEANER_FORW           ; Advance tool cleaning device
+; M_AIR_PRESSURE                ; General air pressure switch
+; B7R_FEEDHOLC1                 ; FEEDHOLDC1, general air pressure failure
+; B0R_STOPC1                    ; STOP, general air pressure failure
+; B1R_STARTC1                   ; No START, general air pressure failure
+; B1R_XFERINHC1                 ; Reading locked up, general air press. failure
+; MSG18                         ; No general air pressure
+; MSG19                         ; Non-positioned tool cleaning
+;
+;******************************************************************************
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+; T016                          ; Confirm general air pressure failure
+; T017                          ; Confirm tool cleaning detector forward
+; T018                          ; Confirm tool cleaning detector back
+;
+;******************************************************************************
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 370
+;
+;#END EXCEPTIONS
+;
+SUB PNEUMATIC
+;
+I_AIR_PRESSURE                  ; General air pressure switch
+  = M_AIR_PRESSURE              ; General air pressure switch
+;
+I_AIR_LINEAR_PRESS              ; Linear encoder air pressure switch
+  = M_AIR_LINEAR_PRESS          ; Linear encoder air pressure switch
+;
+NOT M_AIR_PRESSURE              ; General air pressure switch
+  AND M_MACHINE_POWER           ; Machine with power
+  = TG2 016 500                 ; Confirm general air pressure failure
+;
+T016                            ; Confirm general air pressure failure
+  = MSG18                       ; No general air pressure
+;
+MSG18                           ; No general air pressure
+  AND NOT M_BROACHING_CYCLE     ; Broaching cycle
+  = B7R_FEEDHOLC1               ; FEEDHOLDC1, general air pressure failure
+  = B0R_STOPC1                  ; STOP, general air pressure failure
+  = B1R_STARTC1                 ; No START, general air pressure failure
+  = B1R_XFERINHC1               ; Reading locked up, general air press. failure
+;
+NOT M_AIR_LINEAR_PRESS          ; Linear encoder air pressure switch
+  AND M_MACHINE_POWER           ; Machine with power
+  = TG2 019 1000                ; Confirm linear encoder air pressure failure
+;
+T019                            ; Confirm linear encoder air pressure failure
+  = MSG42                       ; No linear encoder air pressure
+;
+MSG42                           ; No linear encoder air pressure
+  AND NOT M_BROACHING_CYCLE     ; Broaching cycle
+  = B9R_FEEDHOLC1               ; FEEDHOLDC1, linear encoder air pressure failure
+  = B9R_STARTC1                 ; No START, linear encoder air pressure failure
+;
+M_MACHINE_POWER                 ; Machine with power
+  = O_AIR_GENERAL               ; Activation of general air flow
+;
+I_TOOL_CLEANER_OUT              ; Tool cleaning detector forward
+  AND NOT I_TOOL_CLEANER_IN     ; Tool cleaning detector back
+  = TG2 017 200                 ; Confirm tool cleaning detector forward
+;
+T017                            ; Confirm tool cleaning detector forward
+  = M_TOOL_CLEANER_OUT          ; Tool cleaning detector forward
+  = M_SM_TOOL_CLEANER_OUT       ; Screen monitoring: Tool cleaning detector forward
+;
+I_TOOL_CLEANER_IN               ; Tool cleaning detector back
+  AND NOT I_TOOL_CLEANER_OUT    ; Tool cleaning detector forward
+  = TG2 018 200                 ; Confirm tool cleaning detector back
+;
+T018                            ; Confirm tool cleaning detector back
+  = M_TOOL_CLEANER_IN           ; Tool cleaning detector back
+  = M_SM_TOOL_CLEANER_IN        ; Screen monitoring: Tool cleaning detector back
+;
+ENABLEZ                         ; Movement of the Z-axis
+  AND NOT DIRZ                  ; Moves the Z axis in the positive direction
+  = TG2 013 200                 ; Confirmation Z axis moves in the positive direction
+;
+T013                            ; Confirmation Z axis moves in the positive direction
+  = M_ENABLEZ_POS               ; Z axis moves in the positive direction
+;
+ENABLEZ                         ; Movement of the Z-axis
+  AND DIRZ                      ; Moves the Z axis in the negative direction
+  = TG2 014 200                 ; Confirmation Z axis moves in the negative direction
+;
+T014                            ; Confirmation Z axis moves in the negative direction
+  = M_ENABLEZ_NEG               ; Z axis moves in the negative direction
+;
+(M_M20_C1                       ; M20: Tool cleaning backward
+  OR M_SM_CLEANER_BACK          ; Screen monitoring: Tool cleaning backward
+  OR DFU M_BROACHING_CYCLE      ; Broaching cycle
+  OR M_ENABLEZ_POS)             ; Z axis moves in the positive direction
+  AND M_TABLE_COND              ; Table movement conditions
+  AND M_MACHINE_POWER           ; Machine with power
+  = SET M_TOOL_CLEANER_BACK     ; Tool cleaning backward
+  = RES M_TOOL_CLEANER_FORW     ; Tool cleaning forward
+;
+(M_M21_C1                       ; M21: Tool cleaning forward
+  OR M_SM_CLEANER_FORW          ; Screen monitoring: Tool cleaning forward
+  OR M_BROACHING_CYCLE          ; Broaching cycle
+  AND M_ENABLEZ_NEG)            ; Z axis moves in the negative direction
+  AND M_MACHINE_POWER           ; Machine with power
+  AND M_TABLE_COND              ; Table movement conditions
+  = SET M_TOOL_CLEANER_FORW     ; Tool cleaning forward
+  = RES M_TOOL_CLEANER_BACK     ; Tool cleaning backward
+;
+DFU M_TOOL_CLEANER_BACK         ; Tool cleaning backward
+  OR DFU M_TOOL_CLEANER_FORW    ; Tool cleaning forward
+  = SET M_TOOL_CLEANER_AUX      ; Aux Tool cleaning
+;
+M_TOOL_CLEANER_BACK             ; Tool cleaning backward
+  AND M_TOOL_CLEANER_IN         ; Tool cleaning detector back
+  OR M_TOOL_CLEANER_FORW        ; Tool cleaning forward
+  AND M_TOOL_CLEANER_OUT        ; Tool cleaning detector forward
+  OR NOT M_MACHINE_POWER        ; Machine with power
+  = RES M_TOOL_CLEANER_AUX      ; Aux Tool cleaning
+;
+M_ENABLEZ_POS                   ; Z axis moves in the positive direction
+  AND NOT M_TOOL_CLEANER_IN     ; Tool cleaning detector back
+  OR M_ENABLEZ_NEG              ; Z axis moves in the negative direction
+  AND NOT M_TOOL_CLEANER_IN     ; Tool cleaning detector back
+  AND NOT M_TOOL_CLEANER_OUT    ; Tool cleaning detector forward
+  = M_TOOL_CLEANER_NOPOS        ; Non-positioned tool cleaning
+  = B6R_FEEDHOLC1               ; FEEDHOLDC1, Non-positioned tool cleaning
+  = B6R_STOPC1                  ; STOP, Non-positioned tool cleaning
+;
+M_TOOL_CLEANER_AUX              ; Aux Tool cleaning
+  = B3R_AUXENDC1                ; AUXEND: Tool cleaning
+  = B16R_FEEDHOLC1              ; FEEDHOLDC1, Tool cleaning not backwards
+;
+M_TOOL_CLEANER_AUX              ; Aux Tool cleaning
+  OR M_TOOL_CLEANER_NOPOS       ; Non-positioned tool cleaning
+  = MSG19                       ; Non-positioned tool cleaning
+;
+M_TOOL_CLEANER_BACK             ; Tool cleaning backward
+  AND M_MACHINE_POWER           ; Machine with power
+  = O_TOOL_CLEANER_BACK         ; Retracting tool cleaning device
+;
+M_TOOL_CLEANER_FORW             ; Tool cleaning forward
+  AND M_MACHINE_POWER           ; Machine with power
+  = O_TOOL_CLEANER_FORW         ; Advance tool cleaning device
+;
+END
+;
+;------------------------------------------------------------------------------
+;                         HYDRAULIC GROUP
+;------------------------------------------------------------------------------
+; Hydraulic group motor
+; Toolholder Mayr brake
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; I_HYD_THS                     ; Hydraulic thermal switch
+; I_HYD_FILTER                  ; Hydraulic group filter dirty
+; I_HYD_LEVEL                   ; Hydraulic level OK
+; I_HYD_PUMP_ON                 ; Hydraulic group motor running
+; I_MAYR_L_GUIDE_1              ; MAYR brake left guide detector 1
+; I_MAYR_L_GUIDE_2              ; MAYR brake left guide detector 2
+; I_MAYR_L_COMP_1               ; MAYR brake left compensation side detector 1
+; I_MAYR_L_COMP_2               ; MAYR brake left compensation side detector 2
+; I_MAYR_R_GUIDE_1              ; MAYR brake right guide detector 1
+; I_MAYR_R_GUIDE_2              ; MAYR brake right guide detector 2
+; I_MAYR_R_COMP_1               ; MAYR brake right compensation side detector 1
+; I_MAYR_R_COMP_2               ; MAYR brake right compensation side detector 2
+; RESETOUTC1                    ; CNC reset
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; MSG20                         ; Hydraulic level failure
+; MSG21                         ; Hydraulic filter failure
+; MSG22                         ; Hydraulic group thermal switch failure
+; ERR21                         ; Hydraulic thermal switch failure
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+; M_HYD_CONDITIONS              ; Hydraulic conditions
+; M_HYD_PUMP                    ; Hydraulic motor pump
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 375
+;
+;#END EXCEPTIONS
+;
+SUB HYDRAULIC
+;
+I_HYD_THS                       ; Hydraulic thermal switch
+  = M_HYD_THS                   ; Hydraulic thermal switch
+;
+NOT M_HYD_THS                   ; Hydraulic thermal switch
+  AND CNCREADY                  ; CNC with no errors
+  = ERR21                       ; Hydraulic thermal switch failure
+;
+I_HYD_LEVEL                     ; Hydraulic tank level minimum
+  = M_HYD_LEVEL                 ; Hydraulic tank level minimum
+;
+;I_HYD_FILTER                    ; Hydraulic group filter dirty
+;  = M_HYD_FILTER                ; Hydraulic group filter dirty
+;
+I_HYD_PUMP_ON                   ; Hydraulic group motor running
+  = M_HYD_PUMP_ON               ; Hydraulic group motor running
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND DFD I_MAYR_BRAKE_L1       ; Mayr brake left guide detector 1
+  = SET M_MAYR_BRAKE_L1         ; Mayr brake left guide detector 1
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND DFD I_MAYR_BRAKE_R1       ; Mayr brake right guide detector 1
+  = SET M_MAYR_BRAKE_R1         ; Mayr brake right guide detector 1
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND DFD I_MAYR_BRAKE_COMP_L1  ; Mayr brake left compensation side detector 1
+  = SET M_MAYR_BRAKE_COMP_L1    ; Mayr brake left compensation side detector 1
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND DFD I_MAYR_BRAKE_COMP_R1  ; Mayr brake right compensation side detector 1
+  = SET M_MAYR_BRAKE_COMP_R1    ; Mayr brake right compensation side detector 1
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND DFD I_MAYR_BRAKE_COMP_L2  ; Mayr brake left compensation side detector 2
+  = SET M_MAYR_BRAKE_COMP_L2    ; Mayr brake left compensation side detector 2
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND DFD I_MAYR_BRAKE_COMP_R2  ; Mayr brake right compensation side detector 2
+  = SET M_MAYR_BRAKE_COMP_R2    ; Mayr brake right compensation side detector 2
+;
+I_MAYR_BRAKE_L1                 ; Mayr brake left guide detector 1
+  AND I_MAYR_BRAKE_R1           ; Mayr brake right guide detector 1
+  AND I_MAYR_BRAKE_COMP_L1      ; Mayr brake left compensation side detector 1
+  AND I_MAYR_BRAKE_COMP_R1      ; Mayr brake right compensation side detector 1
+  AND I_MAYR_BRAKE_COMP_L2      ; Mayr brake left compensation side detector 2
+  AND I_MAYR_BRAKE_COMP_R2      ; Mayr brake right compensation side detector 2
+  = TG2 113 1000
+;
+T113
+  = M_MAYR_BRAKE_LOCK           ; Toolholder MAYR brake lock detectors ok
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND DFD M_MAYR_BRAKE_LOCK     ; Toolholder MAYR brake lock detectors ok
+  = SET M_MAYR_BRAKE_SW_DFD     ; Toolholder MAYR brake lock detectors down flank
+;
+NOT M_MAYR_BRAKE                ; Toolholder MAYR brake unlock
+  = RES M_MAYR_BRAKE_L1         ; Mayr brake left guide detector 1
+  = RES M_MAYR_BRAKE_R1         ; Mayr brake right guide detector 1
+  = RES M_MAYR_BRAKE_COMP_L1    ; Mayr brake left compensation side detector 1
+  = RES M_MAYR_BRAKE_COMP_R1    ; Mayr brake right compensation side detector 1
+  = RES M_MAYR_BRAKE_COMP_L2    ; Mayr brake left compensation side detector 2
+  = RES M_MAYR_BRAKE_COMP_R2    ; Mayr brake right compensation side detector 2
+  = RES M_MAYR_BRAKE_SW_DFD     ; Aux. Toolholder MAYR brake lock detectors down flank
+;
+I_CHAIN_R                       ; Counterbalance chain right detector
+  AND I_CHAIN_L                 ; Counterbalance chain left detector
+  = TG3 114 1000
+;
+T114
+  = M_CHAIN_OK                  ; Tensioned counterbalance chain
+;
+NOT I_MAYR_BRAKE_L1             ; Mayr brake left guide detector 1
+  AND M_MAYR_BRAKE_L1           ; Mayr brake left guide detector 1
+  AND NOT I_MAYR_BRAKE_R1       ; Mayr brake right guide detector 1
+  AND M_MAYR_BRAKE_R1           ; Mayr brake right guide detector 1
+  AND NOT I_MAYR_BRAKE_COMP_L1  ; Mayr brake left compensation side detector 1
+  AND M_MAYR_BRAKE_COMP_L1      ; Mayr brake left compensation side detector 1
+  AND NOT I_MAYR_BRAKE_COMP_R1  ; Mayr brake right compensation side detector 1
+  AND M_MAYR_BRAKE_COMP_R1      ; Mayr brake right compensation side detector 1
+  AND NOT I_MAYR_BRAKE_COMP_L2  ; Mayr brake left compensation side detector 2
+  AND M_MAYR_BRAKE_COMP_L2      ; Mayr brake left compensation side detector 2
+  AND NOT I_MAYR_BRAKE_COMP_R2  ; Mayr brake right compensation side detector 2
+  AND M_MAYR_BRAKE_COMP_R2      ; Mayr brake right compensation side detector 2
+  AND M_MAYR_BRAKE_SW_DFD       ; Aux. Toolholder MAYR brake lock detectors down flank
+  = TG2 115 1000
+;
+T115
+  = M_MAYR_BRAKE_UNLOCK         ; Toolholder MAYR brake unlock detectors ok
+;
+I_MAYR_BRAKE_PRESS              ; Toolholder mayr brake unlock pressure
+  = TG3 116 2000
+;
+T116
+  = M_MAYR_BRAKE_PRESS          ; Toolholder MAYR brake unlock pressure
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND M_HYD_THS                 ; Hydraulic thermal switch
+  AND M_HYD_LEVEL               ; Hydraulic tank level minimum
+;  AND M_HYD_FILTER              ; Hydraulic group filter dirty
+  AND NOT M_HYD_PUMP_FAULT      ; Hydraulic group motor fault
+  = M_HYD_CONDITIONS            ; Hydraulic conditions
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT M_HYD_LEVEL           ; Hydraulic tank level minimum
+  = MSG20                       ; Hydraulic level failure
+;
+;M_MACHINE_POWER                 ; Machine with power
+;  AND NOT M_HYD_FILTER          ; Hydraulic filter
+;  = MSG21                       ; Hydraulic filter failure
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT M_HYD_THS             ; Hydraulic thermal switch
+  = MSG22                       ; Hydraulic group thermal switch failure
+;
+M_HYD_CONDITIONS                ; Hydraulic conditions
+  = M_HYD_PUMP                  ; Hydraulic motor pump
+;
+M_HYD_PUMP                      ; Hydraulic motor pump
+  = O_HYD_PUMP                  ; Hydraulic motor pump
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND (M_HYD_PUMP               ; Hydraulic motor pump
+  AND NOT M_HYD_PUMP_ON         ; Hydraulic group motor running
+  OR NOT M_HYD_PUMP             ; Hydraulic motor pump
+  AND M_HYD_PUMP_ON)            ; Hydraulic group motor running
+  = TG2 117 2000                ; Delay hydraulic group motor monitoring
+;
+T117                            ; Delay hydraulic group motor monitoring
+  = SET M_HYD_PUMP_FAULT        ; Hydraulic group motor fault
+
+RESETOUTC1                      ; CNC reset
+  = RES M_HYD_PUMP_FAULT        ; Hydraulic group motor fault
+;
+M_HYD_PUMP_FAULT                ; Hydraulic group motor fault
+  = MSG23                       ; Hydraulic group motor fault
+;
+M_HYD_PUMP_ON                   ; Hydraulic group motor running
+  AND M_Z_BRAKE                 ; Aux. Z brake
+  AND M_Z1_BRAKE                ; Aux. Z1 brake
+  AND M_BRAKE_Z_ENA             ; Z axes brake enable
+  = M_MAYR_BRAKE                ; Toolholder MAYR brake unlock
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  = O_MAYR_BRAKE                ; Toolholder MAYR brake unlock
+;
+NOT M_MAYR_BRAKE_PRESS          ; Toolholder MAYR brake unlock pressure
+  OR NOT M_MAYR_BRAKE_UNLOCK    ; Toolholder MAYR brake unlock detectors ok
+  OR NOT M_CHAIN_OK             ; Tensioned counterbalance chain
+  = B1R_INHIBITZ                ; INHIBITZ, Toolholder MAYR brake failure
+  = B1R_INHIBITZ1               ; INHIBITZ1, Toolholder MAYR brake failure
+  = B1R_STOPC1                  ; STOP, Toolholder MAYR brake failure
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND NOT M_MAYR_BRAKE_R1       ; Mayr brake right guide detector 1
+  = MSG35                       ; Mayr brake right guide detector 1 failure
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND NOT M_MAYR_BRAKE_L1       ; Mayr brake left guide detector 1
+  = MSG36                       ; Mayr brake left guide detector 1 failure
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND NOT M_MAYR_BRAKE_R1       ; Mayr brake right compensation side detector 1
+  = MSG37                       ; Mayr brake right compensation side detector 1 failure
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND NOT M_MAYR_BRAKE_L1       ; Mayr brake left compensation side detector 1
+  = MSG38                       ; Mayr brake left compensation side detector 1 failure
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND NOT M_MAYR_BRAKE_COMP_R2  ; Mayr brake right compensation side detector 2
+  = MSG39                       ; Mayr brake right compensation side detector 2 failure
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND NOT M_MAYR_BRAKE_COMP_L2  ; Mayr brake left compensation side detector 2
+  = MSG40                       ; Mayr brake left compensation side detector 2 failure
+;
+M_MAYR_BRAKE                    ; Toolholder MAYR brake unlock
+  AND NOT M_MAYR_BRAKE_SW_DFD   ; Toolholder MAYR brake lock detectors down flank
+  = MSG41                       ; Toolholder MAYR brake lock detectors down flank failure
+;
+END
+;
+;------------------------------------------------------------------------------
+;                         M1/CONDITIONAL BLOCKS (BLOCK SKIP)
+;------------------------------------------------------------------------------
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; BD1_M01STOP                   ; M01STOP button
+; BD1_BLKSKIP1                  ; Button for conditional block
+; M_MACHINE_POWER               ; Machine with power
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; M01STOP                       ; M01STOP Status
+; BLKSKIP1                      ; Conditional block status
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 380
+;
+;#END EXCEPTIONS
+;
+SUB CNC_CONDITIONALS
+;
+DFU BD1_M01STOP                 ; M01STOP button
+  AND M_MACHINE_POWER           ; Machine with power
+  = CPL M01STOP                 ; M01STOP status
+;
+DFU BD1_BLKSKIP1                ; Conditional block button
+  AND M_MACHINE_POWER           ; Machine with power
+  = CPL BLKSKIP1                ; Conditional block status
+;
+END
+;
+;------------------------------------------------------------------------------
+;                               MACHINE PERMISSIONS
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; _FEEDHOL,_STOP,CYSTART,AUXEND,_XFERINH
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; R_FEEDHOLC1                   ; Register bits to generate _FEEDHOLC1
+; R_STOPC1                      ; Register bits to generate STOP en el CNC
+; R_STARTC1                     ; Register bits for no START validation at CNC
+; R_AUXENDC1                    ; Register bits to generate AUXEND
+; R_XFERINHC1                   ; Bits to generate lock for reading _XFERINH
+; R_INHIBITZ                    ; Register bits to generate INHIBITZ
+; R_INHIBITC                    ; Register bits to generate INHIBITC
+; R_INHIBITZ1                   ; Register bits to generate INHIBITZ1
+; START                         ; Start key CNC operator panel
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; _FEEDHOLC1                    ; FEEDHOLD to the CNC.
+; MSG10                         ; Message "no permission to move axes"
+; MSG11                         ; Message "STOP generated via PLC"
+; MSG12                         ; Message "START inhibit via PLC"
+; MSG13                         ; Message "Reading block lockup via PLC"
+; _STOPC1                       ; STOP of CNC.
+; M_STARTC1                     ; Request for CYSTART
+; CYSTARTC1                     ; Start CNC
+; AUXENDC1                      ; AUXEND from CNC
+; _XFERINHC1                    ; Lock CNC reading
+; INHIBITZ                      ; Inhibit Z
+; INHIBITC                      ; Inhibit C
+; INHIBITZ1                     ; Inhibit Z1
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+; T011                          ; STOP pulse from CNC
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 390
+;
+;#END EXCEPTIONS
+;
+SUB CNC_PERMISSIONS
+;
+CPS R_FEEDHOLC1 EQ 0            ; Register bits to generate _FEEDHOLC1
+  = _FEEDHOLC1                  ; FEEDHOLDC1 to the CNC.
+;
+NOT _FEEDHOLC1                  ; Feedhold not present
+  AND M_MACHINE_POWER           ; Machine with power
+  = MSG10                       ; Message "no permission to move axes"
+;
+CPS R_INHIBITZ NE 0             ; Register bits to generate INHIBITZ
+  = INHIBITZ                    ; Inhibit Z
+;
+CPS R_INHIBITZ1 NE 0            ; Register bits to generate INHIBITZ1
+  = INHIBITZ1                   ; Inhibit Z1
+;
+CPS R_INHIBITC NE 0             ; Register bits to generate INHIBITC
+  = INHIBITC                    ; Inhibit C
+;
+CPS R_STOPC1 NE 0               ; Register bits to generate STOP at the CNC
+  = TG1 011 100                 ; STOP pulse from CNC
+  = MSG11                       ; Message "STOP generated by PLC"
+;
+NOT T011                        ; STOP pulse from CNC
+  = _STOPC1                     ; STOP from CNC.
+;
+(START                          ; Start key CNC virtual operator panel
+  OR I_START_OP)                ; Start key from operator panel
+  AND CPS R_STARTC1 EQ 0        ; Register bits for no START validation at CNC
+  AND CPS R_STOPC1 EQ 0         ; Register bits to generate STOP en el CNC
+  = M_STARTC1                   ; Request for CYSTART
+;
+CPS R_STARTC1 NE 0              ; Register bits for no START validation at CNC
+  AND M_MACHINE_POWER           ; Machine with power
+  = MSG12                       ; Message " START inhibited by PLC"
+;
+M_STARTC1                       ; Request CYSTART
+  = CYSTARTC1                   ; Start CNC
+;
+CPS R_AUXENDC1 EQ 0             ; Register bits to generate AUXEND
+  = AUXENDC1                    ; AUXEND from CNC
+;
+CPS R_XFERINHC1 EQ 0            ; Bits to generate locking of reading _XFERINH
+  = _XFERINHC1                  ; CNC reading locked
+;
+NOT _XFERINHC1                  ; CNC reading locked
+   AND M_MACHINE_POWER          ; Machine with power
+  = MSG13                       ; Message "Reading block lockup via PLC"
+;
+END
+;
+;------------------------------------------------------------------------------
+;                             Screen monitoring
+;------------------------------------------------------------------------------
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+;******************************************************************************
+;
+;*************************************************************************
+;                         EXCEPTIONS
+;*************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 600
+;
+;#END EXCEPTIONS
+;
+SUB SCREEN_MONITORING
+;
+I_SAFETY_RELAY                  ; Discrepancy safety relay
+  = M_SAFETY_RELAY              ; Screen monitoring: Discrepancy safety relay
+;
+I_PS_EXT_IO_HEADER              ; Power supply external I/O header
+  = M_PS_EXT_IO_HEADER          ; Screen monitoring: Power supply external I/O header
+;
+I_PS_EXT_IO_OUT                 ; Power supply external I/O outputs
+  = M_PS_EXT_IO_OUT             ; Screen monitoring: Power supply external I/O outputs fault
+;
+I_PS_IN_ET200SP                 ; Inputs power supply ET200SP
+  = M_PS_IN_ET200SP             ; Screen monitoring: Inputs power supply ET200SP fault
+;
+I_PS_SAFETY                     ; Safety power supply
+  = M_PS_SAFETY                 ; Screen monitoring: Safety power supply fault
+;
+I_PS_CNC                        ; CNC power supply
+  = M_PS_CNC                    ; Screen monitoring: CNC power supply fault
+;
+I_PS_PPC                        ; Operator panel power supply
+  = M_PS_PPC                    ; Screen monitoring: Operator panel power supply fault
+;
+I_PS_OUT_ET200SP                ; Output power supply ET200SP
+  = M_PS_OUT_ET200SP            ; Screen monitoring: Output power supply ET200SP fault
+;
+I_RPS_LINE_CONTACT              ; RPS Line contact
+  = M_RPS_LINE_CONTACT          ; Screen monitoring: RPS Line contact
+;
+I_RPS_SYSTEM_OK                 ; Drives power supply OK
+  = M_RPS_SYSTEM_OK             ; Screen monitoring: Drives power supply fault
+;
+I_PILZ_OK                       ; Condiciones de rearme OK
+  = M_PILZ_OK                   ; Screen monitoring: Condiciones de rearme OK
+;
+I_POWER_ON                      ; Power on
+  = M_POWER_ON                  ; Screen monitoring: Power on
+;
+I_DOOR_F_CLOSED                 ; Front door closed
+  = M_DOOR_F_CLOSED             ; Screen monitoring: Front door closed
+;
+I_DOOR_L_CLOSED                 ; Left door closed
+  = M_DOOR_L_CLOSED             ; Screen monitoring: Left door closed
+;
+I_DOOR_R_CLOSED                 ; Right door closed
+  = M_DOOR_R_CLOSED             ; Screen monitoring: Right door closed
+;
+I_TABLE_UNLOCKED                ; Table axis unlocked detector
+  = M_SM_SQ712                  ; Screen monitoring: Table axis unlocked detector
+;
+I_TABLE_LOCKED                  ; Table axis locked detector
+  = M_SM_SQ713                  ; Screen monitoring: Table axis locked detector
+;
+I_TABLE_LOCK_PRESS              ; Table axis locked pressure
+  = M_SM_BP714                  ; Screen monitoring: Table axis locked pressure
+;
+I_MAYR_BRAKE_L1                 ; Mayr brake left guide detector 1
+  = M_SM_BQ715                  ; Screen monitoring: Mayr brake left guide detector 1
+;
+I_MAYR_BRAKE_R1                 ; Mayr brake right guide detector 1
+  = M_SM_BQ721                  ; Screen monitoring: Mayr brake right guide detector 1
+;
+I_MAYR_BRAKE_COMP_L1            ; Mayr brake left compensation side detector 1
+  = M_SM_BQ717                  ; Screen monitoring: Mayr brake left compensation side detector 1
+;
+I_MAYR_BRAKE_COMP_R1            ; Mayr brake right compensation side detector 1
+  = M_SM_BQ723                  ; Screen monitoring: Mayr brake right compensation side detector 1
+;
+I_MAYR_BRAKE_COMP_L2            ; Mayr brake left compensation side detector 2
+  = M_SM_BQ720                  ; Screen monitoring: Mayr brake left compensation side detector 2
+;
+I_MAYR_BRAKE_COMP_R2            ; Mayr brake right compensation side detector 2
+  = M_SM_BQ724                  ; Screen monitoring: Mayr brake right compensation side detector 2
+;
+I_MAYR_BRAKE_PRESS              ; Toolholder mayr brake unlock pressure
+  = M_SM_BP727                  ; Screen monitoring: Toolholder mayr brake unlock pressure
+;
+I_CHAIN_R                       ; Counterbalance chain right detector
+  = M_SM_BQ716                  ; Screen monitoring: Counterbalance chain right detector
+;
+I_CHAIN_L                       ; Counterbalance chain left detector
+  = M_SM_BQ722                  ; Screen monitoring: Counterbalance chain left detector
+;
+M_HYD_THS                       ; Hydraulic thermal switch
+  = M_SM_14QM5                  ; Screen monitoring: Hydraulic thermal switch
+;
+M_HYD_LEVEL                     ; Hydraulic tank level minimum
+  = M_SM_BL726                  ; Screen monitoring: Hydraulic tank level minimum
+;
+M_HYD_PUMP_ON                   ; Hydraulic group motor running
+  = M_SM_KA04                   ; Screen monitoring: Hydraulic group motor running
+;
+M_COOL_TRANSF_THS               ; Coolant transfer motor circuit breaker
+  = M_SM_14QM3                  ; Screen monitoring: Coolant transfer motor circuit breaker
+;
+M_COOL_MAIN_THS                 ; Coolant motor main circuit breaker
+  = M_SM_14QM2                  ; Screen monitoring: Coolant motor main circuit breaker
+;
+M_COOL_TRANSFER_ON              ; Coolant transfer motor on
+  = M_SM_KA02                   ; Screen monitoring: Coolant transfer motor on
+;
+M_COOL_MAIN_ON                  ; Coolant motor main on
+  = M_SM_KA01                   ; Screen monitoring: Coolant motor main on
+;
+M_COOL_FLOW                     ; Coolant flow
+  = M_SM_BC44                   ; Screen monitoring: Coolant flow
+;
+M_COOL_TANK_MIN                 ; Coolant tank level minimum
+  = M_SM_BN42                   ; Screen monitoring: Coolant tank level minimum
+;
+M_CHIP_CONVEYOR_THS             ; Chip conveyor thermal switch
+  = M_SM_14QM4                  ; Screen monitoring:  Chip conveyor thermal switch
+;
+M_CHIP_CONVEYOR_ON              ; Chip conveyor motor on
+  = M_SM_KA03                   ; Screen monitoring: Chip conveyor motor on
+;
+M_PAPER_FILTER_THS              ; Paper filter thermal switch
+  = M_SM_14QM1                  ; Screen monitoring: Paper filter thermal switch
+;
+M_PAPER_FILTER_LEVEL            ; Paper filter level
+  = M_SM_BN41                   ; Screen monitoring: Paper filter level
+;
+M_PAPER_FILTER_FAULT            ; Paper is missing
+  = M_SM_SQ40                   ; Screen monitoring: Paper is missing
+;
+M_PAPER_FILTER_ON               ; Paper filter motor running
+  = M_SM_KA00                   ; Screen monitoring: Paper filter motor running
+;
+M_AIR_PRESSURE                  ; General air pressure switch
+  = M_SM_BP710                  ; Screen monitoring: General air pressure switch
+;
+M_AIR_LINEAR_PRESS              ; Linear encoder air pressure switch
+  = M_SM_BP711                  ; Screen monitoring: Linear encoder air pressure switch
+;
+M_BRAKE_Z_ENA                   ; Z axes brake enable
+  = M_SM_BRAKE_Z_ENA            ; Screen monitoring: Z axes brake enable
+;
+M_GANTRY_POS_DOWN               ; Z-axis start position
+  = M_SM_GANTRY_DOWN            ; Z-axis down position
+;
+M_GANTRY_POS_MIDDLE             ; Z-axis middle position
+  = M_SM_GANTRY_MIDDLE          ; Z-axis middle position
+;
+M_GANTRY_POS_UP                 ; Z-axis end position;
+  = M_SM_GANTRY_UP              ; Z-axis up position
+;
+M_LUB_CYCLE                     ; Lubrication cycle
+  = M_SM_LUB_CYCLE_ON           ; Screen monitoring: Lubrication cycle
+;
+()                              ; Logic "1"
+  = MOV R_TIME_PAUSE_LUB R100   ; Pause between lub.(h.)
+  = MOV C012 R102
+  = SBS R100 R102 R101          ; Remaining time for lubrication
+;
+MSG32                           ; E1: Empty indicator
+  = M_SM_LUC400_FAULT_E1        ; Screen monitoring: Empty indicator
+;
+MSG33                           ; E2: Overcurrent
+  = M_SM_LUC400_FAULT_E2        ; Screen monitoring: Overcurrent
+;
+; Orders from operator screen
+;
+DFU M_SM_M200                   ; Screen monitoring: Gantry to origin
+  AND FREEC1                    ; Channel ready to accept PLC block
+  AND M_MACHINE_POWER           ; Machine with power
+  = SET M_GANTRY_M200           ; CNCEX Gantry to origin
+;
+M_GANTRY_M200                   ; CNCEX Gantry to origin
+  AND NOT M6010                 ; Aux. CNCEX
+  = CNCEX(M200,M6010,1)         ; Gantry to origin
+;
+M_RESET_C1                      ; General reset
+  OR M6010                      ; Aux. CNCEX
+  = RES M_GANTRY_M200           ; CNCEX Gantry to origin
+;
+DFU M_SM_M201                   ; Screen monitoring: Gantry to the middle part
+  AND FREEC1                    ; Channel ready to accept PLC block
+  AND M_MACHINE_POWER           ; Machine with power
+  = SET M_GANTRY_M201           ; CNCEX Gantry to the middle part
+;
+M_GANTRY_M201                   ; CNCEX Gantry to the middle part
+  AND NOT M6011                 ; Aux. CNCEX
+  = CNCEX(M201,M6011,1)         ; Gantry to the middle part
+;
+M_RESET_C1                      ; General reset
+  OR M6011                      ; Aux. CNCEX
+  = RES M_GANTRY_M201           ; CNCEX Gantry up to the top
+;
+DFU M_SM_M202                   ; Screen monitoring: Gantry up to the top
+  AND FREEC1                    ; Channel ready to accept PLC block
+  AND M_MACHINE_POWER           ; Machine with power
+  = SET M_GANTRY_M202           ; CNCEX Gantry up to the top
+;
+M_GANTRY_M202                   ; CNCEX Gantry up to the top
+  AND NOT M6012                 ; Aux. CNCEX
+  = CNCEX(M202,M6012,1)         ; Gantry up to the top
+;
+M_RESET_C1                      ; General reset
+  OR M6012                      ; Aux. CNCEX
+  = RES M_GANTRY_M202           ; CNCEX Gantry up to the top
+;
+M_TABLE_COND                    ; Table movement conditions
+  = M_SM_TABLE_COND             ; Table movement conditions
+;
+DFU M_SM_TABLE_POS              ; Screen monitoring: Table position
+  AND FREEC1                    ; Channel ready to accept PLC block
+  AND M_MACHINE_POWER           ; Machine with power
+  AND M_TABLE_COND              ; Table movement conditions
+  = SET M_TABLE_G180            ; CNCEX Table position
+;
+M_TABLE_G180                    ; CNCEX Table position
+  AND NOT M6015                 ; Aux. CNCEX
+  = CNCEX(G180,M6015,1)         ; Table position
+;
+M_RESET_C1                      ; General reset
+  OR M6015                      ; Aux. CNCEX
+  = RES M_TABLE_G180            ; CNCEX Table position
+;
+END
+;
+;------------------------------------------------------------------------------
+;         COUNTER OF HOURS THAT THE MACHINE HAS BEEN ON AND IN CYCLE
+;------------------------------------------------------------------------------
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; M_RAPIDENC1                   ; "Rapid" pressed and CNC in AUT, not in G0
+; M_MZ1_SUBM06                  ; T change (M6) subroutine in execution
+; M_RESET_TIMERS                ; Reset machine timers (Component OEM)
+; M_MANUALC1                    ; CNC in manual modes
+; M_SP1_REQUEST_M19             ; Request for S orientation (M19)
+; M_SP1_NMIN                    ; SP1 stopped
+; INCYCLEC1                     ; CNC in execution
+; R_FRO_CNC                     ; Feed override
+; FHOUTC1                       ; Temporary stop due to Feedhold or Stop
+; ENABLEZ                       ; Z axis in movement
+; RAPIDC1                       ; CNC in G0
+; MANRAPIDC1                    ; CNC in rapid in Manual mode
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; C001                          ; Counter for seconds machine on
+; C002                          ; Counter for minutes machine on
+; C003                          ; Counter for hours machine on
+; C004                          ; Counter for seconds CNC in execution
+; C005                          ; Counter for minutes CNC in execution
+; C006                          ; Counter for hours the CNC in execution
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+;******************************************************************************
+;
+;*************************************************************************
+;                         EXCEPTIONS
+;*************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 700
+;
+;#END EXCEPTIONS
+;
+SUB MACHINE_TIMERS
+;
+; **** Machine with power
+;
+DFU CLK1000                     ; Flank every second
+  OR DFD CLK1000                ; Flank every second
+  = CUP 001                     ; Counter for seconds machine on
+;
+CPS C001 GE 60                  ; Counter for seconds machine on = 60 s
+  = CUP 002                     ; Counter for minutes machine on
+  = CPR 001 0                   ; Counter for seconds machine on = 0 s
+;
+CPS C002 GE 60                  ; Counter for minutes machine on = 60 min.
+  = CUP 003                     ; Counter for hours machine on
+  = CPR 002 0                   ; Counter for minutes machine on = 0 min.
+;
+; **** IN EXECUTION
+;
+(DFU CLK1000                    ; Flank every second
+  OR DFD CLK1000)               ; Flank every second
+  AND INCYCLEC1                 ; CNC in execution
+  = CUP 004                     ; Total Counter for seconds CNC in execution
+  = CUP 014                     ; Partial Counter for seconds CNC in execution
+;
+CPS C004 GE 60                  ; Total Counter for seconds CNC in execution = 60 s
+  = CUP 005                     ; Total Counter for minutes CNC in execution
+  = CPR 004 0                   ; Total Counter for seconds CNC in execution = 0 s
+;
+CPS C014 GE 60                  ; Partial Counter for seconds CNC in execution = 60 s
+  = CUP 015                     ; Partial Counter for minutes CNC in execution
+  = CPR 014 0                   ; Partial Counter for seconds CNC in execution = 0 s
+;
+CPS C005 GE 60                  ; Total Counter for minutes CNC in execution = 60 min.
+  = CUP 006                     ; Total Counter for hours the CNC in execution
+  = CPR 005 0                   ; Total Counter for minutes CNC in execution = 0 min.
+;
+CPS C015 GE 60                  ; Partial Counter for minutes CNC in execution = 60 min.
+  = CUP 016                     ; Partial Counter for hours partial the CNC in execution
+  = CPR 015 0                   ; Partial Counter for minutes CNC in execution = 0 min.
+;
+M_RESET_TIMERS                  ; Reset machine timers
+  = CPR 014 0                   ; Partial Counter for seconds CNC in execution = 0 s
+  = CPR 015 0                   ; Partial Counter for minutes CNC in execution = 0 min
+  = CPR 016 0                   ; Partial Counter for hours partial the CNC in execution
+  = RES M_RESET_TIMERS          ; Reset machine timers
+;
+
+; ******************* MACHINING TIME ******************************************
+;
+NOT M_MANUALC1                  ; CNC in manual modes
+  AND INCYCLEC1                 ; CNC in execution
+  = TIMERON                     ; Enable TIMER
+;
+END
+;
+;------------------------------------------------------------------------------
+;                         MACHINE LIGHTING
+;------------------------------------------------------------------------------
+;******************************************************************************
+;
+; Inside lighting of machine, machining area
+;   1.- Programming from the CNC
+;       1.1.- M50: Turn lights on
+;       1.2.- M51: Turn lights off
+;   2.- Operator panel, the user button complements the lighting status
+;
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+;BD1_LIGHTING                  ; Button for machine lighting
+;M_M50_C1                      ; M50: Lights on
+;M_M51_C1                      ; M51: Lights off
+;
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+;O_LIGHT                       ; Machine lighting
+;LD1_LIGHTING                  ; LED for machine lighting
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+;M_LIGHT_ON                    ; Request to turn lights on
+;
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 800
+;
+;#END EXCEPTIONS
+;
+SUB MACHINE_LIGHTING
+;
+M_M50_C1                        ; M50: Lights on
+  = SET M_LIGHT_ON              ; Request to turn lights on
+;
+DFU BD1_LIGHTING                ; Button for machine lighting
+  = CPL M_LIGHT_ON              ; Request to turn lights on
+;
+M_M51_C1                        ; M51: Lights off
+  = RES M_LIGHT_ON              ; Request to turn lights on
+;
+M_LIGHT_ON                      ; Machine lighting status
+  = O_LIGHT                     ; Machine lighting
+  = LD1_LIGHTING                ; LED for machine lighting
+;
+END
+;
+;-------------------------------------------------------------------------
+;                         END-OF-CYCLE BEACON
+;-------------------------------------------------------------------------
+;
+;*************************************************************************
+;                         INPUT RESOURCES
+;*************************************************************************
+;
+; M_DOOR_CLOSED                 ; Door closed
+; B6KEYBD2                      ; START key on operator panel
+; B7KEYBD2                      ; STOP key on operator panel
+; CNCREADY                      ; CNC with no errors
+; M01STOP                       ; M01STOP status active
+; _STOP                         ; Program stop by PLC
+; FHOUTC1                       ; CNC, program execution stopped
+; INCYCLEC1                     ; CNC in execution
+; RESETOUTC1                    ; CNC reset
+; M_EMERGEN                     ; CNC emergency
+; M_M0_C1                       ; M00: Program stop
+; M_M1_C1                       ; Conditional program stop
+; M_M2_C1                       ; End of program
+; M_M30_C1                      ; End of program
+; M_MACHINE_POWER               ; Machine with power
+;
+;*************************************************************************
+;                         OUTPUT RESOURCES
+;*************************************************************************
+;
+; O_CNC_INCYCLE                 ; Green beacon output
+; O_CNC_CYCLE_END               ; End-of-cycle beacon
+; O_CNC_ERROR                   ; Emergency beacon
+;
+;*************************************************************************
+;                         INTERNAL RESOURCES
+;*************************************************************************
+;
+; M_BEACON_EMERGEN              ; Emergency beacon
+; M_BEACON_END                  ; End-of-program beacon
+;
+;*************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 801
+;
+;#END EXCEPTIONS
+;
+SUB WARNING_LIGHT
+;
+NOT M_EMERGEN                   ; CNC emergency
+  OR NOT CNCREADY               ; CNC with no errors
+  = M_BEACON_EMERGEN            ; Red LED
+;
+M_M0_C1                         ; Program stop M0
+  OR M_M2_C1                    ; End of program
+  OR M_M30_C1                   ; End of program
+  OR (M_M1_C1                   ; Conditional program stop
+  AND M01STOP)                  ; M01STOP status active
+  OR DFU _STOP                  ; Program stop by PLC
+  = SET M_BEACON_END            ; End-of-program beacon
+;
+DFU INCYCLEC1                   ; CNC in execution
+  OR DFD M_DOOR_CLOSED          ; Door closed
+  OR RESETOUTC1                 ; CNC reset
+  OR M_STARTC1                  ; Request for CYSTART
+  OR NOT M_MACHINE_POWER        ; Machine with power
+  = RES M_BEACON_END            ; End-of-program beacon
+;
+  M_BEACON_END                  ; End-of-program beacon
+  AND CLK1000                   ; Flashing mark 1000 ms (1 s)
+  = O_CNC_CYCLE_END             ; WARNING_LIGHT end of cycle, orange
+;
+M_BEACON_EMERGEN                ; Emergency beacon
+  AND CLK400                    ; Flashing mark 400 ms
+  = O_CNC_ERROR                 ; Emergency beacon
+;
+INCYCLEC1                       ; CNC in execution
+  OR (FHOUTC1                   ; CNC, program execution stopped
+  AND CLK400)                   ; Timer 400 ms
+  = O_CNC_INCYCLE               ; Green beacon output
+;
+END
+;
+;------------------------------------------------------------------------------
+;                 ELectric Cabinet Cooling
+;------------------------------------------------------------------------------
+;
+; For operation of the electric cabinet cooling is taken into account
+; the temperature of the head driver
+;
+;******************************************************************************
+;                         INPUT RESOURCES
+;******************************************************************************
+;
+; I_COOL_CABINET_THS            ; Electric cabinet air conditioner thermal switch
+; I_COOL_CABINET_FAULT          ; Cabinet climate controler failure
+; M_MACHINE_POWER               ; Machine with power
+;******************************************************************************
+;                         OUTPUT RESOURCES
+;******************************************************************************
+;
+; MSG45                         ; Electric cabinet air conditioner thermal switch failure
+; MSG46                         ; Cabinet climate controler failure
+;
+;******************************************************************************
+;                         INTERNAL RESOURCES
+;******************************************************************************
+;
+; M_COOL_CABINET_THS            ; Electric cabinet air conditioner thermal switch
+; M_COOL_CABINET_FAULT          ; Cabinet climate controler failure
+;
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 805
+;
+;#END EXCEPTIONS
+;
+SUB ELECTRIC_CABINET
+;
+I_COOL_CABINET_THS              ; Electric cabinet air conditioner thermal switch
+  = M_COOL_CABINET_THS          ; Electric cabinet air conditioner thermal switch
+;
+I_COOL_CABINET_FAULT            ; Cabinet climate controler failure
+  = M_COOL_CABINET_FAULT        ; Cabinet climate controler failure
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT M_COOL_CABINET_THS    ; Electric cabinet air conditioner thermal switch
+  = MSG45                       ; Electric cabinet air conditioner thermal switch failure
+;
+M_MACHINE_POWER                 ; Machine with power
+  AND NOT M_COOL_CABINET_FAULT  ; Cabinet climate controler failure
+  = MSG46                       ; Cabinet climate controler failure
+;
+END
+;
+; SUBRUTINA PARA PODER LEER VARIABLES DEL REGULADOR EN REGISTROS PLC
+;
+SUB LECTURA_VARIABLES_DRIVER
+;
+;NOT M7000 
+;AND M_MACHINE_POWER
+;= CNCRD(DRV.TV2.C,R200,M7000)
+NOT M7001
+AND M_MACHINE_POWER
+= CNCRD(DRV.TV2.Z,R201,M7001)
+NOT M7002 
+AND M_MACHINE_POWER
+= CNCRD(DRV.TV2.Z1,R202,M7002)
+;
+NOT M7003 
+AND M_MACHINE_POWER
+= CNCRD(DRV.KV6.Z,R203,M7003)
+NOT M7004 
+AND M_MACHINE_POWER
+= CNCRD(DRV.KV6.Z1,R204,M7004)
+;
+NOT M7005 
+AND M_MACHINE_POWER
+= CNCRD(DRV.TV50.Z,R205,M7005)
+NOT M7006 
+AND M_MACHINE_POWER
+= CNCRD(DRV.TV50.Z1,R206,M7006)
+;
+NOT M7007 
+AND M_MACHINE_POWER
+= CNCRD(DRV.TV51.Z,R207,M7007)
+NOT M7008 
+AND M_MACHINE_POWER
+= CNCRD(DRV.TV51.Z1,R208,M7008)
+;
+NOT M7009 
+AND M_MACHINE_POWER
+= CNCRD(DRV.SV2.Z,R209,M7009)
+NOT M7010 
+AND M_MACHINE_POWER
+= CNCRD(DRV.SV2.Z1,R210,M7010)
+;
+NOT M7011 
+AND M_MACHINE_POWER
+= CNCRD(DRV.CV3.Z,R211,M7011)
+NOT M7012 
+AND M_MACHINE_POWER
+= CNCRD(DRV.CV3.Z1,R212,M7012)
+;
+NOT M7013 
+AND M_MACHINE_POWER
+= CNCRD(DRV.PV51.Z,R213,M7013)
+NOT M7014 
+AND M_MACHINE_POWER
+= CNCRD(DRV.PV53.Z,R214,M7014)
+NOT M7015 
+AND M_MACHINE_POWER
+= CNCRD(DRV.PV190.Z,R215,M7015)
+;
+NOT M7016 
+AND M_MACHINE_POWER
+= CNCRD(DRV.PV51.Z1,R216,M7016)
+NOT M7017 
+AND M_MACHINE_POWER
+= CNCRD(DRV.PV53.Z1,R217,M7017)
+NOT M7018 
+AND M_MACHINE_POWER
+= CNCRD(DRV.PV190.Z1,R218,M7018)
+;
+;NOT M7019
+;AND M_MACHINE_POWER
+;= CNCRD(M4032,R219,M7019)
+
+;NOT M8000
+;AND M_MACHINE_POWER
+;= CNCRD([1].G.GUPF[243],R_POSZ_1DIENTE,M8000)
+
+;NOT M8001 
+;AND M_MACHINE_POWER
+;= CNCRD([1].G.GUPF[245],R_POSZ_UDIENTE,M8001)
+END
+
+
+;
+; SUBRUTINA PARA MANEJAR LOS TRIGGER DE INICIO Y FIN
+;
+SUB TRIGGER_INICIO_FINAL_MEC
+
+
+;ACTIVACION DATALOGGER Y IC3
+M586		; TOOL CLEANER IN
+AND M1		; BROACHING CYCLE ON
+OR R_ACTIVAR_DATALOGER
+ = M7020      
+
+;SE QUIERE COGER DATALOGGER DESDE EL PRINCIPIO
+
+;DESACTIVACION DATALOGGER Y REGISTRADOR
+DFD M7020
+= CPL M7030
+
+()
+=DVS R_POSZ 315 R_TRIG_REC;
+
+
+()
+=CNCWR(R_TRIG_REC,G.ANALO[1],M8003)
+
+;M586		; TOOL CLEANER IN
+;AND M1		; BROACHING CYCLE ON
+; = M7020	; READ DATALOGGER
+;
+;DFD M7020		; END OF BROACHING CYCLE (TOP)
+; = CPL M7030	; CLOSE DATALOGGER
+
+END
+;
+;------------------------------------------------------------------------------
+;                         END OF PROGRAM
+;------------------------------------------------------------------------------
+;******************************************************************************
+;                         EXCEPTIONS
+;******************************************************************************
+;
+;#BEGIN EXCEPTIONS
+;
+; #Order number = 990
+;
+;#END EXCEPTIONS
+;
+SUB FINAL
+;
+()                              ; Logic "1"
+  = RES M_CY1                   ; Reset bit of first scan
+;
+END                             ; End of main PLC program
+;

@@ -1,0 +1,49 @@
+;PROGRAMA FINGERPRINT BROCHADORA
+
+#WARNING["REMOVER PIEZA PARA LA EJECUCIÓN DEL PROGRAMA"]
+M0
+
+;DEFINICIÓN DE VARIABLES
+
+V.P.IniPosZ = 0;
+V.P.EndPosZ = 3150;
+V.P.FeedInc = 10000;
+V.P.FeedMax = 40000;
+V.P.Cycle = V.P.FeedMax / V.P.FeedInc-1;
+V.P.IDweel = 1;
+V.P.SafeCPos = 0;
+V.P.SafeZPos = 0;
+
+;DESPLAZAMIENTO A POSICIÓN INICIAL
+
+M20 M9                          		        	; Retroceso cepillo, parar taladrina
+G00 G07 G90 ZV.P.IniPosZ	   	; Posición inicial del carro
+G00 G07 G90 CV.P.SafeCPos		; Posición de seguridad del plato
+
+;DEFINIR VELOCIDAD DE CORTE
+
+V.P.Feed = V.P.FeedInc;
+
+
+;TEST VAIBEN EJE Z
+
+;ACTIVAR TOMA DE DATOS
+V.PLC.R[300]	= 1	              	; Activar Datalogger
+G04 KV.P.IDweel			; Espera
+
+#RPT[N10,N20,V.P.Cycle]
+ N10
+
+G01 G90 ZV.P.EndPosZ  FV.P.Feed	; Ascensión a posición final
+G04 KV.P.IDweel			; Espera
+G01 G90 ZV.P.IniPosZ FV.P.Feed	; Descender a posición de inicio
+G04 KV.P.IDweel			; Espera
+
+V.P.Feed = V.P.Feed + V.P.FeedInc;
+
+N20
+
+;DESACTIVAR TOMA DE DATOS
+V.PLC.R[300]	=  0	              	; Desactivar Datalogger
+
+M30
