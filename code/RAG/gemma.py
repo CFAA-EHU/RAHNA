@@ -7,13 +7,14 @@ from langgraph.graph.message import add_messages
 from langgraph.graph import START, StateGraph
 from langgraph.checkpoint.memory import MemorySaver
 
-from transformers import AutoProcessor, Gemma3ForConditionalGeneration
+from transformers import AutoProcessor, Gemma3ForConditionalGeneration, BitsAndBytesConfig
 from langchain_huggingface import HuggingFaceEmbeddings
 
 import torch
 import uuid
 import sys
 import os
+import time
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"DEVICE: {device}")
@@ -29,8 +30,22 @@ embeddings = HuggingFaceEmbeddings(
 # --- LLM: Gemma-3-4b-it ---
 model_path = "/home/niturregi/proyecto/modelos/gemma_4b"
 
+#bnb_config = BitsAndBytesConfig(
+#    load_in_8bit=True
+#)
+
+#bnb_config = BitsAndBytesConfig(
+#    load_in_4bit=True,
+#    bnb_4bit_compute_dtype=torch.float16,
+#    bnb_4bit_quant_type="nf4",
+#    bnb_4bit_use_double_quant=True
+#)
+
 model = Gemma3ForConditionalGeneration.from_pretrained(
-    model_path, device_map="auto"
+    model_path, 
+    device_map="auto",
+    #quantization_config=bnb_config,
+    dtype=torch.bfloat16,
 ).eval()
 
 model.generation_config.top_p = None
@@ -63,6 +78,7 @@ def gemma_chat(messages, temp):
 
     gen_kwargs = {
             "max_new_tokens": MAX_NEW_TOKENS,
+            "remove_invalid_values": True,
     }
 
     if temp==0.0:
@@ -72,6 +88,7 @@ def gemma_chat(messages, temp):
             "do_sample": True,
             "temperature": temp,
             "top_p": 0.9,
+            "top_k": 50,
         })
 
     with torch.inference_mode():

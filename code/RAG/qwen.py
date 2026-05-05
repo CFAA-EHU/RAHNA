@@ -30,14 +30,22 @@ embeddings = HuggingFaceEmbeddings(
 model_path = "/home/niturregi/proyecto/modelos/qwen_7b"
 
 # --- bnb_config para cargar en 8bit
-bnb_config = BitsAndBytesConfig(
-    load_in_8bit=True,
-)
+#bnb_config = BitsAndBytesConfig(
+#    load_in_8bit=True,
+#)
+
+# --- bnb_config para cargar en 4bit
+#bnb_config = BitsAndBytesConfig(
+#    load_in_4bit=True,
+#    bnb_4bit_compute_dtype=torch.float16,
+#    bnb_4bit_quant_type="nf4",
+#    bnb_4bit_use_double_quant=True
+#)
 
 model = AutoModelForCausalLM.from_pretrained(
         model_path,
         dtype=dtype,
-        quantization_config=bnb_config,
+        #quantization_config=bnb_config,
         device_map="auto",
 )
 
@@ -65,7 +73,7 @@ def qwen_chat(messages, temp):
             add_generation_prompt=True
     )
     model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
-    prompt_tokens = model_inputs.input_ids.shape[-1]
+    prompt_tokens = model_inputs.input_ids.shape[1]
 
     gen_kwargs = {
             "max_new_tokens": MAX_NEW_TOKENS,

@@ -1,3 +1,0 @@
-embedding_model_name: "/app/modelos/modelo"
-llm_model_name: "/app/modelos/mistral"
-chroma_persist_directory: "/app/mistral-embeddings_db"

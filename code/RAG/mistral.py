@@ -13,6 +13,7 @@ from langchain_huggingface import HuggingFacePipeline, ChatHuggingFace, HuggingF
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline, BitsAndBytesConfig
 import torch
 import os
+import time
 
 torch.cuda.empty_cache()
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -30,14 +31,22 @@ embeddings = HuggingFaceEmbeddings(
 # --- LLM ---
 model_path = "/home/niturregi/proyecto/modelos/mistral_7b"
 
-bnb_config = BitsAndBytesConfig(
-    load_in_8bit=True
-)
+#bnb_config = BitsAndBytesConfig(
+#    load_in_8bit=True
+#)
+
+#bnb_config = BitsAndBytesConfig(
+#    load_in_4bit=True,
+#    bnb_4bit_compute_dtype=torch.float16,
+#    bnb_4bit_quant_type="nf4",
+#    bnb_4bit_use_double_quant=True
+#)
+
 
 model = AutoModelForCausalLM.from_pretrained(
     model_path,
     dtype=dtype,
-    quantization_config=bnb_config,
+    #quantization_config=bnb_config,
     device_map="auto"
 )
 
@@ -46,6 +55,7 @@ model.generation_config.top_k = None
 model.generation_config.temperature = None
 
 tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
+tokenizer.pad_token = tokenizer.eos_token
 
 MAX_NEW_TOKENS = 512
 def mistral_chat(messages, temp):
@@ -82,7 +92,7 @@ def mistral_chat(messages, temp):
         })
 
     with torch.inference_mode():
-        outputs = model.generate(**inputs, **gen_kwargs)
+        outputs = model.generate(**inputs, **gen_kwargs, pad_token_id=tokenizer.eos_token_id)
     answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return answer, prompt_tokens
 

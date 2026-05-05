@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify 
-from qwen_text import get_rag_response
+from rag_code import get_rag_response
 import os
 import csv
 import uuid
