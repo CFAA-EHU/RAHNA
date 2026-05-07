@@ -19,14 +19,14 @@ print(f"DEVICE: {device}")
 
 # --- Embeddings ---
 embeddings = HuggingFaceEmbeddings(
-    model_name="/app/modelos/modelo",
+    model_name="/app/modelos/embedding_model",
     model_kwargs={"device": "cpu"},
     encode_kwargs={"batch_size": 4, "normalize_embeddings": True},
     cache_folder="./hf_cache",
 )
 
 # --- LLM ---
-model_path = "/app/modelos/qwen_7b"
+model_path = "/app/modelos/llm_model"
 
 #--- bnb_config para cargar en 8bit
 bnb_config = BitsAndBytesConfig(

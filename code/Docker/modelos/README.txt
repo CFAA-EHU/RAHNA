@@ -1,1 +1,1 @@
-Place the downloaded HuggingFace model folder here.
+Place the downloaded HuggingFace model folders here.

@@ -20,14 +20,14 @@ print(f"DEVICE: {device}")
 
 # --- Embeddings ---
 embeddings = HuggingFaceEmbeddings(
-    model_name="/home/niturregi/proyecto/modelos/modelo",
+    model_name="/home/unai_lopez/evaluation/modelos/modelo",
     model_kwargs={"device": "cpu"},
     encode_kwargs={"batch_size": 4, "normalize_embeddings": True},
     cache_folder="./hf_cache",
 )
 
 # --- LLM ---
-model_path = "/home/niturregi/proyecto/modelos/qwen_7b"
+model_path = "/home/unai_lopez/evaluation/modelos/qwen_7b"
 
 # --- bnb_config para cargar en 8bit
 #bnb_config = BitsAndBytesConfig(
@@ -49,6 +49,8 @@ model = AutoModelForCausalLM.from_pretrained(
         device_map="auto",
 )
 
+print(model.hf_device_map)
+
 model.generation_config.top_p = None
 model.generation_config.top_k = None
 model.generation_config.temperature = None
@@ -57,9 +59,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 MAX_NEW_TOKENS = 512
 def qwen_chat(messages, temp):
-    """
-    messages: [{'role': 'system/user/assistant', 'content': str}]
-    """
+    # messages: [{'role': 'system/user/assistant', 'content': str}]
     qwen_msgs = []
     for msg in messages:
         qwen_msgs.append({
@@ -72,7 +72,7 @@ def qwen_chat(messages, temp):
             tokenize=False,
             add_generation_prompt=True
     )
-    model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
+    model_inputs = tokenizer([text], return_tensors="pt").to("cuda")
     prompt_tokens = model_inputs.input_ids.shape[1]
 
     gen_kwargs = {
@@ -198,8 +198,10 @@ def get_rag_response(question: str, thread_id: str) -> tuple[str, str, float, fl
     }
     config = {"configurable": {"thread_id": thread_id}}
 
+    torch.cuda.synchronize()
     t0 = time.perf_counter()
     output = app.invoke(input_dict, config)
+    torch.cuda.synchronize()
     response_time = time.perf_counter() - t0
 
     generation_prompt_tokens = output["generation_prompt_tokens"]

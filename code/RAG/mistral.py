@@ -22,18 +22,14 @@ print("DEVICE:", device)
 
 # --- Embeddings ---
 embeddings = HuggingFaceEmbeddings(
-    model_name="/home/niturregi/proyecto/modelos/modelo",
+    model_name="/home/unai_lopez/evaluation/modelos/modelo",
     model_kwargs={"device": "cpu"},
     encode_kwargs={"batch_size": 4, "normalize_embeddings": True},
     cache_folder="./hf_cache"
 )
 
 # --- LLM ---
-model_path = "/home/niturregi/proyecto/modelos/mistral_7b"
-
-#bnb_config = BitsAndBytesConfig(
-#    load_in_8bit=True
-#)
+model_path = "/home/unai_lopez/evaluation/modelos/mistral_7b"
 
 #bnb_config = BitsAndBytesConfig(
 #    load_in_4bit=True,
@@ -41,7 +37,6 @@ model_path = "/home/niturregi/proyecto/modelos/mistral_7b"
 #    bnb_4bit_quant_type="nf4",
 #    bnb_4bit_use_double_quant=True
 #)
-
 
 model = AutoModelForCausalLM.from_pretrained(
     model_path,
@@ -93,7 +88,9 @@ def mistral_chat(messages, temp):
 
     with torch.inference_mode():
         outputs = model.generate(**inputs, **gen_kwargs, pad_token_id=tokenizer.eos_token_id)
-    answer = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    
+    generated_tokens = outputs[0][prompt_tokens:]
+    answer = tokenizer.decode(generated_tokens, skip_special_tokens=True)
     return answer, prompt_tokens
 
 # --- Vectorstore ---
@@ -148,7 +145,7 @@ class State(TypedDict):
 # --- Nodos del grafo ---
 def rewrite_query(state: State):
     prompt_msgs = build_query_rewriter_prompt(state["messages"])
-    rewritten = mistral_chat(prompt_msgs, 0.0)
+    rewritten, _ = mistral_chat(prompt_msgs, 0.0)
     return {"query": rewritten}
 
 def retrieve(state: State):
@@ -177,7 +174,7 @@ def generate(state: State):
         elif isinstance(msg, AIMessage):
             formatted_msgs.append({"role": "assistant", "content": msg.content})
 
-    output_text, prompt_tokens = mistral_chat(formatted_msgs, 0.3)
+    output_text, prompt_tokens = mistral_chat(formatted_msgs, 0.5)
     return {"messages": [AIMessage(output_text)], "generation_prompt_tokens": prompt_tokens}
 
 # --- Construcción del grafo ---
