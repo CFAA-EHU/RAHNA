@@ -2,7 +2,7 @@ services:
   rag-app:
     build: .
     ports:
-      - "8080:8080"
+      - "80:8080"
     volumes:
       - ./docker_data:/data
       - ./modelos:/app/modelos
