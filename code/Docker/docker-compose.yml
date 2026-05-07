@@ -1,7 +1,7 @@
 services:
   rag-app:
     build: .
-    expose:
+    ports:
       - "8080:8080"
     volumes:
       - ./docker_data:/data

@@ -2,6 +2,11 @@
 
 This folder contains the files needed to run the RAG web application in Docker.
 
+To execute:
+```
+docker compose up
+```
+
 ## Before You Run
 
 Create or provide these paths inside this `code/Docker` folder.
@@ -13,10 +18,6 @@ Required for the app:
 - `embeddings_db/`: local ChromaDB data with your document embeddings. The ingestion/build scripts used to create it are in `code/preprocessing`. Once created, the folder can be moved to this location.
 
 Path names in this README (such as `modelos/embedding_model` or `modelos/llm_model`) match our tested setup. If your folder/model names differ, update the corresponding references in `rag_code.py` and Docker configuration.
-
-Runtime data folder:
-
-- `docker_data/` is mounted to `/data` in the container and stores `valoraciones.csv`.
 
 ## What Each File Is For
 
@@ -41,7 +42,7 @@ Runtime data folder:
 
 ## If You Want To Use Other Models
 
-`rag_code.py` is tailored to one tested setup (Qwen-based generation + current embedding model path).
+`rag_code.py` is tailored to one tested setup (`Qwen2.5-7B-Instruct`-based generation + current embedding model path).
 
 To switch models, you must edit `rag_code.py` to match the new model requirements, especially:
 
@@ -54,5 +55,5 @@ The scripts in the `code/RAG` folder offer example implementations of the RAG pi
 
 ## Notes
 
-- The app runs on port `8080` inside the container.
+- The app runs on port `8080` inside the container and is accessible in the machine's `8080` port.
 - This setup is designed for NVIDIA/CUDA environments (CUDA base image + 8-bit model loading in `rag_code.py`).
