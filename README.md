@@ -1,7 +1,7 @@
-# RAG4MachiningDocs
-This repository contains the source code and docs used to implement a RAG pipeline that improves documentation usage of broaching tools.
+# RAHNA 
+This repository contains the source code and docs of RAHNA: A conversational agent to support workshop operators in the usage of machine tools.
 
-# Repository structure
+## Repository structure
 The project code is located in the `code` folder, which is organized into three main subfolders:
 - `RAG`: Contains the main RAG pipeline for the application, with a separate file for each LLM. The specific LLMs are:
     - `Qwen2.5-7B-Instruct`
@@ -29,3 +29,7 @@ The RAG pipeline is composed of three main steps: `rewrite_query`, `retrieve` an
 - `retrieve`: The rewritten query is sent to the vector database to retrieve the information that relates most to it. This is done by creating an embedding of the query and performing a similarity search with the documents stored in the database. The most similar documents will be returned.
 
 - `generate`: The list of messages and the retrieved documents are sent to the LLM so that it can answer the user's question based on the information in those documents.
+
+## Quick start
+
+See README file inside `Docker` for deployment instructions.
