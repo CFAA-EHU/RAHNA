@@ -32,4 +32,4 @@ The RAG pipeline is composed of three main steps: `rewrite_query`, `retrieve` an
 
 ## Quick start
 
-See README file inside `Docker` for deployment instructions.
+See README file inside `code/Docker` for deployment instructions.
