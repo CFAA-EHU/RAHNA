@@ -55,5 +55,5 @@ The scripts in the `code/RAG` folder offer example implementations of the RAG pi
 
 ## Notes
 
-- The app runs on port `8080` inside the container and is accessible in the machine's `80` port.
+- The app runs on port `8080` inside the container and is accessible on port `80` of the host machine.
 - This setup is designed for NVIDIA/CUDA environments (CUDA base image + 8-bit model loading in `rag_code.py`).
