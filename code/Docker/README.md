@@ -1,21 +1,19 @@
-# Docker
+# Getting RAHNA up and running
 
-This folder contains the files needed to run the RAG web application in Docker.
+This folder contains the files needed to run RAHNA. Its deployment relies on Docker containers.
 
-To execute:
-```
-docker compose up
-```
+## Instructions
 
-## Before You Run
-
-Create or provide these paths inside this `code/Docker` folder.
-
-Required for the app:
+Create or provide these paths inside this `code/Docker` folder:
 
 - `modelos/embedding_model`: embedding model folder downloaded from HuggingFace.
 - `modelos/llm_model`: generator model folder downloaded from HuggingFace.
 - `embeddings_db/`: local ChromaDB data with your document embeddings. The ingestion/build scripts used to create it are in `code/preprocessing`. Once created, the folder can be moved to this location.
+
+Afterwards, execute:
+```
+docker compose up
+```
 
 Path names in this README (such as `modelos/embedding_model` or `modelos/llm_model`) match our tested setup. If your folder/model names differ, update the corresponding references in `rag_code.py` and Docker configuration.
 
@@ -40,7 +38,7 @@ Path names in this README (such as `modelos/embedding_model` or `modelos/llm_mod
    - generator model from `/app/modelos/llm_model`
    - vector DB from `./embeddings_db`
 
-## If You Want To Use Other Models
+## Using Other Models
 
 `rag_code.py` is tailored to one tested setup (`Qwen2.5-7B-Instruct`-based generation + current embedding model path).
 
