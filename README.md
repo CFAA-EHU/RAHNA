@@ -1,4 +1,4 @@
-# RAG4MachiningDocs
+# RAHNA
 This repository contains the source code and docs used to implement a RAG pipeline that improves documentation usage of broaching tools.
 
 # Repository structure
