@@ -1,6 +1,6 @@
 # Evaluation index
 
-The table below contains the configuration evaluated in each evaluation.
+The table below contains the configurations evaluated in each of the automatic evaluations carried out.
 
 The results for each evaluation are stored in `/raw_results`.
 
