@@ -15,7 +15,7 @@ Required for the app:
 
 - `modelos/embedding_model`: embedding model folder downloaded from HuggingFace.
 - `modelos/llm_model`: generator model folder downloaded from HuggingFace.
-- `embeddings_db/`: local ChromaDB data with your document embeddings. The ingestion/build scripts used to create it are in `code/preprocessing`. Once created, the folder can be moved to this location.
+- `rag/embeddings_db/`: local ChromaDB data with your document embeddings. The ingestion/build scripts used to create it are in `code/preprocessing`. Once created, the folder can be moved to this location.
 
 Path names in this README (such as `modelos/embedding_model` or `modelos/llm_model`) match our tested setup. If your folder/model names differ, update the corresponding references in `rag_code.py` and Docker configuration.
 
