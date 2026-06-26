@@ -7,11 +7,11 @@ It is designed for analyzing technical, scientific, or industrial documents cont
 
 ## Main Features
 
-- 📄 **Automatic image extraction** from PDF files using `PyMuPDF`.
-- 🔍 **Duplicate removal** via SHA-256 hashing.
-- 🧠 **Automatic image captioning** with the **Qwen2.5-VL** model.
-- 💾 **Structured JSON export**, including page number, image index, file path, and description.
-- ⚙️ Compatible with both **GPU (CUDA)** and **CPU** execution.
+-  **Automatic image extraction** from PDF files using `PyMuPDF`.
+-  **Duplicate removal** via SHA-256 hashing.
+-  **Automatic image captioning** with the **Qwen2.5-VL** model.
+-  **Structured JSON export**, including page number, image index, file path, and description.
+-  Compatible with both **GPU (CUDA)** and **CPU** execution.
 
 ---
 
@@ -36,7 +36,7 @@ pip install qwen-vl-utils
 ## Project Structure
 
 ```
-📁 qwen2.5-vl-pdf-extractor
+qwen2.5-vl-pdf-extractor
 ├── image_descriptions_pdf_qwen.py    # Main script
 ├── pdf_images_qwen/                  # Folder where extracted images are stored
 ├── image_descriptions_qwen.json      # JSON file containing generated captions
